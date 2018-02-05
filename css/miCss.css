@@ -1,0 +1,191 @@
+@charset "UTF-8";
+
+header {
+    background-color: #1c2040;
+    color: white;
+}
+
+header h1 {
+    display: inline-block;
+    border-bottom: #009fe2 2px solid;
+    margin-top: 0;
+    padding-top: 20px;
+}
+
+header button {
+    background-color: #009fe2;
+    margin-top: 20px;
+    color: white;
+}
+
+#logo {
+    display: inline;
+}
+
+header button:hover {
+    background-color: white;
+    margin-top: 20px;
+    color: #009fe2;
+}
+
+.colorBlue {
+    color: #009fe2;
+    font-size: 1.65em;
+}
+
+.titulo {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+nav {
+    background-color: #1c2040;
+    border-top: solid 1px white;
+}
+
+main {
+    min-height: calc(100vh - 211px);
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #1c2040;
+    color: white;
+    height: 70px;
+}
+
+.panel-default > .panel-heading {
+
+    background-color: #1c2040;
+    color: white;
+}
+
+.panel-default {
+    border: #555555 2px solid;
+}
+
+.panel-default:hover {
+    border: #555555 1px solid;
+
+}
+
+.panel-default > .panel-footer > .btn {
+    background-color: #1c2040;
+    color: white;
+}
+
+.panel-default > .panel-footer > .btn:hover {
+
+    background-color: white;
+    border-color: #232f3e;
+    color: #232f3e;
+}
+
+#nav1 {
+    background-color: inherit;
+    color: white;
+    border: 0px;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: white;
+}
+
+.navbar-brand {
+    border-right: 1px solid white;
+
+}
+
+.navbar-default .navbar-nav > li > a:focus {
+    color: white;
+}
+
+.navbar-default .navbar-brand:focus {
+    color: white;
+}
+
+.navbar-default .navbar-brand {
+    color: white;
+}
+
+.navbar-default .navbar-brand:hover {
+    color: #009fe2;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+
+    background-color: white;
+    border-color: #232f3e;
+    color: #232f3e;
+}
+
+.panel p {
+    min-height: 40px;
+}
+
+.producto .panel-body {
+
+}
+
+.producto .panel-footer {
+    border-top: white;
+    background-color: white;
+    height: 162px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+#shopPopulate img {
+    max-height: 171.16px;
+}
+
+#globalProductPopulate img {
+    max-height: 171.16px;
+}
+
+#globalProductPopulate .panel-footer {
+    background-color: #1c2040;
+    height: auto;
+    color: white;
+}
+
+#globalProductPopulate .producto .panel-body {
+    min-height: 410.16px;
+    max-height: 410.16px;
+
+}
+
+#myCarousel img {
+    max-height: 379.16px;
+}
+
+.carousel-inner > .item > a > img, .carousel-inner > .item > img, .img-responsive, .thumbnail a > img, .thumbnail > img {
+
+    display: inline;
+}
+
+#myCarousel {
+    margin: auto;
+
+}
+
+.carousel-indicators li {
+    border: 1px solid black;
+}
+
+.carousel-indicators .active {
+    background-color: black;
+}
+
+footer span{
+    color:#009fe2 ;
+}
+
+footer span:hover{
+    color:white ;
+}

@@ -1,1 +1,1 @@
-Subo la práctica acabada.
+Le faltan algunos productos y el reparto de productos a algunas tiendas
