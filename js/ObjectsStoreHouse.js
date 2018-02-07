@@ -23,7 +23,7 @@ function Category(title) {
     });
 
     Object.defineProperty(this, '_description', {
-        t: function () {
+        get: function () {
             return _description;
         },
         set: function (value) {

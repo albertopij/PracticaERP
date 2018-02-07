@@ -19,7 +19,7 @@ header button {
 }
 
 #logo {
-    display: inline;
+    display: inline-block;
 }
 
 header button:hover {
@@ -64,12 +64,11 @@ footer {
 }
 
 .panel-default {
-    border: #555555 2px solid;
+    border: #555555 1px solid;
 }
 
 .panel-default:hover {
-    border: #555555 1px solid;
-
+    box-shadow: 2px -2px 58px -11px rgba(0, 0, 0, 1);
 }
 
 .panel-default > .panel-footer > .btn {
@@ -121,6 +120,22 @@ footer {
     border-color: #232f3e;
     color: #232f3e;
 }
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover{
+    background-color: white;
+}
+
+.navbar-nav > li > .dropdown-menu {
+    background-color: #1c2040;
+
+}
+
+.navbar-nav > li > .dropdown-menu a {
+    color: white;
+}
+
+.navbar-nav > li > .dropdown-menu a:hover {
+    color: black;
+}
 
 .panel p {
     min-height: 40px;
@@ -157,6 +172,7 @@ footer {
 #globalProductPopulate .producto .panel-body {
     min-height: 410.16px;
     max-height: 410.16px;
+    overflow: auto;
 
 }
 
@@ -182,10 +198,10 @@ footer {
     background-color: black;
 }
 
-footer span{
-    color:#009fe2 ;
+footer span {
+    color: #009fe2;
 }
 
-footer span:hover{
-    color:white ;
+footer span:hover {
+    color: white;
 }
