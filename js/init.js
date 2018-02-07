@@ -335,7 +335,6 @@ function init() {
         var enlaceProductosGlobales = document.createElement("a");
         enlaceProductosGlobales.setAttribute("href", "#");
         enlaceProductosGlobales.addEventListener("click", function () {
-
             globalProductPopulate()
         });
 
@@ -678,7 +677,9 @@ function init() {
 
         for (i = 0; i < productosTienda.length; i++) {
 
-            if (j >= 4) {
+            j++;
+
+            if (j > 4) {
                 j = 0;
 
                 row = document.createElement("div");
@@ -686,9 +687,6 @@ function init() {
                 divShopPopulate.appendChild(row);
 
             }
-
-            j++;
-
 
             if (productsCategory.indexOf(productosTienda[i]) > -1) {
 
@@ -915,9 +913,6 @@ function init() {
         var shopPopulate = document.getElementById("shopPopulate");
         var detalleProducto = document.getElementById("detalleProducto");
         var globalProductPopulate = document.getElementById("globalProductPopulate");
-        var menuCategoryShopPopulateRepetido = document.getElementById("menuCategoryShopPopulate");
-        var returnShopProduct = document.getElementById("returnShopProduct");
-
 
         if (categorias !== null) {
             categorias.remove();
@@ -933,16 +928,6 @@ function init() {
 
         if (globalProductPopulate !== null) {
             globalProductPopulate.remove();
-        }
-
-        if (menuCategoryShopPopulateRepetido !== null) {
-
-            menuCategoryShopPopulateRepetido.remove();
-        }
-
-        if (returnShopProduct !== null) {
-
-            returnShopProduct.remove();
         }
 
         var initPopulate = document.getElementById("initPopulate");
@@ -1072,10 +1057,6 @@ function init() {
     movil2.images = ["img/samsung-s8.jpg", "img/samsung-s82.jpg", "img/samsung-s83.jpg", "img/samsung-s84.jpg"];
     movil2.description = "¡Da la bienvenida a la pantalla infinita! El revolucionario diseño de Galaxy S8 y S8+ comienza desde su interior. Se ha redefinido cada componente del Smartphone para romper con los límites de su pantalla, despidiéndonos de los marcos. Así todo lo que verás será contenido y nada más. Disfruta de la pantalla más grande e inmersiva fabricada para un dispositivo móvil que podrás sostener con una sola mano. Galaxy S8 y S8+ te liberan de los confines de los marcos, ofreciéndote una superficie lisa e ininterrumpida que fluye sobre sus bordes. "
 
-    var movil3 = new Smartphone("7", "LG G6 32GB Plata Libre", "439");
-    movil3.images = ["img/lg-g6.jpg", "img/lg-g62.jpg", "img/lg-g63.jpg", "img/lg-g64.jpg"];
-    movil3.description = "El LG G6 tiene un diseño refinado resistente al agua y una pantalla casi sin bordes que lo hacen relativamente compacto a pesar de ser de 5.7 pulgadas. La combinación de cámaras es un placer de usar y es algo difícil de encontrar en el mercado; tiene ranura microSD y su desempeño muy bueno.";
-
     var tele1 = new TV("3", "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo", "1799");
     tele1.images = ["img/samsung-curve.jpg", "img/samsung-curve2.jpg", "img/samsung-curve3.jpg", "img/samsung-curve4.jpg"];
     tele1.description = "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.";
@@ -1084,9 +1065,6 @@ function init() {
     tele2.images = ["img/lg-4k.jpg", "img/lg-4k2.jpg", "img/lg-4k3.jpg", "img/lg-4k4.jpg"];
     tele2.description = "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.";
 
-    var tele3 = new TV("8", "Sony KD49XE9005 49\" LED UltraHD 4K", "1019");
-    tele3.images = ["img/sony-tv.jpg", "img/sony-tv2.jpg", "img/sony-tv3.jpg", "img/sony-tv4.jpg"];
-    tele3.description = "La realidad con un contraste excepcional Preciosas vistas nocturna con luces brillantes y negros profundos. Con hasta 5 veces 2 el contraste de un TV LED convencional, las escenas oscuras son más oscuras y las brillantes aún más brillantes.";
     var portatil1 = new Laptop("5", "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil", "889");
     portatil1.images = ["img/yoga.jpg", "img/yoga2.jpg", "img/yoga3.jpg", "img/yoga4.jpg", "img/yoga5.jpg"];
     portatil1.description = "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.";
@@ -1116,10 +1094,8 @@ function init() {
 
     almacen.addProduct(movil1, telefonos);
     almacen.addProduct(movil2, telefonos);
-    almacen.addProduct(movil3, telefonos);
     almacen.addProduct(tele1, televisiones);
     almacen.addProduct(tele2, televisiones);
-    almacen.addProduct(tele3, televisiones);
     almacen.addProduct(portatil1, portatiles);
     almacen.addProduct(portatil2, portatiles);
 
@@ -1129,37 +1105,14 @@ function init() {
     almacen.addShop(tienda3);
 
 
-
-    almacen.addProductInShop(movil1, almacen.defaultShop, 55);
-    almacen.addProductInShop(movil2, almacen.defaultShop, 44);
-    almacen.addProductInShop(movil3, almacen.defaultShop, 28);
-    almacen.addProductInShop(tele1, almacen.defaultShop, 70);
-    almacen.addProductInShop(tele2, almacen.defaultShop, 42);
-    almacen.addProductInShop(tele3, almacen.defaultShop, 77);
-    almacen.addProductInShop(portatil1, almacen.defaultShop, 14);
-    almacen.addProductInShop(portatil2, almacen.defaultShop, 20);
-
     almacen.addProductInShop(movil1, tienda1, 20);
     almacen.addProductInShop(tele1, tienda1, 40);
-    almacen.addProductInShop(tele2, tienda1, 30);
-    almacen.addProductInShop(portatil1, tienda1,18);
-
     almacen.addProductInShop(movil1, tienda2, 50);
     almacen.addProductInShop(movil2, tienda2, 24);
     almacen.addProductInShop(tele1, tienda2, 70);
     almacen.addProductInShop(tele2, tienda2, 40);
     almacen.addProductInShop(portatil1, tienda2, 10);
     almacen.addProductInShop(portatil2, tienda2, 15);
-
-
-    almacen.addProductInShop(movil1,tienda3, 26);
-    almacen.addProductInShop(movil2, tienda3, 40);
-    almacen.addProductInShop(movil3, tienda3, 59);
-    almacen.addProductInShop(tele1, tienda3, 49);
-    almacen.addProductInShop(tele2, tienda3, 22);
-    almacen.addProductInShop(tele3, tienda3, 47);
-    almacen.addProductInShop(portatil1, tienda3, 25);
-    almacen.addProductInShop(portatil2,tienda3, 28);
 
     initPopulate();
     shopsMenusPopulate();
