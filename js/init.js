@@ -4,6 +4,8 @@ function init() {
 
     var contenedorPrincipal = document.getElementById("contenedorPrincipal");
     var etiquetaNav = document.getElementsByTagName("nav");
+    var ventana;
+    var ventanas = [];
 
     function showCategories() {
         var categorias = [];
@@ -376,6 +378,40 @@ function init() {
             }
         }
 
+        var ulRightNav = document.createElement("ul");
+        ulRightNav.setAttribute("class", "pull-right");
+
+        var liRightNav = document.createElement("li");
+
+        ulRightNav.appendChild(liRightNav);
+
+        var aLiRight = document.createElement("a");
+        aLiRight.setAttribute("href", "#");
+        aLiRight.appendChild(document.createTextNode("Cerrar Ventanas"));
+        liRightNav.appendChild(aLiRight);
+
+        var divCloseWidows = document.createElement("div");
+        divCloseWidows.setAttribute("class", "pull-right hidden-sm hidden-xs");
+        navBar.appendChild(divCloseWidows);
+
+        var buttonCloseWindows = document.createElement("button");
+        buttonCloseWindows.setAttribute("id", "closeAllWindows");
+        buttonCloseWindows.setAttribute("class", "btn btn-md");
+        buttonCloseWindows.appendChild(document.createTextNode("Cerrar Ventanas"));
+        divCloseWidows.appendChild(buttonCloseWindows);
+
+
+        buttonCloseWindows.addEventListener("click",function () {
+
+            var i;
+
+            for (i = 0; i < ventanas.length; i++) {
+                if (!ventanas[i].close()) {
+                    ventanas[i].close();
+                }
+            }
+            ventanas = [];
+        });
     }
 
 
@@ -482,10 +518,19 @@ function init() {
 
         function createFunctionShowShopDetailProduct(shop, product) {
             return function () {
-                productShopPopulate(shop, product);
+
+
+                ventana = window.open("detalleProducto.html", "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=700,height=400");
+
+                ventana.onload = montarVentana;
+
+                ventanas.push(ventana);
+
+                function montarVentana() {
+                    productShopPopulate(shop, product);
+                }
             }
         }
-
     }
 
 
@@ -735,41 +780,36 @@ function init() {
 
         function createFunctionShowShopDetailProduct(shop, product) {
             return function () {
-                productShopPopulate(shop, product);
+
+
+                ventana = window.open("detalleProducto.html", "", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=700,height=400");
+
+                ventana.onload = montarVentana;
+
+                ventanas.push(ventana);
+
+                function montarVentana() {
+                    productShopPopulate(shop, product);
+                }
             }
         }
     }
 
     function productShopPopulate(shop, product) {
 
-        returnShopPopulate();
+        var contenedorPrincipal = ventana.document.getElementById("contenedorPrincipal");
 
-        var categorias = document.getElementById("menuCategoryShopPopulate");
-        categorias.style.display = "none";
-
-
-        var shopPopulate = document.getElementById("shopPopulate");
-        shopPopulate.style.display = "none";
-        var i;
-        var contenedorPrincipal = document.getElementById("contenedorPrincipal");
-
-        var globalProductPopulate = document.getElementById("globalProductPopulate");
-
-        if (globalProductPopulate !== null) {
-            globalProductPopulate.remove();
-        }
-
-
-        var contenedorPanel = document.createElement("div");
+        var contenedorPanel = ventana.document.createElement("div");
         contenedorPanel.setAttribute("id", "detalleProducto");
         contenedorPanel.setAttribute("class", "col-sm-8 col-sm-offset-2 col-xs-12");
         contenedorPrincipal.appendChild(contenedorPanel);
 
 
-        var mainH2 = document.createElement("h2");
+        var mainH2 = ventana.document.createElement("h2");
         mainH2.setAttribute("class", "text-center bold titulo");
         mainH2.appendChild(document.createTextNode("Detalle de producto"));
         contenedorPanel.appendChild(mainH2);
+
 
         var panel = document.createElement("div");
         panel.setAttribute("class", "panel panel-default text-center");
@@ -808,6 +848,8 @@ function init() {
         var carouselIndicators = document.createElement("ol");
         carouselIndicators.setAttribute("class", "carousel-indicators");
         carrusel.appendChild(carouselIndicators);
+
+        var i;
 
         for (i = 0; i < product.images.length; i++) {
 
@@ -890,7 +932,6 @@ function init() {
         var textoParrafoDescripcion = document.createTextNode(product.description);
         parrafoDescripcion.appendChild(textoParrafoDescripcion);
         descripcion.appendChild(textoDescripcion);
-
     }
 
 
@@ -1162,5 +1203,4 @@ function init() {
 
 }
 
-
-window.onload = init();
+window.onload = init;

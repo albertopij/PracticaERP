@@ -12,19 +12,25 @@ header h1 {
     padding-top: 20px;
 }
 
-header button {
+header button{
     background-color: #009fe2;
     margin-top: 20px;
     color: white;
 }
 
-#logo {
-    display: inline-block;
+nav button{
+    background-color: #009fe2;
+    margin-top: 8px;
+    color: white;
 }
 
-header button:hover {
+#logo {
+    display: inline-block;
+    cursor: pointer;
+}
+
+nav button:hover, header button:hover {
     background-color: white;
-    margin-top: 20px;
     color: #009fe2;
 }
 
@@ -120,7 +126,8 @@ footer {
     border-color: #232f3e;
     color: #232f3e;
 }
-.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover{
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover {
     background-color: white;
 }
 

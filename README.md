@@ -1,1 +1,1 @@
-La práctica ya esta acabada
+Ya cierra las ventanas, la funcionalidad de la práctica del tema 6 ya está acabada.
