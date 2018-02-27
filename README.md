@@ -1,1 +1,1 @@
-La funcionalidad de la práctica 7 está acabada, pero aún faltal algunos detalles.
+La practica 7 está acabada.

@@ -49,8 +49,8 @@ function webAccess(mostrarConfirmacion, user, passwd) {
     var _mostrarConfirmacion = mostrarConfirmacion;
     var i;
     if (username === "prueba" && password === "prueba") {
-        setCookie("username", username,10);
-        setCookie("password", password,10);
+        setCookie("username", username, 10);
+        setCookie("password", password, 10);
 
         var logName = document.getElementsByClassName("logName");
         var buttonsSesion = document.getElementsByClassName("btn-sesion");
@@ -72,7 +72,7 @@ function webAccess(mostrarConfirmacion, user, passwd) {
 
         var logName = document.createElement("span");
         logName.setAttribute("class", "logName");
-        logName.appendChild(document.createTextNode(" "+username + " "));
+        logName.appendChild(document.createTextNode(" " + username + " "));
         loggin[0].appendChild(logName);
 
         var buttonSesion = document.createElement("button");

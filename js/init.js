@@ -173,6 +173,7 @@ function init() {
             ventanas = [];
         });
 
+
         var contenedorTiendas = document.createElement("div");
         contenedorTiendas.setAttribute("class", ".container");
         contenedorTiendas.setAttribute("id", "initPopulate");
@@ -227,7 +228,13 @@ function init() {
 
             var nombreTienda = document.createTextNode(shop.value.name);
 
-            var dirImg = "img/" + shop.value.name + ".jpg";
+            var dirImg;
+            if (shop.value.image !== undefined || shop.value.image == "") {
+                dirImg = shop.value.image;
+
+            } else {
+                dirImg = "img/noShopImage.jpg";
+            }
 
 
             var tienda = document.createElement("div");
@@ -343,6 +350,11 @@ function init() {
 
                 var nombre = document.getElementById("nameShop2");
                 nombre.setAttribute("value", shop.name);
+
+                if (shop.image !== undefined && shop.image !== "") {
+                    var imagen = document.getElementById("imageShop2");
+                    imagen.setAttribute("value", shop.image)
+                }
 
                 if (shop.address !== undefined) {
                     var direccion = document.getElementById("addressShop2");
@@ -562,21 +574,29 @@ function init() {
             }
         }
 
-        var ulRightNav = document.createElement("ul");
-        ulRightNav.setAttribute("class", "pull-right");
 
         var liRightNav = document.createElement("li");
 
-        ulRightNav.appendChild(liRightNav);
+        ulNavbar.appendChild(liRightNav);
 
         var aLiRight = document.createElement("a");
         aLiRight.setAttribute("href", "#");
+        aLiRight.setAttribute("id", "closeAllWindows2");
+        aLiRight.setAttribute("class", "hidden-sm hidden-md hidden-lg");
         aLiRight.appendChild(document.createTextNode("Cerrar Ventanas"));
+        aLiRight.addEventListener("click", function () {
+
+            var i;
+            for (i = 0; i < ventanas.length; i++) {
+                if (!ventanas[i].close()) {
+                    ventanas[i].close();
+                }
+            }
+            ventanas = [];
+        });
+
         liRightNav.appendChild(aLiRight);
 
-        var divHeaderRight = document.createElement("div");
-        divHeaderRight.setAttribute("class", "pull-right");
-        navBar.appendChild(divHeaderRight);
 
         var buttonAccess = document.createElement("button");
         buttonAccess.setAttribute("id", "buttonAccess2");
@@ -747,6 +767,12 @@ function init() {
 
                 var precio = document.getElementById("priceProduct2");
                 precio.setAttribute("value", product.price);
+
+                var imagen = document.getElementById("imageProduct2");
+
+                if (product.images !== undefined && product.images[0] !== "") {
+                    imagen.setAttribute("value", product.images[0]);
+                }
 
                 if (product.description !== undefined) {
                     descripcionProduct2.innerHTML = product.description;
@@ -1043,6 +1069,7 @@ function init() {
                 buttonUpdateProduct.setAttribute("data-target", "#updateProduct");
                 buttonUpdateProduct.appendChild(document.createTextNode("Modificar"));
                 panelBodyProducto.appendChild(buttonUpdateProduct);
+                buttonUpdateProduct.addEventListener("click", createFunctionUpdateProduct(productos[i], tienda));
 
                 var buttonRemoveProducto = document.createElement("button");
                 buttonRemoveProducto.setAttribute("class", "btn btn-danger loggin pull-right");
@@ -1077,6 +1104,52 @@ function init() {
             }
             checkCookie();
         }
+
+
+        function createFunctionUpdateProduct(product, shop) {
+            return function () {
+
+                document.getElementById("formUpdateProduct").reset();
+
+
+                var nombre = document.getElementById("nameProduct2");
+                nombre.setAttribute("value", product.name);
+
+                var precio = document.getElementById("priceProduct2");
+                precio.setAttribute("value", product.price);
+
+                var imagen = document.getElementById("imageProduct2");
+
+                if (product.images !== undefined && product.images[0] !== "") {
+                    imagen.setAttribute("value", product.images[0]);
+                }
+
+                if (product.description !== undefined) {
+                    descripcionProduct2.innerHTML = product.description;
+                }
+
+                var buttonUpdateProductRepetido = document.getElementById("buttonUpdateProduct");
+
+                if (buttonUpdateProductRepetido !== null) {
+                    buttonUpdateProductRepetido.remove();
+                }
+                var formUpdateProduct = document.getElementById("formUpdateProduct");
+                var buttonUpdateProduct = document.createElement("button");
+                buttonUpdateProduct.setAttribute("id", "buttonUpdateProduct");
+                buttonUpdateProduct.setAttribute("class", "btn btn-block btn-classic");
+                buttonUpdateProduct.setAttribute("data-dismiss", "modal");
+                buttonUpdateProduct.appendChild(document.createTextNode("Modificar"));
+                formUpdateProduct.appendChild(buttonUpdateProduct);
+                buttonUpdateProduct.addEventListener("click", update(product, shop));
+            }
+        }
+
+        function update(product) {
+            return function () {
+                functionUpdateProduct(product, shop);
+            }
+        }
+
 
         function createFunctionRemoveProduct(product, shop) {
             return function () {
@@ -1378,7 +1451,7 @@ function init() {
                         disponibilidadTienda.appendChild(textodisponibilidadTienda);
                         panelBodyProducto.appendChild(disponibilidadTienda);
                         var buttonStock = document.createElement("button");
-                        buttonStock.setAttribute("class", "btn btn-md loggin");
+                        buttonStock.setAttribute("class", "btn btn-md loggin pull-right");
                         buttonStock.setAttribute("data-toggle", "modal");
                         buttonStock.setAttribute("data-target", "#updateGlobalProduct");
 
@@ -1584,6 +1657,7 @@ function init() {
             checkCookie();
         }
 
+
         function createFunctionUpdateCategory(category) {
             return function () {
 
@@ -1631,15 +1705,22 @@ function init() {
 
         var cif = document.forms["formAddShop"]["cif"].value;
         var nombre = document.forms["formAddShop"]["nameShop"].value;
+        var imagen = document.forms["formAddShop"]["imageShop"].value;
         var direccion = document.forms["formAddShop"]["addressShop"].value;
         var telefono = document.forms["formAddShop"]["telfShop"].value;
         var initPopulate1 = document.getElementById("initPopulate");
 
         if (cif.length > 0 && nombre.length > 0) {
             var tienda = new Shop(cif, nombre);
+            tienda.image = imagen;
             tienda.address = direccion;
             tienda.telf = telefono;
             almacen.addShop(tienda);
+        }
+        var form = document.getElementById("formAddShop");
+        if (form !== null) {
+            window.alert("entra");
+            document.getElementById("formAddShop").reset();
         }
         initPopulate1.remove();
         initPopulate();
@@ -1660,13 +1741,16 @@ function init() {
 
     function functionUpdateShop(shop) {
 
+
         var nombre = document.forms["formUpdateShop"]["nameShop2"].value;
+        var imagen = document.forms["formUpdateShop"]["imageShop2"].value;
         var direccion = document.forms["formUpdateShop"]["addressShop2"].value;
         var telefono = document.forms["formUpdateShop"]["telfShop2"].value;
         var initPopulate1 = document.getElementById("initPopulate");
 
         if (nombre.length > 0) {
             shop.name = nombre;
+            shop.image = imagen;
             shop.address = direccion;
             shop.telf = telefono;
 
@@ -1742,6 +1826,7 @@ function init() {
         var serialNumber = document.forms["formAddProductERP"]["serialNumber"].value;
         var name = document.forms["formAddProductERP"]["name"].value;
         var price = document.forms["formAddProductERP"]["price"].value;
+        var image = document.forms["formAddProductERP"]["image"].value;
         var category = document.forms["formAddProductERP"]["selectCategoryProduct"].value;
         var descripcionProduct = document.forms["formAddProductERP"]["descripcionProduct"].value;
         var categories = showCategories();
@@ -1754,6 +1839,11 @@ function init() {
 
             var product = new DefaultProduct(serialNumber, name, price);
 
+            if (image.length === 0) {
+                image = "img/noProductImage.jpg";
+            }
+
+            product.images[0] = image;
             product.description = descripcionProduct;
 
             while (i < categories.length) {
@@ -1809,11 +1899,19 @@ function init() {
 
         var nombre = document.forms["formUpdateProduct"]["nameProduct2"].value;
         var precio = document.forms["formUpdateProduct"]["priceProduct2"].value;
+        var imagen = document.forms["formUpdateProduct"]["imageProduct2"].value;
         var descripcion = document.forms["formUpdateProduct"]["descripcionProduct2"].value;
 
+
         if (nombre.length > 0 && precio > 0) {
+
+            if (imagen.length === 0) {
+                imagen = "img/noProductImage.jpg";
+            }
+
             product.name = nombre;
             product.price = precio;
+            product.images[0] = imagen;
             product.description = descripcion;
 
             shopPopulate(shop);
@@ -1833,22 +1931,6 @@ function init() {
 
         globalProductPopulate();
 
-    }
-
-    function functionUpdateProduct(product, shop) {
-
-        var nombre = document.forms["formUpdateProduct"]["nameProduct2"].value;
-        var precio = document.forms["formUpdateProduct"]["priceProduct2"].value;
-        var descripcion = document.forms["formUpdateProduct"]["descripcionProduct2"].value;
-
-        if (nombre.length > 0 && precio > 0) {
-            product.name = nombre;
-            product.price = precio;
-            product.description = descripcion;
-
-            shopPopulate(shop);
-            checkCookie();
-        }
     }
 
 
@@ -1903,8 +1985,11 @@ function init() {
 //Creamos Tiendas
 
     var tienda1 = new Shop("1", "MediaMarkt");
+    tienda1.image = "img/MediaMarkt.jpg";
     var tienda2 = new Shop("2", "Worten");
+    tienda2.image = "img/Worten.jpg";
     var tienda3 = new Shop("3", "PcComponentes");
+    tienda3.image = "img/PcComponentes.jpg";
 
     console.log("##### Testeo StoreHouse. ##### ");
     var almacen = StoreHouse.getInstance();
@@ -1925,6 +2010,7 @@ function init() {
     almacen.addProduct(tele3, televisiones);
     almacen.addProduct(portatil1, portatiles);
     almacen.addProduct(portatil2, portatiles);
+    almacen.defaultShop.image = "img/defaultShop.jpg";
 
 
     almacen.addShop(tienda1);

@@ -198,6 +198,7 @@ function Shop(cif, name) {
     var _name = name;
     var _address;
     var _telf;
+    var _image;
     var _coords;
 
     Object.defineProperty(this, 'cif', {
@@ -231,6 +232,15 @@ function Shop(cif, name) {
         set: function (value) {
             if (/^[679]\d{8}$/.test(value)) throw new InvalidValueException("telf", value);
             _telf = value;
+        }
+    });
+
+    Object.defineProperty(this, 'image', {
+        get: function () {
+            return _image;
+        },
+        set: function (value) {
+            _image = value;
         }
     });
 
