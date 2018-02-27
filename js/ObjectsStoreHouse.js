@@ -22,7 +22,7 @@ function Category(title) {
         }
     });
 
-    Object.defineProperty(this, '_description', {
+    Object.defineProperty(this, 'description', {
         get: function () {
             return _description;
         },
@@ -109,6 +109,13 @@ function Product(serialNumber, name, price) {
 
 Product.prototype = {};
 Product.prototype.constructor = Product;
+
+function DefaultProduct(serialNumber, name, price) {
+    Product.call(this, serialNumber, name, price);
+}
+
+DefaultProduct.prototype = Object.create(Product.prototype);
+DefaultProduct.prototype.constructor = DefaultProduct;
 
 function Smartphone(serialNumber, name, price) {
     Product.call(this, serialNumber, name, price);

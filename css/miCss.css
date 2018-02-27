@@ -12,21 +12,67 @@ header h1 {
     padding-top: 20px;
 }
 
-header button{
+#HglobalProductPopulate {
+    margin-right: 20px;
+}
+
+.loggin {
+    display: none;
+}
+
+/*#loggin2{
+    display: none;
+}
+*/
+
+header button {
     background-color: #009fe2;
-    margin-top: 20px;
+    margin-left: 5px;
     color: white;
 }
 
-nav button{
+nav button {
     background-color: #009fe2;
     margin-top: 8px;
     color: white;
 }
 
+body button {
+    background-color: #009fe2;
+    color: white;
+    border: solid 1px white;
+
+}
+
+body button.btn.btn-md:hover {
+    background-color: white;
+    color: #009fe2;
+    border: solid 1px #009fe2;
+}
+
+#logName {
+    display: inline-block;
+}
+
+#headerRight {
+    display: flex;
+    align-items: center;
+    height: 71px;
+}
+
 #logo {
     display: inline-block;
     cursor: pointer;
+}
+
+.btn-classic {
+    background-color: #009fe2;
+    color: white;
+}
+
+.btn-classic:hover {
+    background-color: #007ebf;
+    color: white;
 }
 
 nav button:hover, header button:hover {
@@ -39,9 +85,36 @@ nav button:hover, header button:hover {
     font-size: 1.65em;
 }
 
+#buttonAddShop {
+    margin-right: 10px;
+}
+
+#buttonAddProductERP {
+    margin-left: 10px;
+}
+
 .titulo {
     margin-top: 10px;
     margin-bottom: 20px;
+}
+
+.select {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
 nav {
@@ -77,6 +150,14 @@ footer {
     box-shadow: 2px -2px 58px -11px rgba(0, 0, 0, 1);
 }
 
+.panel-default > .panel-body > .btn {
+    margin-top: 10px;
+}
+
+.categoria .panel-footer {
+    width: 100%;
+}
+
 .panel-default > .panel-footer > .btn {
     background-color: #1c2040;
     color: white;
@@ -97,6 +178,15 @@ footer {
 
 .navbar-default .navbar-nav > li > a {
     color: white;
+}
+
+#closeAllWindows {
+    margin-right: 10px;
+}
+
+#buttonAccess2 {
+    display: none;
+    margin-right: 10px;
 }
 
 .navbar-brand {
@@ -148,14 +238,14 @@ footer {
     min-height: 40px;
 }
 
-.producto .panel-body {
-
-}
-
 .producto .panel-footer {
     border-top: white;
     background-color: white;
     height: 162px;
+}
+
+.categoria .panel-body {
+    height: 200px;
 }
 
 .bold {
@@ -211,4 +301,36 @@ footer span {
 
 footer span:hover {
     color: white;
+}
+
+.modal-header {
+    background-color: #009fe2;
+    color: white;
+}
+
+#modalAccessSuccess .modal-header {
+    background-color: #3ac018;
+}
+
+#modalAccessDenied .modal-header {
+    background-color: #ff0000;
+}
+
+button:hover {
+    background-color: #bfbfbf;
+}
+
+@media (max-width: 768px) {
+    .navbar-brand {
+        display: none;
+    }
+
+    .navbar-toggle {
+        float: none;
+        margin-left: 10px;
+    }
+
+    #buttonAccess2 {
+        display: inline-block;
+    }
 }

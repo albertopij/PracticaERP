@@ -10,24 +10,359 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/miCss.css" rel="stylesheet">
 </head>
-<body>
+<body id="body">
 <header class="container-fluid">
     <div class="container">
         <div id="logo">
             <h1 class="bold">TecnoAlberto</h1><span class="colorBlue bold">.com</span>
         </div>
-        <div class="pull-right hidden-xs">
-            <button id="HglobalProductPopulate" class="btn btn-md">Productos Globales</button>
+        <div id="headerRight" class="pull-right hidden-xs">
+            <button id="closeAllWindows" class="btn btn-md">Cerrar Ventanas</button>
+            <button id="buttonAccess1" class="btn btn-md" type="button" data-toggle="modal" data-target="#modalAccess">
+                <span class="glyphicon glyphicon-user"></span> Acesso
+            </button>
+            <div id="loggin1" class="loggin">
+
+            </div>
         </div>
     </div>
 </header>
 <nav>
-    <div class="pull-right hidden-xs">
-        <button id="closeAllWindows" class="btn btn-md">Cerrar ventanas</button>
-    </div>
 </nav>
 <main class="container" id="contenedorPrincipal">
+    <div class="modal fade" id="modalAccess" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4><span class="glyphicon glyphicon-lock"></span> Login</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form name="myAccess" role="form">
+                        <div class="form-group">
+                            <label for="username"><span class="glyphicon glyphicon-user"></span> Usuario</label>
+                            <input type="text" class="form-control" id="username" placeholder="Introduzca el usuario">
+                        </div>
+                        <div class="form-group">
+                            <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Contraseña</label>
+                            <input type="password" class="form-control" id="psw" placeholder="Introduzca la contraseña">
+                        </div>
+                        <button class="btn btn-block btn-classic" data-dismiss="modal" onclick=webAccess(true)><span
+                                class="glyphicon glyphicon-off"></span> Login
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalAccessDenied" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Acesso Fallido</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <p class="text-danger">El usuario o la contraseña no son correctos</p>
+                    <button type="submit" class="btn" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addShop" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Añadir Tienda</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form name="formAddShop" role="form">
+                        <div class="form-group">
+                            <label for="cif">CIF *</label>
+                            <input type="text" class="form-control" id="cif" placeholder="Introduzca el CIF">
+                        </div>
+                        <div class="form-group">
+                            <label for="nameShop">Nombre *</label>
+                            <input type="text" class="form-control" id="nameShop"
+                                   placeholder="Introduzca el Nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="addressShop">Dirección</label>
+                            <input type="text" class="form-control" id="addressShop"
+                                   placeholder="Introduzca la Dirección">
+                        </div>
+                        <div class="form-group">
+                            <label for="telfShop">Teléfono</label>
+                            <input type="text" class="form-control" id="telfShop"
+                                   placeholder="Introduzca el número de Teléfono">
+                        </div>
+                        <button id="buttonAddShop" class="btn btn-block btn-classic" data-dismiss="modal"><span
+                                class="glyphicon glyphicon-plus"></span> Añadir
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="updateShop" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Modificar Tienda</h4>
+                </div>
+                <div id="BupdateShop" class="modal-body" style="padding:40px 50px;">
+                    <form name="formUpdateShop" id="formUpdateShop" role="form">
+                        <div class="form-group">
+                            <label for="nameShop2">Nombre</label>
+                            <input type="text" class="form-control" id="nameShop2"
+                                   placeholder="Introduzca el Nombre">
+                        </div>
+                        <div class="form-group">
+                            <label for="addressShop2">Dirección</label>
+                            <input type="text" class="form-control" id="addressShop2"
+                                   placeholder="Introduzca la Dirección">
+                        </div>
+                        <div class="form-group">
+                            <label for="telfShop2">Teléfono</label>
+                            <input type="text" class="form-control" id="telfShop2"
+                                   placeholder="ej: 9XXXXXXX">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addCategory" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Añadir Categoria</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form name="formAddCategory" role="form">
+                        <div class="form-group">
+                            <label for="nameCategory">Nombre *</label>
+                            <input type="text" class="form-control" id="nameCategory"
+                                   placeholder="Introduzca el nombre de la categoría">
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcionCategory">Descripción</label>
+                            <textarea type="text" class="form-control" id="descripcionCategory"
+                                      placeholder="Introduzca una breve descripción"></textarea>
+                        </div>
 
+                        <button id="buttonAddCategory" class="btn btn-block btn-classic" data-dismiss="modal"><span
+                                class="glyphicon glyphicon-plus"></span> Añadir
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="updateCategory" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Modificar Categoria</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form name="formUpdateCategory" id="formUpdateCategory" role="form">
+                        <div class="form-group">
+                            <label for="nameCategory2">Nombre</label>
+                            <input type="text" class="form-control" id="nameCategory2"
+                                   placeholder="Introduzca el nombre de la categoría">
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcionCategory2">Descripción</label>
+                            <textarea type="text" class="form-control" id="descripcionCategory2"
+                                      placeholder="Introduzca una breve descripción"></textarea>
+                        </div>
+
+                        <button id="buttonUpdateCategory" class="btn btn-block btn-classic" data-dismiss="modal"><span
+                                class="glyphicon glyphicon-plus"></span> Modificar
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addProductERP" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Añadir Producto en el ERP</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form name="formAddProductERP" role="form">
+                        <div class="form-group">
+                            <label for="serialNumber">Número de serie *</label>
+                            <input type="text" class="form-control" id="serialNumber"
+                                   placeholder="Introduzca el número de serie">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Nombre *</label>
+                            <input type="text" class="form-control" id="name"
+                                   placeholder="Introduzca el nombre del producto">
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Precio *</label>
+                            <input type="text" class="form-control" id="price"
+                                   placeholder="Introduzca el precio del producto">
+                        </div>
+                        <div class="form-group">
+                            <label for="selectCategoryProduct">Categoria</label>
+                            <select id="selectCategoryProduct" class="select">
+                                <option selected>Selecciona...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcionProduct">Descripción</label>
+                            <textarea type="text" class="form-control" id="descripcionProduct"
+                                      placeholder="Introduzca una breve descripción"></textarea>
+                        </div>
+
+                        <button id="buttonAddProductERP" class="btn btn-block btn-classic" data-dismiss="modal"><span
+                                class="glyphicon glyphicon-plus"></span> Añadir
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addProductShop" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Añadir Producto en la Tienda</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form name="formAddProductShop" role="form">
+                        <div class="form-group">
+                            <label for="selectProduct">Producto *</label>
+                            <select id="selectProduct" class="select">
+                                <option selected>Selecciona...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="stock">Stock *</label>
+                            <input type="text" class="form-control" id="stock"
+                                   placeholder="Introduzca el stock">
+                        </div>
+                        <button id="buttonAddProductShop" class="btn btn-block btn-classic" data-dismiss="modal"><span
+                                class="glyphicon glyphicon-plus"></span> Añadir
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="updateProduct" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Modificar Producto</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form name="formUpdateProduct" id="formUpdateProduct" role="form">
+                        <div class="form-group">
+                            <label for="nameProduct2">Nombre</label>
+                            <input type="text" class="form-control" id="nameProduct2"
+                                   placeholder="Introduzca el nombre del producto">
+                        </div>
+                        <div class="form-group">
+                            <label for="priceProduct2">Precio</label>
+                            <input type="text" class="form-control" id="priceProduct2"
+                                   placeholder="Introduzca el precio del producto">
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcionProduct2">Descripción</label>
+                            <textarea type="text" class="form-control" id="descripcionProduct2"
+                                      placeholder="Introduzca una breve descripción"></textarea>
+                        </div>
+
+                        <button id="buttonUpdateProduct" class="btn btn-block btn-classic" data-dismiss="modal"><span
+                                class="glyphicon glyphicon-plus"></span> Añadir
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="updateGlobalProduct" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Modificar Producto</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form name="formUpdateGlobalProduct" id="formUpdateGlobalProduct" role="form">
+                        <div class="form-group">
+                            <label for="stockGlobalProduct">Stock</label>
+                            <input type="text" class="form-control" id="stockGlobalProduct"
+                                   placeholder="Introduzca el nuevo stock">
+                        </div>
+                        <button id="buttonUpdateGlobalProduct" class="btn btn-block btn-classic"
+                                data-dismiss="modal"><span
+                                class="glyphicon glyphicon-plus"></span> Modificar
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove"></span> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 <footer class="container-fluid text-center">
     <a href="#logo" title="To Top">
@@ -42,6 +377,7 @@
 <script src="js/StoreHouse.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/formularios.js"></script>
 <script src="js/init.js"></script>
 </body>
 </html>

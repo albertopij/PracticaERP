@@ -1,5 +1,8 @@
 "use strict";
 
+var almacen2;
+
+
 function init() {
 
     var contenedorPrincipal = document.getElementById("contenedorPrincipal");
@@ -118,10 +121,6 @@ function init() {
         var i = 0;
         var shops = almacen.shops;
         var shop = shops.next();
-        var botonGlobalProductPopulate = document.getElementById("HglobalProductPopulate");
-        botonGlobalProductPopulate.addEventListener("click", function () {
-            globalProductPopulate()
-        });
 
         var inicioLogo = document.getElementById("logo");
 
@@ -132,6 +131,12 @@ function init() {
             var detalleProducto = document.getElementById("detalleProducto");
             var globalProductPopulate = document.getElementById("globalProductPopulate");
             var initPopulate = document.getElementById("initPopulate");
+            var categoryPopulate = document.getElementById("categoryPopulate");
+
+            if (categoryPopulate !== null) {
+
+                categoryPopulate.remove();
+            }
 
 
             if (categorias !== null) {
@@ -154,9 +159,47 @@ function init() {
 
         });
 
+
+        var buttonCloseWindows = document.getElementById("closeAllWindows");
+
+        buttonCloseWindows.addEventListener("click", function () {
+
+            var i;
+            for (i = 0; i < ventanas.length; i++) {
+                if (!ventanas[i].close()) {
+                    ventanas[i].close();
+                }
+            }
+            ventanas = [];
+        });
+
         var contenedorTiendas = document.createElement("div");
         contenedorTiendas.setAttribute("class", ".container");
         contenedorTiendas.setAttribute("id", "initPopulate");
+
+        var buttonAddShop = document.createElement("button");
+        buttonAddShop.setAttribute("class", "btn btn-md loggin text-center");
+        buttonAddShop.setAttribute("id", "buttonAddShop");
+        buttonAddShop.setAttribute("type", "button");
+        buttonAddShop.setAttribute("data-toggle", "modal");
+        buttonAddShop.setAttribute("data-target", "#addShop");
+        buttonAddShop.appendChild(document.createTextNode("Añadir Tienda "));
+        var spanAddShop = document.createElement("span");
+        spanAddShop.setAttribute("class", "glyphicon glyphicon-plus");
+        buttonAddShop.appendChild(spanAddShop);
+        contenedorTiendas.appendChild(buttonAddShop);
+
+        var buttonAddProductERP = document.createElement("button");
+        buttonAddProductERP.setAttribute("class", "btn btn-md loggin text-center");
+        buttonAddProductERP.setAttribute("id", "buttonAddProductERP");
+        buttonAddProductERP.setAttribute("type", "button");
+        buttonAddProductERP.setAttribute("data-toggle", "modal");
+        buttonAddProductERP.setAttribute("data-target", "#addProductERP");
+        buttonAddProductERP.appendChild(document.createTextNode("Añadir Producto"));
+        var spanAddProduct = document.createElement("span");
+        spanAddProduct.setAttribute("class", "glyphicon glyphicon-plus");
+        buttonAddProductERP.appendChild(spanAddProduct);
+        contenedorTiendas.appendChild(buttonAddProductERP);
 
         var mainH2 = document.createElement("h2");
         mainH2.setAttribute("class", "text-center bold titulo");
@@ -183,6 +226,7 @@ function init() {
             }
 
             var nombreTienda = document.createTextNode(shop.value.name);
+
             var dirImg = "img/" + shop.value.name + ".jpg";
 
 
@@ -208,12 +252,32 @@ function init() {
             imagen.setAttribute("src", dirImg);
             panelBody.appendChild(imagen);
 
+            if (shop.value.name !== "defaultShop") {
+
+                var buttonUpdateCategory = document.createElement("button");
+                buttonUpdateCategory.setAttribute("class", "btn btn-success loggin pull-left");
+                buttonUpdateCategory.setAttribute("type", "button");
+                buttonUpdateCategory.setAttribute("data-toggle", "modal");
+                buttonUpdateCategory.setAttribute("data-target", "#updateShop");
+                buttonUpdateCategory.appendChild(document.createTextNode("Modificar"));
+                panelBody.appendChild(buttonUpdateCategory);
+                buttonUpdateCategory.addEventListener("click", createFunctionUpdateShop(shop.value));
+
+                var buttonRemoveShop = document.createElement("button");
+                buttonRemoveShop.setAttribute("class", "btn btn-danger loggin pull-right");
+                buttonRemoveShop.setAttribute("type", "button");
+                buttonRemoveShop.setAttribute("data-toggle", "modal");
+                buttonRemoveShop.setAttribute("data-target", "#removeShop");
+                buttonRemoveShop.appendChild(document.createTextNode("Eliminar"));
+                panelBody.appendChild(buttonRemoveShop);
+                buttonRemoveShop.addEventListener("click", createFunctionRemoveShop(shop.value));
+            }
 
             var panelFooter = document.createElement("div");
             panelFooter.setAttribute("class", "panel-footer");
 
             var button = document.createElement("button");
-            button.setAttribute("class", "btn btn-lg");
+            button.setAttribute("class", "btn btn-lg tienda");
             button.addEventListener("click", createFunctionShowShop(shop.value));
 
 
@@ -232,9 +296,95 @@ function init() {
         }
 
 
+        var selectCategory = document.getElementById("selectCategoryProduct");
+
+        var categories = almacen.categories;
+        var category = categories.next();
+
+        while (category.done !== true) {
+
+            var option = document.createElement("option");
+            option.setAttribute("value", category.value.title);
+            option.setAttribute("class", "optionDinamico");
+            option.appendChild(document.createTextNode(category.value.title));
+            selectCategory.appendChild(option);
+            category = categories.next();
+        }
+
+        var selectProduct = document.getElementById("selectProduct");
+        var i;
+        var categories = almacen.categories;
+        var category = categories.next();
+        while (category.done !== true) {
+            var product = almacen.getCategoryProduct(category.value);
+            if (product.length > 0) {
+                var optgroup = document.createElement("optgroup");
+                optgroup.setAttribute("label", category.value.title);
+                optgroup.setAttribute("class", "optionDinamico");
+                selectProduct.appendChild(optgroup);
+
+                for (i = 0; i < product.length; i++) {
+                    var option = document.createElement("option");
+                    option.setAttribute("value", product[i].serialNumber);
+                    option.setAttribute("class", "optionDinamico");
+                    option.appendChild(document.createTextNode(product[i].name));
+                    optgroup.appendChild(option);
+                }
+
+            }
+            category = categories.next();
+        }
+
+        function createFunctionUpdateShop(shop) {
+            return function () {
+
+                document.getElementById("formUpdateShop").reset();
+
+
+                var nombre = document.getElementById("nameShop2");
+                nombre.setAttribute("value", shop.name);
+
+                if (shop.address !== undefined) {
+                    var direccion = document.getElementById("addressShop2");
+                    direccion.setAttribute("value", shop.address);
+                }
+
+                if (shop.telf !== undefined) {
+                    var telf = document.getElementById("telfShop2");
+                    telf.setAttribute("value", shop.telf)
+                }
+
+                var buttonUpdateShopRepetido = document.getElementById("buttonUpdateShop");
+
+                if (buttonUpdateShopRepetido !== null) {
+                    buttonUpdateShopRepetido.remove();
+                }
+                var bupdateShop = document.getElementById("BupdateShop");
+                var buttonUpdateShop = document.createElement("button");
+                buttonUpdateShop.setAttribute("id", "buttonUpdateShop");
+                buttonUpdateShop.setAttribute("class", "btn btn-block btn-classic");
+                buttonUpdateShop.setAttribute("data-dismiss", "modal");
+                buttonUpdateShop.appendChild(document.createTextNode("Modificar"));
+                bupdateShop.appendChild(buttonUpdateShop);
+                buttonUpdateShop.addEventListener("click", update(shop));
+            }
+        }
+
+        function update(shop) {
+            return function () {
+                functionUpdateShop(shop);
+            }
+        }
+
         function createFunctionShowShop(shop) {
             return function () {
                 shopPopulate(shop);
+            }
+        }
+
+        function createFunctionRemoveShop(shop) {
+            return function () {
+                removeShop(shop);
             }
         }
     }
@@ -275,7 +425,63 @@ function init() {
             var detalleProducto = document.getElementById("detalleProducto");
             var globalProductPopulate = document.getElementById("globalProductPopulate");
             var initPopulate = document.getElementById("initPopulate");
+            var categoryPopulate = document.getElementById("categoryPopulate");
 
+            if (categoryPopulate !== null) {
+
+                categoryPopulate.remove();
+            }
+
+            if (categorias !== null) {
+                categorias.remove();
+            }
+
+            if (shopPopulate !== null) {
+                shopPopulate.remove();
+            }
+
+            if (detalleProducto !== null) {
+                detalleProducto.remove();
+            }
+
+            if (globalProductPopulate !== null) {
+                globalProductPopulate.remove();
+            }
+
+            initPopulate.style.display = "";
+        });
+
+
+        var textoTitulo = document.createTextNode("ERP");
+        tituloMenu.appendChild(textoTitulo);
+
+
+        var navBar = document.createElement("div");
+        navBar.setAttribute("id", "navBar");
+        navBar.setAttribute("class", "collapse navbar-collapse navbar-ex1-collapse");
+
+        var ulNavbar = document.createElement("ul");
+        ulNavbar.setAttribute("id", "navLeft");
+        ulNavbar.setAttribute("class", "nav navbar-nav");
+
+
+        var textoTienda = document.createTextNode("Tiendas");
+        var li = document.createElement("li");
+        var enlaceTienda = document.createElement("a");
+        enlaceTienda.setAttribute("href", "#");
+        enlaceTienda.addEventListener("click", function () {
+
+            var categorias = document.getElementById("menuCategoryShopPopulate");
+            var shopPopulate = document.getElementById("shopPopulate");
+            var detalleProducto = document.getElementById("detalleProducto");
+            var globalProductPopulate = document.getElementById("globalProductPopulate");
+            var initPopulate = document.getElementById("initPopulate");
+            var categoryPopulate = document.getElementById("categoryPopulate");
+
+            if (categoryPopulate !== null) {
+
+                categoryPopulate.remove();
+            }
 
             if (categorias !== null) {
                 categorias.remove();
@@ -296,44 +502,22 @@ function init() {
             initPopulate.style.display = "";
 
         });
+        enlaceTienda.appendChild(textoTienda);
+        li.appendChild(enlaceTienda);
+        ulNavbar.appendChild(li);
 
-
-        var textoTitulo = document.createTextNode("Tiendas");
-        tituloMenu.appendChild(textoTitulo);
-
-
-        var navBar = document.createElement("div");
-        navBar.setAttribute("id", "navBar");
-        navBar.setAttribute("class", "collapse navbar-collapse navbar-ex1-collapse");
-
-        var ulNavbar = document.createElement("ul");
-        ulNavbar.setAttribute("id", "navLeft");
-        ulNavbar.setAttribute("class", "nav navbar-nav");
-
-
-//iterador tiendas
-
-        var shops = almacen.shops;
-        var shop = shops.next();
-        while (shop.done !== true) {
-
-            var textoTienda = document.createTextNode(shop.value.name);
-            var li = document.createElement("li");
-            var enlaceTienda = document.createElement("a");
-            enlaceTienda.setAttribute("href", "#");
-            enlaceTienda.addEventListener("click", createFunctionShowShop(shop.value));
-
-            enlaceTienda.appendChild(textoTienda);
-            li.appendChild(enlaceTienda);
-            ulNavbar.appendChild(li);
-
-            shop = shops.next();
-        }
+        var textoTienda = document.createTextNode("Categorías Globales");
+        var li = document.createElement("li");
+        var enlaceTienda = document.createElement("a");
+        enlaceTienda.setAttribute("href", "#");
+        enlaceTienda.addEventListener("click", categoryPopulate);
+        enlaceTienda.appendChild(textoTienda);
+        li.appendChild(enlaceTienda);
+        ulNavbar.appendChild(li);
 
 
         var textoAllProduct = document.createTextNode("Productos Globales");
         li = document.createElement("li");
-        li.setAttribute("class", "hidden-sm hidden-md hidden-lg");
         var enlaceProductosGlobales = document.createElement("a");
         enlaceProductosGlobales.setAttribute("href", "#");
         enlaceProductosGlobales.addEventListener("click", function () {
@@ -390,32 +574,31 @@ function init() {
         aLiRight.appendChild(document.createTextNode("Cerrar Ventanas"));
         liRightNav.appendChild(aLiRight);
 
-        var divCloseWidows = document.createElement("div");
-        divCloseWidows.setAttribute("class", "pull-right hidden-sm hidden-xs");
-        navBar.appendChild(divCloseWidows);
+        var divHeaderRight = document.createElement("div");
+        divHeaderRight.setAttribute("class", "pull-right");
+        navBar.appendChild(divHeaderRight);
 
-        var buttonCloseWindows = document.createElement("button");
-        buttonCloseWindows.setAttribute("id", "closeAllWindows");
-        buttonCloseWindows.setAttribute("class", "btn btn-md");
-        buttonCloseWindows.appendChild(document.createTextNode("Cerrar Ventanas"));
-        divCloseWidows.appendChild(buttonCloseWindows);
+        var buttonAccess = document.createElement("button");
+        buttonAccess.setAttribute("id", "buttonAccess2");
+        buttonAccess.setAttribute("class", "btn btn-md pull-right");
+        buttonAccess.setAttribute("data-toggle", "modal");
+        buttonAccess.setAttribute("data-target", "#modalAccess");
+        var spanAccess = document.createElement("span");
+        spanAccess.setAttribute("class", "glyphicon glyphicon-user");
+        buttonAccess.appendChild(spanAccess);
+        buttonAccess.appendChild(document.createTextNode(" Acceso"));
+        nav1Header.appendChild(buttonAccess);
 
+        var divLoggin = document.createElement("div");
+        divLoggin.setAttribute("id", "loggin2");
+        divLoggin.setAttribute("class", "pull-right");
+        nav1Header.appendChild(divLoggin);
 
-        buttonCloseWindows.addEventListener("click",function () {
-
-            var i;
-
-            for (i = 0; i < ventanas.length; i++) {
-                if (!ventanas[i].close()) {
-                    ventanas[i].close();
-                }
-            }
-            ventanas = [];
-        });
     }
 
 
     function shopPopulate(shop) {
+
 
         var globalProductPopulate = document.getElementById("globalProductPopulate");
 
@@ -445,12 +628,24 @@ function init() {
             detalleProducto.remove();
         }
 
+
         var productos = showProductShop1(almacen.getShopProduct(tienda), tienda);
 
         var divShopPopulate = document.createElement("div");
         divShopPopulate.setAttribute("id", "shopPopulate");
         divShopPopulate.setAttribute("class", ".container-fluid");
         contenedorPrincipal.appendChild(divShopPopulate);
+
+        var buttonAddProduct = document.createElement("button");
+        buttonAddProduct.setAttribute("class", "btn btn-md loggin text-center");
+        buttonAddProduct.setAttribute("type", "button");
+        buttonAddProduct.setAttribute("data-toggle", "modal");
+        buttonAddProduct.setAttribute("data-target", "#addProductShop");
+        buttonAddProduct.appendChild(document.createTextNode("Añadir Producto "));
+        var spanAddProduct = document.createElement("span");
+        spanAddProduct.setAttribute("class", "glyphicon glyphicon-plus");
+        buttonAddProduct.appendChild(spanAddProduct);
+        divShopPopulate.appendChild(buttonAddProduct);
 
 
         var mainH2 = document.createElement("h2");
@@ -462,7 +657,7 @@ function init() {
         var row = document.createElement("div");
         row.setAttribute("class", "row");
         divShopPopulate.appendChild(row);
-
+        var x = 0;
         for (i = 0; i < productos.length; i++) {
 
             j++;
@@ -493,6 +688,26 @@ function init() {
             imgProducto.setAttribute("src", productos[i].images[0]);
             panelBodyProducto.appendChild(imgProducto);
 
+
+            var buttonUpdateProduct = document.createElement("button");
+            buttonUpdateProduct.setAttribute("class", "btn btn-success loggin pull-left");
+            buttonUpdateProduct.setAttribute("type", "button");
+            buttonUpdateProduct.setAttribute("data-toggle", "modal");
+            buttonUpdateProduct.setAttribute("data-target", "#updateProduct");
+            buttonUpdateProduct.appendChild(document.createTextNode("Modificar"));
+            panelBodyProducto.appendChild(buttonUpdateProduct);
+            buttonUpdateProduct.addEventListener("click", createFunctionUpdateProduct(productos[i], shop));
+
+
+            var buttonRemoveProducto = document.createElement("button");
+            buttonRemoveProducto.setAttribute("class", "btn btn-danger loggin pull-right");
+            buttonRemoveProducto.setAttribute("type", "button");
+            buttonRemoveProducto.setAttribute("data-toggle", "modal");
+            buttonRemoveProducto.setAttribute("data-target", "#removeProduct");
+            buttonRemoveProducto.appendChild(document.createTextNode("Eliminar"));
+            panelBodyProducto.appendChild(buttonRemoveProducto);
+            buttonRemoveProducto.addEventListener("click", createFunctionRemoveProduct(productos[i], tienda));
+
             var panelFooterProducto = document.createElement("div");
             panelFooterProducto.setAttribute("class", "panel-footer");
             panelProducto.appendChild(panelFooterProducto);
@@ -514,6 +729,64 @@ function init() {
             buttonDetalles.addEventListener("click", createFunctionShowShopDetailProduct(tienda, productos[i]));
             panelFooterProducto.appendChild(buttonDetalles);
 
+            var buttonAddProductShop = document.getElementById("buttonAddProductShop");
+            buttonAddProductShop.addEventListener("click", createFunctionAddProduct(shop));
+
+            checkCookie();
+
+        }
+
+        function createFunctionUpdateProduct(product, shop) {
+            return function () {
+
+                document.getElementById("formUpdateProduct").reset();
+
+
+                var nombre = document.getElementById("nameProduct2");
+                nombre.setAttribute("value", product.name);
+
+                var precio = document.getElementById("priceProduct2");
+                precio.setAttribute("value", product.price);
+
+                if (product.description !== undefined) {
+                    descripcionProduct2.innerHTML = product.description;
+                }
+
+                var buttonUpdateProductRepetido = document.getElementById("buttonUpdateProduct");
+
+                if (buttonUpdateProductRepetido !== null) {
+                    buttonUpdateProductRepetido.remove();
+                }
+                var formUpdateProduct = document.getElementById("formUpdateProduct");
+                var buttonUpdateProduct = document.createElement("button");
+                buttonUpdateProduct.setAttribute("id", "buttonUpdateProduct");
+                buttonUpdateProduct.setAttribute("class", "btn btn-block btn-classic");
+                buttonUpdateProduct.setAttribute("data-dismiss", "modal");
+                buttonUpdateProduct.appendChild(document.createTextNode("Modificar"));
+                formUpdateProduct.appendChild(buttonUpdateProduct);
+                buttonUpdateProduct.addEventListener("click", update(product, shop));
+            }
+        }
+
+        function update(product) {
+            return function () {
+                functionUpdateProduct(product, shop);
+            }
+        }
+
+        function createFunctionAddProduct(shop) {
+            return function () {
+                if (x === 0) {
+                    addProductInShop(shop);
+                }
+                x++;
+            }
+        }
+
+        function createFunctionRemoveProduct(product, shop) {
+            return function () {
+                removeProduct(product, shop);
+            }
         }
 
         function createFunctionShowShopDetailProduct(shop, product) {
@@ -638,7 +911,6 @@ function init() {
 
         while (category.done !== true) {
             productsCategory = almacen.getCategoryProduct(category.value);
-
             for (i = 0; i < productosTienda.length; i++) {
 
                 if (productsCategory.indexOf(productosTienda[i]) > -1 && categoriasTienda.indexOf(category.value) < 0) {
@@ -710,15 +982,26 @@ function init() {
         contenedorPrincipal.appendChild(divShopPopulate);
 
 
+        var buttonAddProduct = document.createElement("button");
+        buttonAddProduct.setAttribute("class", "btn btn-md loggin text-center");
+        buttonAddProduct.setAttribute("type", "button");
+        buttonAddProduct.setAttribute("data-toggle", "modal");
+        buttonAddProduct.setAttribute("data-target", "#addShop");
+        buttonAddProduct.appendChild(document.createTextNode("Añadir Producto "));
+        var spanAddProduct = document.createElement("span");
+        spanAddProduct.setAttribute("class", "glyphicon glyphicon-plus");
+        buttonAddProduct.appendChild(spanAddProduct);
+        divShopPopulate.appendChild(buttonAddProduct);
+
         var mainH2 = document.createElement("h2");
         mainH2.setAttribute("class", "text-center bold titulo");
         mainH2.appendChild(document.createTextNode("Tienda " + shop.name));
         divShopPopulate.appendChild(mainH2);
 
-
         var row = document.createElement("div");
         row.setAttribute("class", "row");
         divShopPopulate.appendChild(row);
+
 
         var j = 0;
         for (i = 0; i < productosTienda.length; i++) {
@@ -753,6 +1036,23 @@ function init() {
                 imgProducto.setAttribute("src", productosTienda[i].images[0]);
                 panelBodyProducto.appendChild(imgProducto);
 
+                var buttonUpdateProduct = document.createElement("button");
+                buttonUpdateProduct.setAttribute("class", "btn btn-success loggin pull-left");
+                buttonUpdateProduct.setAttribute("type", "button");
+                buttonUpdateProduct.setAttribute("data-toggle", "modal");
+                buttonUpdateProduct.setAttribute("data-target", "#updateProduct");
+                buttonUpdateProduct.appendChild(document.createTextNode("Modificar"));
+                panelBodyProducto.appendChild(buttonUpdateProduct);
+
+                var buttonRemoveProducto = document.createElement("button");
+                buttonRemoveProducto.setAttribute("class", "btn btn-danger loggin pull-right");
+                buttonRemoveProducto.setAttribute("type", "button");
+                buttonRemoveProducto.setAttribute("data-toggle", "modal");
+                buttonRemoveProducto.setAttribute("data-target", "#removeProduct");
+                buttonRemoveProducto.appendChild(document.createTextNode("Eliminar"));
+                panelBodyProducto.appendChild(buttonRemoveProducto);
+                buttonRemoveProducto.addEventListener("click", createFunctionRemoveProduct(productos[i], tienda, category));
+
                 var panelFooterProducto = document.createElement("div");
                 panelFooterProducto.setAttribute("class", "panel-footer");
                 panelProducto.appendChild(panelFooterProducto);
@@ -775,7 +1075,13 @@ function init() {
                 buttonDetalles.addEventListener("click", createFunctionShowShopDetailProduct(tienda, productosTienda[i]));
                 panelFooterProducto.appendChild(buttonDetalles);
             }
+            checkCookie();
+        }
 
+        function createFunctionRemoveProduct(product, shop) {
+            return function () {
+                removeProduct(product, shop, category);
+            }
         }
 
         function createFunctionShowShopDetailProduct(shop, product) {
@@ -955,6 +1261,12 @@ function init() {
         var globalProductPopulate = document.getElementById("globalProductPopulate");
         var menuCategoryShopPopulateRepetido = document.getElementById("menuCategoryShopPopulate");
         var returnShopProduct = document.getElementById("returnShopProduct");
+        var categoryPopulate = document.getElementById("categoryPopulate");
+
+        if (categoryPopulate !== null) {
+
+            categoryPopulate.remove();
+        }
 
 
         if (categorias !== null) {
@@ -998,21 +1310,20 @@ function init() {
         globalProductPopulate.appendChild(mainH2);
 
 
-        for (i = 1; i < categories.length; i++) {
+        for (i = 0; i < categories.length; i++) {
             categoryProducts = almacen.getCategoryProduct(categories[i]);
+            if (categoryProducts.length > 0) {
+                console.log("La categoria Global: " + categories[i].title);
 
-            console.log("La categoria Global: " + categories[i].title);
+                var nameCategory = document.createElement("h3");
+                nameCategory.setAttribute("class", "text-center bold titulo");
+                nameCategory.appendChild(document.createTextNode(categories[i].title));
+                globalProductPopulate.appendChild(nameCategory);
 
-
-            var nameCategory = document.createElement("h3");
-            nameCategory.setAttribute("class", "text-center bold titulo");
-            nameCategory.appendChild(document.createTextNode(categories[i].title));
-            globalProductPopulate.appendChild(nameCategory);
-
-            var row = document.createElement("div");
-            row.setAttribute("class", "row");
-            globalProductPopulate.appendChild(row);
-
+                var row = document.createElement("div");
+                row.setAttribute("class", "row");
+                globalProductPopulate.appendChild(row);
+            }
 
             for (j = 0; j < categoryProducts.length; j++) {
                 suma = 0;
@@ -1061,12 +1372,21 @@ function init() {
                         }
 
                         stock = almacen.getProductStock(product, tienda.value);
-                        suma += stock;
+                        suma += parseInt(stock);
                         var disponibilidadTienda = document.createElement("p");
-                        var textodisponibilidadTienda = document.createTextNode("En la tienda " + tienda.value.name + " tiene de stock " + stock);
+                        var textodisponibilidadTienda = document.createTextNode(tienda.value.name + " tiene de stock " + stock + " ");
                         disponibilidadTienda.appendChild(textodisponibilidadTienda);
                         panelBodyProducto.appendChild(disponibilidadTienda);
+                        var buttonStock = document.createElement("button");
+                        buttonStock.setAttribute("class", "btn btn-md loggin");
+                        buttonStock.setAttribute("data-toggle", "modal");
+                        buttonStock.setAttribute("data-target", "#updateGlobalProduct");
 
+                        var spanButtonStock = document.createElement("span");
+                        spanButtonStock.setAttribute("class", "glyphicon glyphicon-pencil");
+                        buttonStock.appendChild(spanButtonStock);
+                        disponibilidadTienda.appendChild(buttonStock);
+                        buttonStock.addEventListener("click", createFunctionUpdateGlobalProduct(product, tienda.value));
                     }
 
                     tienda = tiendas.next();
@@ -1082,8 +1402,453 @@ function init() {
                 panelFooterProducto.appendChild(stockTotal);
 
             }
+
         }
 
+
+        function createFunctionUpdateGlobalProduct(product, shop) {
+            return function () {
+
+                var formPanelBodyProducto = document.getElementById("formUpdateGlobalProduct");
+
+                var buttonUpdateGlobalProductRepetido = document.getElementById("buttonUpdateGlobalProduct");
+
+                if (buttonUpdateGlobalProductRepetido !== null) {
+                    buttonUpdateGlobalProductRepetido.remove();
+                }
+
+                var buttonUpdateGlobalProduct = document.createElement("button");
+                buttonUpdateGlobalProduct.setAttribute("id", "buttonUpdateGlobalProduct");
+                buttonUpdateGlobalProduct.setAttribute("class", "btn btn-block btn-classic");
+                buttonUpdateGlobalProduct.setAttribute("type", "button");
+                buttonUpdateGlobalProduct.setAttribute("data-dismiss", "modal");
+                buttonUpdateGlobalProduct.appendChild(document.createTextNode("Modificar"));
+                formPanelBodyProducto.appendChild(buttonUpdateGlobalProduct);
+                buttonUpdateGlobalProduct.addEventListener("click", update(product, shop));
+            }
+        }
+
+        function update(product, shop) {
+
+
+            return function () {
+                functionUpdateGlobalProduct(product, shop);
+            };
+
+        }
+
+        checkCookie();
+
+    }
+
+
+    function categoryPopulate() {
+        var initPopulate = document.getElementById("initPopulate");
+        initPopulate.style.display = "none";
+        var categoryPopulate = document.getElementById("categoryPopulate");
+        if (categoryPopulate !== null) {
+
+            categoryPopulate.remove();
+        }
+
+        var globalProductPopulate = document.getElementById("globalProductPopulate");
+
+        if (globalProductPopulate !== null) {
+            globalProductPopulate.remove();
+        }
+
+
+        var menuCategoryShopPopulateRepetido = document.getElementById("menuCategoryShopPopulate");
+
+        if (menuCategoryShopPopulateRepetido !== null) {
+
+            menuCategoryShopPopulateRepetido.parentElement.removeChild(menuCategoryShopPopulateRepetido);
+        }
+
+        var contenedorTiendas = document.getElementById("initPopulate");
+
+        contenedorTiendas.style.display = "none";
+
+        var j = 0;
+        var i;
+        var shopPopulateRepetido = document.getElementById("shopPopulate");
+        var detalleProducto = document.getElementById("detalleProducto");
+
+
+        if (shopPopulateRepetido !== null) {
+
+            contenedorPrincipal.removeChild(shopPopulateRepetido);
+        }
+
+        if (detalleProducto !== null) {
+
+            detalleProducto.remove();
+        }
+
+
+        var categorias = showCategories();
+
+        var divCategoryPopulate = document.createElement("div");
+        divCategoryPopulate.setAttribute("id", "categoryPopulate");
+        divCategoryPopulate.setAttribute("class", ".container-fluid");
+        contenedorPrincipal.appendChild(divCategoryPopulate);
+
+        var buttonAddCategory = document.createElement("button");
+        buttonAddCategory.setAttribute("class", "btn btn-md loggin text-center");
+        buttonAddCategory.setAttribute("type", "button");
+        buttonAddCategory.setAttribute("data-toggle", "modal");
+        buttonAddCategory.setAttribute("data-target", "#addCategory");
+        buttonAddCategory.appendChild(document.createTextNode("Añadir Categoria "));
+        var spanAddCategory = document.createElement("span");
+        spanAddCategory.setAttribute("class", "glyphicon glyphicon-plus");
+        buttonAddCategory.appendChild(spanAddCategory);
+        divCategoryPopulate.appendChild(buttonAddCategory);
+
+        var mainH2 = document.createElement("h2");
+        mainH2.setAttribute("class", "text-center bold titulo");
+        mainH2.appendChild(document.createTextNode("Categorías"));
+        divCategoryPopulate.appendChild(mainH2);
+
+
+        var row = document.createElement("div");
+        row.setAttribute("class", "row");
+        divCategoryPopulate.appendChild(row);
+
+        for (i = 0; i < categorias.length; i++) {
+
+            j++;
+
+            if (j > 4) {
+                j = 0;
+
+                row = document.createElement("div");
+                row.setAttribute("class", "row");
+                divCategoryPopulate.appendChild(row);
+
+            }
+
+            var categoria = document.createElement("div");
+            categoria.setAttribute("class", "col-md-3 col-sm-6 col-xs-12");
+            row.appendChild(categoria);
+
+            var panelCategoria = document.createElement("div");
+            panelCategoria.setAttribute("class", "panel panel-default text-center categoria");
+            categoria.appendChild(panelCategoria);
+
+
+            var panelBodyCategoria = document.createElement("div");
+            panelBodyCategoria.setAttribute("class", "panel-body");
+            panelCategoria.appendChild(panelBodyCategoria);
+
+            var h2 = document.createElement("h2");
+            h2.appendChild(document.createTextNode(categorias[i].title));
+            panelBodyCategoria.appendChild(h2);
+            panelCategoria.appendChild(panelBodyCategoria);
+
+
+            var descipcionCategoria = document.createElement("p");
+            descipcionCategoria.appendChild(document.createTextNode(categorias[i].description));
+            panelBodyCategoria.appendChild(descipcionCategoria);
+
+
+            var panelFooterCategoria = document.createElement("div");
+            panelFooterCategoria.setAttribute("class", "panel-footer loggin");
+            panelCategoria.appendChild(panelFooterCategoria);
+
+
+            var divFooterBotones = document.createElement("div");
+            divFooterBotones.setAttribute("id", "divFooterBotones");
+            panelFooterCategoria.appendChild(divFooterBotones);
+            if (categorias[i].title !== "Anonymous category") {
+                var buttonUpdateProduct = document.createElement("button");
+                buttonUpdateProduct.setAttribute("class", "btn btn-success loggin pull-left");
+                buttonUpdateProduct.setAttribute("type", "button");
+                buttonUpdateProduct.setAttribute("data-toggle", "modal");
+                buttonUpdateProduct.setAttribute("data-target", "#updateCategory");
+                buttonUpdateProduct.appendChild(document.createTextNode("Modificar"));
+                buttonUpdateProduct.addEventListener("click", createFunctionUpdateCategory(categorias[i]));
+
+                divFooterBotones.appendChild(buttonUpdateProduct);
+
+                var buttonRemoveCategory = document.createElement("button");
+                buttonRemoveCategory.setAttribute("class", "btn btn-danger loggin pull-right");
+                buttonRemoveCategory.setAttribute("type", "button");
+                buttonRemoveCategory.setAttribute("data-toggle", "modal");
+                buttonRemoveCategory.setAttribute("data-target", "#removeCategori");
+                buttonRemoveCategory.appendChild(document.createTextNode("Eliminar"));
+                divFooterBotones.appendChild(buttonRemoveCategory);
+                buttonRemoveCategory.addEventListener("click", createFunctionRemoveCategory(categorias[i]));
+
+            }
+
+            checkCookie();
+        }
+
+        function createFunctionUpdateCategory(category) {
+            return function () {
+
+                document.getElementById("formUpdateCategory").reset();
+
+
+                var nombre = document.getElementById("nameCategory2");
+                nombre.setAttribute("value", category.title);
+
+                if (category.description !== undefined) {
+                    descripcionCategory2.innerHTML = category.description;
+                }
+
+                var buttonUpdateCategoryRepetido = document.getElementById("buttonUpdateCategory");
+
+                if (buttonUpdateCategoryRepetido !== null) {
+                    buttonUpdateCategoryRepetido.remove();
+                }
+                var formUpdateCategory = document.getElementById("formUpdateCategory");
+                var buttonUpdateCategory = document.createElement("button");
+                buttonUpdateCategory.setAttribute("id", "buttonUpdateCategory");
+                buttonUpdateCategory.setAttribute("class", "btn btn-block btn-classic");
+                buttonUpdateCategory.setAttribute("data-dismiss", "modal");
+                buttonUpdateCategory.appendChild(document.createTextNode("Modificar"));
+                formUpdateCategory.appendChild(buttonUpdateCategory);
+                buttonUpdateCategory.addEventListener("click", update(category));
+            }
+        }
+
+        function update(category) {
+            return function () {
+                functionUpdateCategory(category);
+            }
+        }
+
+        function createFunctionRemoveCategory(category) {
+            return function () {
+                removeCategory(category);
+            }
+        }
+
+    }
+
+    function addShop() {
+
+        var cif = document.forms["formAddShop"]["cif"].value;
+        var nombre = document.forms["formAddShop"]["nameShop"].value;
+        var direccion = document.forms["formAddShop"]["addressShop"].value;
+        var telefono = document.forms["formAddShop"]["telfShop"].value;
+        var initPopulate1 = document.getElementById("initPopulate");
+
+        if (cif.length > 0 && nombre.length > 0) {
+            var tienda = new Shop(cif, nombre);
+            tienda.address = direccion;
+            tienda.telf = telefono;
+            almacen.addShop(tienda);
+        }
+        initPopulate1.remove();
+        initPopulate();
+        checkCookie();
+    }
+
+    function removeShop(shop) {
+        var initPopulate1 = document.getElementById("initPopulate");
+
+        almacen.removeShop(shop);
+
+        initPopulate1.remove();
+        initPopulate();
+        checkCookie();
+
+
+    }
+
+    function functionUpdateShop(shop) {
+
+        var nombre = document.forms["formUpdateShop"]["nameShop2"].value;
+        var direccion = document.forms["formUpdateShop"]["addressShop2"].value;
+        var telefono = document.forms["formUpdateShop"]["telfShop2"].value;
+        var initPopulate1 = document.getElementById("initPopulate");
+
+        if (nombre.length > 0) {
+            shop.name = nombre;
+            shop.address = direccion;
+            shop.telf = telefono;
+
+            initPopulate1.remove();
+            initPopulate();
+            checkCookie();
+        }
+
+
+    }
+
+
+    function addCategory() {
+
+        var nombre = document.forms["formAddCategory"]["nameCategory"].value;
+        var descripcion = document.forms["formAddCategory"]["descripcionCategory"].value;
+
+
+        if (nombre.length > 0) {
+            var category = new Category(nombre);
+            category.description = descripcion;
+
+            almacen.addCategory(category);
+        }
+        categoryPopulate();
+        checkCookie();
+    }
+
+
+    function removeCategory(category) {
+
+        almacen.removeCategory(category);
+
+        categoryPopulate();
+        checkCookie();
+    }
+
+
+    function functionUpdateCategory(category) {
+
+        var nombre = document.forms["formUpdateCategory"]["nameCategory2"].value;
+        var descripcion = document.forms["formUpdateCategory"]["descripcionCategory2"].value;
+
+        if (nombre.length > 0) {
+            category.title = nombre;
+            category.description = descripcion;
+
+            categoryPopulate();
+            checkCookie();
+        }
+
+    }
+
+
+    function removeProduct(product, shop, category) {
+
+
+        almacen.removeShopProduct(product, shop);
+
+        if (!category) {
+            shopPopulate(shop);
+        } else {
+            productsCategoryShopPopulate(shop, category);
+        }
+
+        shopPopulate(shop);
+        checkCookie();
+    }
+
+    function addProductERP() {
+
+
+        var serialNumber = document.forms["formAddProductERP"]["serialNumber"].value;
+        var name = document.forms["formAddProductERP"]["name"].value;
+        var price = document.forms["formAddProductERP"]["price"].value;
+        var category = document.forms["formAddProductERP"]["selectCategoryProduct"].value;
+        var descripcionProduct = document.forms["formAddProductERP"]["descripcionProduct"].value;
+        var categories = showCategories();
+        var i = 0;
+        var j;
+        var initPopulate1 = document.getElementById("initPopulate");
+        initPopulate1.remove();
+
+        if (serialNumber.length > 0 && name.length > 0 && price.length > 0) {
+
+            var product = new DefaultProduct(serialNumber, name, price);
+
+            product.description = descripcionProduct;
+
+            while (i < categories.length) {
+
+                if (categories[i].title === category) {
+                    category = categories[i];
+                    almacen.addProduct(product, category);
+                }
+
+                i++;
+            }
+        }
+
+        var optionDinamico = document.getElementsByClassName("optionDinamico");
+        var size = optionDinamico.length;
+        for (j = 0; j < size; j++) {
+            optionDinamico[j].style.display = "none";
+        }
+
+        initPopulate();
+        checkCookie();
+    }
+
+
+    function addProductInShop(shop) {
+
+        var product = document.forms["formAddProductShop"]["selectProduct"].value;
+        var stock = document.forms["formAddProductShop"]["stock"].value;
+        var products;
+        var i;
+        var j;
+        var categories = showCategories();
+
+        for (j = 0; j < categories.length; j++) {
+
+            products = almacen.getCategoryProduct(categories[j]);
+            console.log("La categoria es: " + categories[j].title);
+            for (i = 0; i < products.length; i++) {
+
+                if (products[i].serialNumber === product) {
+                    almacen.addProductInShop(products[i], shop, stock);
+                }
+
+            }
+
+        }
+
+        shopPopulate(shop);
+        checkCookie();
+    }
+
+    function functionUpdateProduct(product, shop) {
+
+        var nombre = document.forms["formUpdateProduct"]["nameProduct2"].value;
+        var precio = document.forms["formUpdateProduct"]["priceProduct2"].value;
+        var descripcion = document.forms["formUpdateProduct"]["descripcionProduct2"].value;
+
+        if (nombre.length > 0 && precio > 0) {
+            product.name = nombre;
+            product.price = precio;
+            product.description = descripcion;
+
+            shopPopulate(shop);
+            checkCookie();
+        }
+
+    }
+
+    function functionUpdateGlobalProduct(product, shop) {
+
+        var number = document.forms["formUpdateGlobalProduct"]["stockGlobalProduct"].value;
+
+        if (number > 0) {
+            almacen.changeProductStock(product, shop, number);
+        }
+
+
+        globalProductPopulate();
+
+    }
+
+    function functionUpdateProduct(product, shop) {
+
+        var nombre = document.forms["formUpdateProduct"]["nameProduct2"].value;
+        var precio = document.forms["formUpdateProduct"]["priceProduct2"].value;
+        var descripcion = document.forms["formUpdateProduct"]["descripcionProduct2"].value;
+
+        if (nombre.length > 0 && precio > 0) {
+            product.name = nombre;
+            product.price = precio;
+            product.description = descripcion;
+
+            shopPopulate(shop);
+            checkCookie();
+        }
     }
 
 
@@ -1198,9 +1963,18 @@ function init() {
     almacen.addProductInShop(portatil1, tienda3, 25);
     almacen.addProductInShop(portatil2, tienda3, 28);
 
+    var buttonAddShop = document.getElementById("buttonAddShop");
+    buttonAddShop.addEventListener("click", addShop);
+
+    var buttonAddCategory = document.getElementById("buttonAddCategory");
+    buttonAddCategory.addEventListener("click", addCategory);
+
+    var buttonAddProductERP = document.getElementById("buttonAddProductERP");
+    buttonAddProductERP.addEventListener("click", addProductERP);
+
     initPopulate();
     shopsMenusPopulate();
-
+    checkCookie();
 }
 
 window.onload = init;
