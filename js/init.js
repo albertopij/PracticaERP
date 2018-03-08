@@ -1,6 +1,10 @@
 "use strict";
 
 var almacen2;
+const DB_NAME = 'UT07Indexed_erp';
+const DB_VERSION = 1;
+const DB_STORE_NAME1 = 'categories';
+const DB_STORE_NAME2 = 'shops';
 
 
 function init() {
@@ -9,6 +13,9 @@ function init() {
     var etiquetaNav = document.getElementsByTagName("nav");
     var ventana;
     var ventanas = [];
+    var tiendasObjectStore = [];
+    var categoriasObjectStore = [];
+
 
     function showCategories() {
         var categorias = [];
@@ -16,7 +23,7 @@ function init() {
         var categories = almacen.categories;
         var category = categories.next();
         while (category.done !== true) {
-            console.log("Category: " + category.value.title);
+            console.log("Category: " + category.value.description);
             categorias.push(category.value);
             category = categories.next();
         }
@@ -25,15 +32,17 @@ function init() {
     }
 
     function showShops() {
-
+        var tiendas = [];
         console.log("Recorremos las tiendas.");
         var shops = almacen.shops;
         var shop = shops.next();
         while (shop.done !== true) {
             console.log("Shop: " + shop.value.name);
-
+            tiendas.push(shop.value);
             shop = shops.next();
         }
+
+        return tiendas;
     }
 
     function showAllProductsShops(product) {
@@ -391,6 +400,7 @@ function init() {
         function createFunctionShowShop(shop) {
             return function () {
                 shopPopulate(shop);
+                checkCookie();
             }
         }
 
@@ -1316,7 +1326,7 @@ function init() {
 
     function globalProductPopulate() {
 
-        var categories = showCategories();
+
         var categoryProducts;
         var tiendas;
         var tienda;
@@ -1335,6 +1345,8 @@ function init() {
         var menuCategoryShopPopulateRepetido = document.getElementById("menuCategoryShopPopulate");
         var returnShopProduct = document.getElementById("returnShopProduct");
         var categoryPopulate = document.getElementById("categoryPopulate");
+        var categories = showCategories();
+
 
         if (categoryPopulate !== null) {
 
@@ -1710,17 +1722,24 @@ function init() {
         var telefono = document.forms["formAddShop"]["telfShop"].value;
         var initPopulate1 = document.getElementById("initPopulate");
 
+
         if (cif.length > 0 && nombre.length > 0) {
             var tienda = new Shop(cif, nombre);
             tienda.image = imagen;
             tienda.address = direccion;
             tienda.telf = telefono;
             almacen.addShop(tienda);
-        }
-        var form = document.getElementById("formAddShop");
-        if (form !== null) {
-            window.alert("entra");
-            document.getElementById("formAddShop").reset();
+
+            tiendasObjectStore.push({
+                shop: tienda.getObject(),
+                products: [],
+                stocks: []
+            });
+
+            var shopsObjectStore = db.transaction(DB_STORE_NAME2, "readwrite").objectStore(DB_STORE_NAME2);
+
+            shopsObjectStore.add(tiendasObjectStore[tiendasObjectStore.length - 1]);
+
         }
         initPopulate1.remove();
         initPopulate();
@@ -1732,6 +1751,20 @@ function init() {
 
         almacen.removeShop(shop);
 
+        var request = db.transaction([DB_STORE_NAME2], "readwrite")
+            .objectStore(DB_STORE_NAME2)
+            .delete(shop.cif);
+
+        request.onsuccess = function (event) {
+            alert("Objeto borrado");
+            // It's gone!
+        };
+
+        request.onerror = function (event) {
+            alert("Problemas al borrar: " + event.target.error);
+            // It's gone!
+        };
+
         initPopulate1.remove();
         initPopulate();
         checkCookie();
@@ -1740,7 +1773,6 @@ function init() {
     }
 
     function functionUpdateShop(shop) {
-
 
         var nombre = document.forms["formUpdateShop"]["nameShop2"].value;
         var imagen = document.forms["formUpdateShop"]["imageShop2"].value;
@@ -1754,6 +1786,34 @@ function init() {
             shop.address = direccion;
             shop.telf = telefono;
 
+            var objectStore = db.transaction([DB_STORE_NAME2], "readwrite").objectStore(DB_STORE_NAME2);
+            var request = objectStore.get(shop.cif);
+            request.onerror = function (event) {
+                // Handle errors!
+            };
+            request.onsuccess = function (event) {
+                // Get the old value that we want to update
+                var data = request.result;
+
+                // update the value(s) in the object that you want to change
+                data.shop.name = nombre;
+                data.shop.image = imagen;
+                data.shop.address = direccion;
+                data.shop.telf = telefono;
+
+                // Put this updated object back into the database.
+                var requestUpdate = objectStore.put(data);
+                requestUpdate.onerror = function (event) {
+                    alert("Fallo al actualizar");
+
+                };
+                requestUpdate.onsuccess = function (event) {
+                    alert("Actualizado correctamente");
+
+                };
+            };
+
+
             initPopulate1.remove();
             initPopulate();
             checkCookie();
@@ -1765,15 +1825,25 @@ function init() {
 
     function addCategory() {
 
+        var id = document.forms["formAddCategory"]["idCategory"].value;
         var nombre = document.forms["formAddCategory"]["nameCategory"].value;
         var descripcion = document.forms["formAddCategory"]["descripcionCategory"].value;
 
 
-        if (nombre.length > 0) {
-            var category = new Category(nombre);
+        if (id > 0 && nombre.length > 0) {
+            var category = new Category(id, nombre);
             category.description = descripcion;
 
             almacen.addCategory(category);
+            categoriasObjectStore.push({
+                category: category.getObject(),
+                products: []
+            });
+
+            var categoriesObjectStore = db.transaction(DB_STORE_NAME1, "readwrite").objectStore(DB_STORE_NAME1);
+
+            categoriesObjectStore.add(categoriasObjectStore[categoriasObjectStore.length - 1]);
+
         }
         categoryPopulate();
         checkCookie();
@@ -1783,6 +1853,20 @@ function init() {
     function removeCategory(category) {
 
         almacen.removeCategory(category);
+
+        var request = db.transaction([DB_STORE_NAME1], "readwrite")
+            .objectStore(DB_STORE_NAME1)
+            .delete(category.title);
+
+        request.onsuccess = function (event) {
+            alert("Categoria borrada");
+            // It's gone!
+        };
+
+        request.onerror = function (event) {
+            alert("Problemas al borrar categoria: " + event.target.error);
+            // It's gone!
+        };
 
         categoryPopulate();
         checkCookie();
@@ -1794,9 +1878,38 @@ function init() {
         var nombre = document.forms["formUpdateCategory"]["nameCategory2"].value;
         var descripcion = document.forms["formUpdateCategory"]["descripcionCategory2"].value;
 
+
+        alert(category.title);
+
         if (nombre.length > 0) {
             category.title = nombre;
             category.description = descripcion;
+
+            var objectStore = db.transaction([DB_STORE_NAME1], "readwrite").objectStore(DB_STORE_NAME1);
+            var request = objectStore.get(category.id);
+            request.onerror = function (event) {
+                // Handle errors!
+            };
+            request.onsuccess = function (event) {
+                // Get the old value that we want to update
+                var data = request.result;
+
+                // update the value(s) in the object that you want to change
+                data.category.title = nombre;
+                data.category.description = descripcion;
+
+
+                // Put this updated object back into the database.
+                var requestUpdate = objectStore.put(data);
+                requestUpdate.onerror = function (event) {
+                    alert("Fallo al actualizar");
+
+                };
+                requestUpdate.onsuccess = function (event) {
+                    alert("Actualizado correctamente");
+
+                };
+            };
 
             categoryPopulate();
             checkCookie();
@@ -1807,6 +1920,43 @@ function init() {
 
     function removeProduct(product, shop, category) {
 
+        var productosInERPShop = showProductShop1(almacen.getShopProduct(shop), shop);
+
+
+        function checkProduct(productERP) {
+            return productERP.serialNumber == product.serialNumber;
+        }
+
+
+        var productPosition = productosInERPShop.findIndex(checkProduct);
+
+
+        var objectStore = db.transaction([DB_STORE_NAME2], "readwrite").objectStore(DB_STORE_NAME2);
+        var request = objectStore.get(shop.cif);
+        request.onerror = function (event) {
+            // Handle errors!
+        };
+        request.onsuccess = function (event) {
+            // Get the old value that we want to update
+            var data = request.result;
+
+            // update the value(s) in the object that you want to change
+
+            data.products.splice(productPosition, 1);
+            data.stocks.splice(productPosition, 1);
+
+            // Put this updated object back into the database.
+            var requestUpdate = objectStore.put(data);
+            requestUpdate.onerror = function (event) {
+                alert("eliminado al actualizar");
+
+            };
+            requestUpdate.onsuccess = function (event) {
+                alert("eliminado correctamente");
+
+            };
+        };
+
 
         almacen.removeShopProduct(product, shop);
 
@@ -1816,7 +1966,7 @@ function init() {
             productsCategoryShopPopulate(shop, category);
         }
 
-        shopPopulate(shop);
+
         checkCookie();
     }
 
@@ -1851,6 +2001,32 @@ function init() {
                 if (categories[i].title === category) {
                     category = categories[i];
                     almacen.addProduct(product, category);
+
+
+                    var objectStore = db.transaction([DB_STORE_NAME1], "readwrite").objectStore(DB_STORE_NAME1);
+                    var request = objectStore.get(category.id);
+                    request.onerror = function (event) {
+                        // Handle errors!
+                    };
+                    request.onsuccess = function (event) {
+                        // Get the old value that we want to update
+                        var data = request.result;
+
+                        // update the value(s) in the object that you want to change
+                        data.products[data.products.length - 1] = product.getObject();
+
+
+                        // Put this updated object back into the database.
+                        var requestUpdate = objectStore.put(data);
+                        requestUpdate.onerror = function (event) {
+                            alert("Fallo al añadir al erp");
+
+                        };
+                        requestUpdate.onsuccess = function (event) {
+                            alert("añadido al erp correctamente");
+
+                        };
+                    }
                 }
 
                 i++;
@@ -1885,6 +2061,34 @@ function init() {
 
                 if (products[i].serialNumber === product) {
                     almacen.addProductInShop(products[i], shop, stock);
+                    var productoInsertar = products[i];
+
+                    var objectStore = db.transaction([DB_STORE_NAME2], "readwrite").objectStore(DB_STORE_NAME2);
+                    var request = objectStore.get(shop.cif);
+                    request.onerror = function (event) {
+                        alert("hay error");
+                    };
+                    request.onsuccess = function (event) {
+                        // Get the old value that we want to update
+                        var data = request.result;
+
+                        // update the value(s) in the object that you want to change
+                        data.products.push(productoInsertar.getObject());
+                        data.stocks.push(stock);
+
+
+                        // Put this updated object back into the database.
+                        var requestUpdate = objectStore.put(data);
+                        requestUpdate.onerror = function (event) {
+                            alert("Fallo al añadir a la tienda");
+
+                        };
+                        requestUpdate.onsuccess = function (event) {
+                            alert("añadido a la tienda correctamente");
+
+                        };
+                    }
+
                 }
 
             }
@@ -1894,6 +2098,116 @@ function init() {
         shopPopulate(shop);
         checkCookie();
     }
+
+
+    function UpdateProductBBDD(product) {
+        var categorias = showCategories();
+
+
+        for (var i = 0; i < categorias.length; i++) {
+
+            var products = almacen.getCategoryProduct(categorias[i]);
+            for (var j = 0; j < products.length; j++) {
+
+                if (products[j].serialNumber === product.serialNumber) {
+                    var posicionProducto = j;
+                    var objectStore1 = db.transaction([DB_STORE_NAME1], "readwrite").objectStore(DB_STORE_NAME1);
+                    var request1 = objectStore1.get(categorias[i].id);
+                    request1.onerror = function (event) {
+                        // Handle errors!
+                    };
+                    request1.onsuccess = function (event) {
+                        // Get the old value that we want to update
+                        var data = request1.result;
+
+                        // update the value(s) in the object that you want to change
+                        alert("la j es: " + posicionProducto);
+                        data.products[posicionProducto] = product.getObject();
+
+                        // Put this updated object back into the database.
+                        var requestUpdate = objectStore1.put(data);
+                        requestUpdate.onerror = function (event) {
+                            alert("Fallo al actualizar");
+
+                        };
+                        requestUpdate.onsuccess = function (event) {
+                            alert("Actualizado correctamente");
+
+                        };
+
+                    };
+                }
+            }
+
+        }
+
+
+        var objectStore = db.transaction([DB_STORE_NAME2], "readwrite").objectStore(DB_STORE_NAME2);
+
+
+        objectStore.openCursor().onsuccess = function (event) {
+            var cursor = event.target.result;
+            if (cursor) {
+                alert("Name for title " + cursor.key + " is " + cursor.value.shop.cif);
+
+                var request = objectStore.get(cursor.value.shop.cif);
+
+                request.onsuccess = function (event) {
+
+                    var shop = new Shop(request.result.shop.cif, request.result.shop.name);
+                    var productInShop = request.result.products;
+                    var stockInShop = request.result.stocks;
+
+
+                    shop.address = request.result.shop.address;
+                    shop.telf = request.result.shop.telf;
+                    shop.image = request.result.shop.image;
+                    // shop.coords = cursor.value.coords;
+
+                    var products = showProductShop1(almacen.getShopProduct(shop), shop);
+                    alert("tamaño de productos es: " + products.length);
+                    for (var j = 0; j < products.length; j++) {
+
+                        if (products[j].serialNumber === product.serialNumber) {
+
+                            alert("entra en el serial number " + products[j].serialNumber);
+                            var posicionProducto = j;
+                            request.onerror = function (event) {
+                                alert("hay error claro que si");
+                            };
+
+                            alert("No hay error que guay");
+                            // Get the old value that we want to update
+                            var data = request.result;
+
+                            // update the value(s) in the object that you want to change
+                            alert("la j tienda es: " + posicionProducto);
+                            data.products[posicionProducto] = product.getObject();
+
+                            // Put this updated object back into the database.
+                            var requestUpdate = objectStore.put(data);
+                            requestUpdate.onerror = function (event) {
+                                alert("Fallo al actualizar!!!!");
+
+                            };
+                            requestUpdate.onsuccess = function (event) {
+                                alert("Actualizado correctamente!!!!");
+
+                            };
+
+                        }
+                    }
+
+                };
+                cursor.continue();
+            }
+            else {
+                alert("No more entries!");
+            }
+
+        };
+    }
+
 
     function functionUpdateProduct(product, shop) {
 
@@ -1905,6 +2219,7 @@ function init() {
 
         if (nombre.length > 0 && precio > 0) {
 
+
             if (imagen.length === 0) {
                 imagen = "img/noProductImage.jpg";
             }
@@ -1914,17 +2229,57 @@ function init() {
             product.images[0] = imagen;
             product.description = descripcion;
 
+
+            UpdateProductBBDD(product);
             shopPopulate(shop);
             checkCookie();
         }
-
     }
 
     function functionUpdateGlobalProduct(product, shop) {
 
         var number = document.forms["formUpdateGlobalProduct"]["stockGlobalProduct"].value;
+        var productosInERPShop = showProductShop1(almacen.getShopProduct(shop), shop);
+
+
+        function checkProduct(productERP) {
+            return productERP.serialNumber == product.serialNumber;
+        }
+
 
         if (number > 0) {
+
+
+            var productPosition = productosInERPShop.findIndex(checkProduct);
+
+
+            var objectStore = db.transaction([DB_STORE_NAME2], "readwrite").objectStore(DB_STORE_NAME2);
+            var request = objectStore.get(shop.cif);
+            request.onerror = function (event) {
+                // Handle errors!
+            };
+            request.onsuccess = function (event) {
+                // Get the old value that we want to update
+                var data = request.result;
+
+                // update the value(s) in the object that you want to change
+
+
+                data.stocks[productPosition] = parseInt(number);
+
+                // Put this updated object back into the database.
+                var requestUpdate = objectStore.put(data);
+                requestUpdate.onerror = function (event) {
+                    alert("fallo al actualizar stock");
+
+                };
+                requestUpdate.onsuccess = function (event) {
+                    alert("Stock actualizado correctamente");
+
+                };
+            };
+
+
             almacen.changeProductStock(product, shop, number);
         }
 
@@ -1934,120 +2289,11 @@ function init() {
     }
 
 
-//Creamos categorias
-
-    var telefonos = new Category("Telefonos");
-    telefonos.description = "Descripción categoría Telefonos";
-    var televisiones = new Category("Televisiones");
-    televisiones.description = "Descripción categoría Televisiones";
-    var portatiles = new Category("Portatiles");
-    portatiles.description = "Descripción categoría Portatiles";
-    var ropa = new Category("Ropa");
-    ropa.description = "Descripción categoría Ropa";
-
-
-// Creamos productos
-
-
-    var movil1 = new Smartphone("1", "Apple iPhone X 256GB Plata Libre", "1299");
-    movil1.images = ["img/iphone-x.jpg", "img/iphone-x2.jpg", "img/iphone-x3.jpg", "img/iphone-x4.jpg"];
-    movil1.description = "La pantalla del iPhone X tiene esquinas redondeadas que rematan el diseño curvo del teléfono, y esas esquinas se encuentran dentro de un rectángulo estándar. Si se mide el rectángulo estándar, la pantalla tiene 5,85 pulgadas en diagonal (la superficie real de visión es inferior).";
-
-    var movil2 = new Smartphone("2", "Samsung Galaxy S8 4G 64GB Plata Libre", "699");
-    movil2.images = ["img/samsung-s8.jpg", "img/samsung-s82.jpg", "img/samsung-s83.jpg", "img/samsung-s84.jpg"];
-    movil2.description = "¡Da la bienvenida a la pantalla infinita! El revolucionario diseño de Galaxy S8 y S8+ comienza desde su interior. Se ha redefinido cada componente del Smartphone para romper con los límites de su pantalla, despidiéndonos de los marcos. Así todo lo que verás será contenido y nada más. Disfruta de la pantalla más grande e inmersiva fabricada para un dispositivo móvil que podrás sostener con una sola mano. Galaxy S8 y S8+ te liberan de los confines de los marcos, ofreciéndote una superficie lisa e ininterrumpida que fluye sobre sus bordes. "
-
-    var movil3 = new Smartphone("7", "LG G6 32GB Plata Libre", "439");
-    movil3.images = ["img/lg-g6.jpg", "img/lg-g62.jpg", "img/lg-g63.jpg", "img/lg-g64.jpg"];
-    movil3.description = "El LG G6 tiene un diseño refinado resistente al agua y una pantalla casi sin bordes que lo hacen relativamente compacto a pesar de ser de 5.7 pulgadas. La combinación de cámaras es un placer de usar y es algo difícil de encontrar en el mercado; tiene ranura microSD y su desempeño muy bueno.";
-
-    var tele1 = new TV("3", "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo", "1799");
-    tele1.images = ["img/samsung-curve.jpg", "img/samsung-curve2.jpg", "img/samsung-curve3.jpg", "img/samsung-curve4.jpg"];
-    tele1.description = "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.";
-
-    var tele2 = new TV("4", "LG 55SJ950V 55\" UltraHD 4K", "1649");
-    tele2.images = ["img/lg-4k.jpg", "img/lg-4k2.jpg", "img/lg-4k3.jpg", "img/lg-4k4.jpg"];
-    tele2.description = "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.";
-
-    var tele3 = new TV("8", "Sony KD49XE9005 49\" LED UltraHD 4K", "1019");
-    tele3.images = ["img/sony-tv.jpg", "img/sony-tv2.jpg", "img/sony-tv3.jpg", "img/sony-tv4.jpg"];
-    tele3.description = "La realidad con un contraste excepcional Preciosas vistas nocturna con luces brillantes y negros profundos. Con hasta 5 veces 2 el contraste de un TV LED convencional, las escenas oscuras son más oscuras y las brillantes aún más brillantes.";
-    var portatil1 = new Laptop("5", "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil", "889");
-    portatil1.images = ["img/yoga.jpg", "img/yoga2.jpg", "img/yoga3.jpg", "img/yoga4.jpg", "img/yoga5.jpg"];
-    portatil1.description = "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.";
-
-
-    var portatil2 = new Laptop("6", "Apple MacBook Pro Retina Display Intel i7/16GB/256GB/15.4\"", "1999");
-    portatil2.images = ["img/mac-pro.jpg", "img/mac-pro2.jpg", "img/mac-pro3.jpg", "img/mac-pro4.jpg"];
-    portatil2.description = "El MacBook Pro con pantalla Retina sorprende porque es asombrosamente fino y ligero. Pero lo increíble de verdad es que un portátil así sea, además, tan y tan potente. Conseguir semejante rendimiento en un diseño como este no ha sido fácil. En absoluto. Cada milímetro está fabricado y montado con la máxima precisión. Y al diseñarlo hemos tenido que tomar decisiones arriesgadas. Un ejemplo: hemos sustituido viejas tecnologías como el disco duro giratorio y las unidades de disco óptico, que tanto ocupan, por opciones de alto rendimiento como el almacenamiento flash. ¿Por qué? Porque es mucho más rápido y fiable y ocupa hasta un 90% menos. Con todo esto, no es extraño que el MacBook Pro sea tan versátil y cómodo de llevar.";
-
-
-//Creamos Tiendas
-
-    var tienda1 = new Shop("1", "MediaMarkt");
-    tienda1.image = "img/MediaMarkt.jpg";
-    var tienda2 = new Shop("2", "Worten");
-    tienda2.image = "img/Worten.jpg";
-    var tienda3 = new Shop("3", "PcComponentes");
-    tienda3.image = "img/PcComponentes.jpg";
-
     console.log("##### Testeo StoreHouse. ##### ");
     var almacen = StoreHouse.getInstance();
     almacen.name = "Almacen de prueba";
     console.log("Instancia StoreHouse: " + almacen.name);
     console.log("");
-    console.log("####################################################################");
-    console.log("añadimos las categorias Telefonos,televisiones,portatiles y ropa");
-    console.log(almacen.addCategory(telefonos));
-    console.log(almacen.addCategory(televisiones));
-    console.log(almacen.addCategory(portatiles));
-
-    almacen.addProduct(movil1, telefonos);
-    almacen.addProduct(movil2, telefonos);
-    almacen.addProduct(movil3, telefonos);
-    almacen.addProduct(tele1, televisiones);
-    almacen.addProduct(tele2, televisiones);
-    almacen.addProduct(tele3, televisiones);
-    almacen.addProduct(portatil1, portatiles);
-    almacen.addProduct(portatil2, portatiles);
-    almacen.defaultShop.image = "img/defaultShop.jpg";
-
-
-    almacen.addShop(tienda1);
-    almacen.addShop(tienda2);
-    almacen.addShop(tienda3);
-
-
-    almacen.addProductInShop(movil1, almacen.defaultShop, 55);
-    almacen.addProductInShop(movil2, almacen.defaultShop, 44);
-    almacen.addProductInShop(movil3, almacen.defaultShop, 28);
-    almacen.addProductInShop(tele1, almacen.defaultShop, 70);
-    almacen.addProductInShop(tele2, almacen.defaultShop, 42);
-    almacen.addProductInShop(tele3, almacen.defaultShop, 77);
-    almacen.addProductInShop(portatil1, almacen.defaultShop, 14);
-    almacen.addProductInShop(portatil2, almacen.defaultShop, 20);
-
-    almacen.addProductInShop(movil1, tienda1, 20);
-    almacen.addProductInShop(tele1, tienda1, 40);
-    almacen.addProductInShop(tele2, tienda1, 30);
-    almacen.addProductInShop(portatil1, tienda1, 18);
-
-    almacen.addProductInShop(movil1, tienda2, 50);
-    almacen.addProductInShop(movil2, tienda2, 24);
-    almacen.addProductInShop(tele1, tienda2, 70);
-    almacen.addProductInShop(tele2, tienda2, 40);
-    almacen.addProductInShop(portatil1, tienda2, 10);
-    almacen.addProductInShop(portatil2, tienda2, 15);
-
-
-    almacen.addProductInShop(movil1, tienda3, 26);
-    almacen.addProductInShop(movil2, tienda3, 40);
-    almacen.addProductInShop(movil3, tienda3, 59);
-    almacen.addProductInShop(tele1, tienda3, 49);
-    almacen.addProductInShop(tele2, tienda3, 22);
-    almacen.addProductInShop(tele3, tienda3, 47);
-    almacen.addProductInShop(portatil1, tienda3, 25);
-    almacen.addProductInShop(portatil2, tienda3, 28);
 
     var buttonAddShop = document.getElementById("buttonAddShop");
     buttonAddShop.addEventListener("click", addShop);
@@ -2058,9 +2304,334 @@ function init() {
     var buttonAddProductERP = document.getElementById("buttonAddProductERP");
     buttonAddProductERP.addEventListener("click", addProductERP);
 
-    initPopulate();
-    shopsMenusPopulate();
-    checkCookie();
+
+    var db;
+    var request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onerror = function (event) {
+        document.getElementById("error").appendChild(document.createTextNode("Error en la solicitud: " + event.target.error + "<br/>"));
+    };
+
+    request.onsuccess = function (event) {
+
+        // I get a DB to use it in my students form.
+        db = event.target.result;
+        db.onerror = function (event) {
+            alert("No entra2");
+            // Generic error handler for all errors targeted at this database's
+            // requests!
+            document.getElementById("error").appendChild(document.createTextNode("Error en el acceso a la base de datos: " + event.target.error + "<br/>"));
+        };
+
+        var objectStore = db.transaction(DB_STORE_NAME1).objectStore(DB_STORE_NAME1);
+
+        objectStore.openCursor().onsuccess = function (event) {
+            var cursor = event.target.result;
+            if (cursor) {
+                alert("Name for title " + cursor.key + " is " + cursor.value.category.id);
+
+                var request = objectStore.get(cursor.value.category.id);
+
+                request.onsuccess = function (event) {
+                    var category = new Category(request.result.category.id, request.result.category.title);
+                    category.description = request.result.category.description;
+                    var productInCategory = request.result.products;
+
+
+                    var categoryPosition = almacen.getCategoryPosition(category);
+
+                    if (categoryPosition === -1) {
+                        almacen.addCategory(category);
+
+                        for (var i = 0; i < productInCategory.length; i++) {
+
+                            var product = new DefaultProduct(productInCategory[i].serialNumber, productInCategory[i].name, productInCategory[i].price);
+
+                            product.description = productInCategory[i].description;
+                            product.tax = productInCategory[i].tax;
+                            product.images = productInCategory[i].images;
+
+
+                            almacen.addProduct(product, category);
+
+                        }
+                    }
+
+                };
+                cursor.continue();
+            }
+            else {
+                alert("No more entries!");
+            }
+
+        };
+
+        var objectStore1 = db.transaction(DB_STORE_NAME2).objectStore(DB_STORE_NAME2);
+
+        objectStore1.openCursor().onsuccess = function (event) {
+            var cursor = event.target.result;
+            if (cursor) {
+                alert("Name for nif " + cursor.key + " is " + cursor.value.shop.cif);
+
+                var request = objectStore1.get(cursor.value.shop.cif);
+
+                request.onsuccess = function (event) {
+                    var shop = new Shop(request.result.shop.cif, request.result.shop.name);
+                    var productInShop = request.result.products;
+                    var stockInShop = request.result.stocks;
+
+
+                    shop.address = request.result.shop.address;
+                    shop.telf = request.result.shop.telf;
+                    shop.image = request.result.shop.image;
+                    // shop.coords = cursor.value.coords;
+
+
+                    var shopPosition = almacen.getShopPosition(shop);
+
+                    if (shopPosition === -1) {
+                        almacen.addShop(shop);
+
+                        for (var i = 0; i < productInShop.length; i++) {
+
+                            var product = new DefaultProduct(productInShop[i].serialNumber, productInShop[i].name, productInShop[i].price);
+                            product.description = productInShop[i].description;
+                            product.tax = productInShop[i].tax;
+                            product.images = productInShop[i].images;
+
+                            almacen.addProductInShop(product, shop, stockInShop[i]);
+                        }
+                    } else if (shopPosition === 0) {
+                        var productosInERPShop = showProductShop1(almacen.getShopProduct(shop), shop);
+                        if (productosInERPShop.length === 0) {
+                            for (var i = 0; i < productInShop.length; i++) {
+
+                                var product = new DefaultProduct(productInShop[i].serialNumber, productInShop[i].name, productInShop[i].price);
+                                product.description = productInShop[i].description;
+                                product.tax = productInShop[i].tax;
+                                product.images = productInShop[i].images;
+
+                                alert("este producto no está");
+                                almacen.addProductInShop(product, shop, stockInShop[i]);
+
+                            }
+                        }
+                    }
+
+                };
+
+                cursor.continue();
+            }
+            else {
+                alert("No more entries!");
+                initPopulate();
+                shopsMenusPopulate();
+                checkCookie();
+            }
+        };
+    };
+
+    request.onupgradeneeded = function (event) {
+
+        db = event.target.result;
+        console.log("Event onupgradeneeded: " + db.name);
+        var productos = [];
+
+
+        function createCategoriesObjectStore() {
+            //reyeno el array de categorias preparado para insertar en la bbdd
+
+            for (var i = 0; i < categorias.length; i++) {
+                categoriasObjectStore.push({
+                    category: categorias[i].getObject(),
+                    products: []
+                });
+
+                productos = almacen.getCategoryProduct(categorias[i]);
+
+                for (var j = 0; j < productos.length; j++) {
+
+                    categoriasObjectStore[i].products[j] = productos[j].getObject();
+                }
+            }
+
+
+            // Create an objectStore with autoincrement key
+            var categoriesObjectStore = db.createObjectStore(DB_STORE_NAME1, {keyPath: "category.id"});
+            console.log("Categories Object Store has been created");
+
+
+            // Use transaction oncomplete to make sure the objectStore creation is
+            // finished before adding data into it.
+
+            // Store values in the newly created objectStore.
+            var i = 0;
+            for (i in categoriasObjectStore) {
+                alert("Categoria " + categorias[i].title);
+                categoriesObjectStore.add(categoriasObjectStore[i]);
+            }
+
+        }
+
+        function createShopObjectStore() {
+            for (var i = 0; i < tiendas.length; i++) {
+
+                tiendasObjectStore.push({
+                    shop: tiendas[i].getObject(),
+                    products: [],
+                    stocks: []
+                });
+
+                var productosInShop = showProductShop1(almacen.getShopProduct(tiendas[i]), tiendas[i]);
+
+
+                for (var j = 0; j < productosInShop.length; j++) {
+
+                    var stockInShop = almacen.getProductStock(productosInShop[j], tiendas[i]);
+                    tiendasObjectStore[i].products[j] = productosInShop[j].getObject();
+                    tiendasObjectStore[i].stocks[j] = stockInShop;
+                }
+            }
+
+
+            var shopsObjectStore = db.createObjectStore(DB_STORE_NAME2, {keyPath: "shop.cif"});
+
+            // Create an index to search customers by specialty
+
+            // Use transaction oncomplete to make sure the objectStore creation is
+            // finished before adding data into it.
+
+            // Store values in the newly created objectStore.
+            var i = 0;
+            for (i in tiendasObjectStore) {
+                shopsObjectStore.add(tiendasObjectStore[i]);
+            }
+
+        }
+
+        try {
+
+            //Creamos categorias
+
+            var telefonos = new Category(1, "Telefonos");
+            telefonos.description = "Descripción categoría Telefonos";
+            var televisiones = new Category(2, "Televisiones");
+            televisiones.description = "Descripción categoría Televisiones";
+            var portatiles = new Category(3, "Portatiles");
+            portatiles.description = "Descripción categoría Portatiles";
+            var ropa = new Category(4, "Ropa");
+            ropa.description = "Descripción categoría Ropa";
+
+
+// Creamos productos
+
+
+            var movil1 = new Smartphone("1", "Apple iPhone X 256GB Plata Libre", "1299");
+            movil1.images = ["img/iphone-x.jpg", "img/iphone-x2.jpg", "img/iphone-x3.jpg", "img/iphone-x4.jpg"];
+            movil1.description = "La pantalla del iPhone X tiene esquinas redondeadas que rematan el diseño curvo del teléfono, y esas esquinas se encuentran dentro de un rectángulo estándar. Si se mide el rectángulo estándar, la pantalla tiene 5,85 pulgadas en diagonal (la superficie real de visión es inferior).";
+
+            var movil2 = new Smartphone("2", "Samsung Galaxy S8 4G 64GB Plata Libre", "699");
+            movil2.images = ["img/samsung-s8.jpg", "img/samsung-s82.jpg", "img/samsung-s83.jpg", "img/samsung-s84.jpg"];
+            movil2.description = "¡Da la bienvenida a la pantalla infinita! El revolucionario diseño de Galaxy S8 y S8+ comienza desde su interior. Se ha redefinido cada componente del Smartphone para romper con los límites de su pantalla, despidiéndonos de los marcos. Así todo lo que verás será contenido y nada más. Disfruta de la pantalla más grande e inmersiva fabricada para un dispositivo móvil que podrás sostener con una sola mano. Galaxy S8 y S8+ te liberan de los confines de los marcos, ofreciéndote una superficie lisa e ininterrumpida que fluye sobre sus bordes. "
+
+            var movil3 = new Smartphone("7", "LG G6 32GB Plata Libre", "439");
+            movil3.images = ["img/lg-g6.jpg", "img/lg-g62.jpg", "img/lg-g63.jpg", "img/lg-g64.jpg"];
+            movil3.description = "El LG G6 tiene un diseño refinado resistente al agua y una pantalla casi sin bordes que lo hacen relativamente compacto a pesar de ser de 5.7 pulgadas. La combinación de cámaras es un placer de usar y es algo difícil de encontrar en el mercado; tiene ranura microSD y su desempeño muy bueno.";
+
+            var tele1 = new TV("3", "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo", "1799");
+            tele1.images = ["img/samsung-curve.jpg", "img/samsung-curve2.jpg", "img/samsung-curve3.jpg", "img/samsung-curve4.jpg"];
+            tele1.description = "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.";
+
+            var tele2 = new TV("4", "LG 55SJ950V 55\" UltraHD 4K", "1649");
+            tele2.images = ["img/lg-4k.jpg", "img/lg-4k2.jpg", "img/lg-4k3.jpg", "img/lg-4k4.jpg"];
+            tele2.description = "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.";
+
+            var tele3 = new TV("8", "Sony KD49XE9005 49\" LED UltraHD 4K", "1019");
+            tele3.images = ["img/sony-tv.jpg", "img/sony-tv2.jpg", "img/sony-tv3.jpg", "img/sony-tv4.jpg"];
+            tele3.description = "La realidad con un contraste excepcional Preciosas vistas nocturna con luces brillantes y negros profundos. Con hasta 5 veces 2 el contraste de un TV LED convencional, las escenas oscuras son más oscuras y las brillantes aún más brillantes.";
+            var portatil1 = new Laptop("5", "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil", "889");
+            portatil1.images = ["img/yoga.jpg", "img/yoga2.jpg", "img/yoga3.jpg", "img/yoga4.jpg", "img/yoga5.jpg"];
+            portatil1.description = "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.";
+
+
+            var portatil2 = new Laptop("6", "Apple MacBook Pro Retina Display Intel i7/16GB/256GB/15.4\"", "1999");
+            portatil2.images = ["img/mac-pro.jpg", "img/mac-pro2.jpg", "img/mac-pro3.jpg", "img/mac-pro4.jpg"];
+            portatil2.description = "El MacBook Pro con pantalla Retina sorprende porque es asombrosamente fino y ligero. Pero lo increíble de verdad es que un portátil así sea, además, tan y tan potente. Conseguir semejante rendimiento en un diseño como este no ha sido fácil. En absoluto. Cada milímetro está fabricado y montado con la máxima precisión. Y al diseñarlo hemos tenido que tomar decisiones arriesgadas. Un ejemplo: hemos sustituido viejas tecnologías como el disco duro giratorio y las unidades de disco óptico, que tanto ocupan, por opciones de alto rendimiento como el almacenamiento flash. ¿Por qué? Porque es mucho más rápido y fiable y ocupa hasta un 90% menos. Con todo esto, no es extraño que el MacBook Pro sea tan versátil y cómodo de llevar.";
+
+
+//Creamos Tiendas
+
+            var tienda1 = new Shop("1", "MediaMarkt");
+            tienda1.image = "img/MediaMarkt.jpg";
+            var tienda2 = new Shop("2", "Worten");
+            tienda2.image = "img/Worten.jpg";
+            var tienda3 = new Shop("3", "PcComponentes");
+            tienda3.image = "img/PcComponentes.jpg";
+
+
+            console.log("####################################################################");
+            console.log("añadimos las categorias Telefonos,televisiones,portatiles y ropa");
+            console.log(almacen.addCategory(telefonos));
+            console.log(almacen.addCategory(televisiones));
+            console.log(almacen.addCategory(portatiles));
+
+            almacen.addProduct(movil1, telefonos);
+            almacen.addProduct(movil2, telefonos);
+            almacen.addProduct(movil3, telefonos);
+            almacen.addProduct(tele1, televisiones);
+            almacen.addProduct(tele2, televisiones);
+            almacen.addProduct(tele3, televisiones);
+            almacen.addProduct(portatil1, portatiles);
+            almacen.addProduct(portatil2, portatiles);
+
+            almacen.addShop(tienda1);
+            almacen.addShop(tienda2);
+            almacen.addShop(tienda3);
+
+
+            almacen.addProductInShop(movil1, almacen.defaultShop, 55);
+            almacen.addProductInShop(movil2, almacen.defaultShop, 44);
+            almacen.addProductInShop(movil3, almacen.defaultShop, 28);
+            almacen.addProductInShop(tele1, almacen.defaultShop, 70);
+            almacen.addProductInShop(tele2, almacen.defaultShop, 42);
+            almacen.addProductInShop(tele3, almacen.defaultShop, 77);
+            almacen.addProductInShop(portatil1, almacen.defaultShop, 14);
+            almacen.addProductInShop(portatil2, almacen.defaultShop, 20);
+
+            almacen.addProductInShop(movil1, tienda1, 20);
+            almacen.addProductInShop(tele1, tienda1, 40);
+            almacen.addProductInShop(tele2, tienda1, 30);
+            almacen.addProductInShop(portatil1, tienda1, 18);
+
+            almacen.addProductInShop(movil1, tienda2, 50);
+            almacen.addProductInShop(movil2, tienda2, 24);
+            almacen.addProductInShop(tele1, tienda2, 70);
+            almacen.addProductInShop(tele2, tienda2, 40);
+            almacen.addProductInShop(portatil1, tienda2, 10);
+            almacen.addProductInShop(portatil2, tienda2, 15);
+
+
+            almacen.addProductInShop(movil1, tienda3, 26);
+            almacen.addProductInShop(movil2, tienda3, 40);
+            almacen.addProductInShop(movil3, tienda3, 59);
+            almacen.addProductInShop(tele1, tienda3, 49);
+            almacen.addProductInShop(tele2, tienda3, 22);
+            almacen.addProductInShop(tele3, tienda3, 47);
+            almacen.addProductInShop(portatil1, tienda3, 25);
+            almacen.addProductInShop(portatil2, tienda3, 28);
+
+            var tiendas = showShops();
+            var categorias = showCategories();
+
+
+            createCategoriesObjectStore();
+            createShopObjectStore();
+
+        } catch (e) {
+            console.log("Exception creating object store: " + e);
+        }
+    };
+
 }
 
 window.onload = init;

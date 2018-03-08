@@ -1,15 +1,22 @@
 "use strict";
 
-function Category(title) {
+function Category(id, title) {
     if (!(this instanceof Category)) {
         throw new InvalidAccessConstructorException();
     }
 
     if (!title === 0) throw new EmptyValueException("title", title);
 
+    var _id = id;
     var _title = title;
     var _description;
 
+
+    Object.defineProperty(this, 'id', {
+        get: function () {
+            return _id;
+        }
+    });
 
     Object.defineProperty(this, 'title', {
         get: function () {
@@ -33,6 +40,17 @@ function Category(title) {
         }
     });
 }
+
+Category.prototype = {};
+Category.prototype.constructor = Category;
+Category.prototype.getObject = function () {
+
+    return {
+        id: this.id,
+        title: this.title,
+        description: this.description
+    }
+};
 
 
 function Product(serialNumber, name, price) {
@@ -109,6 +127,16 @@ function Product(serialNumber, name, price) {
 
 Product.prototype = {};
 Product.prototype.constructor = Product;
+Product.prototype.getObject = function () {
+    return {
+        serialNumber: this.serialNumber,
+        name: this.name,
+        price: this.price,
+        description: this.description,
+        tax: this.tax,
+        images: this.images
+    }
+};
 
 function DefaultProduct(serialNumber, name, price) {
     Product.call(this, serialNumber, name, price);
@@ -259,3 +287,13 @@ function Shop(cif, name) {
 
 Shop.prototype = {};
 Shop.prototype.constructor = Shop;
+Shop.prototype.getObject = function () {
+    return {
+        cif: this.cif,
+        name: this.name,
+        address: this.address,
+        telf: this.telf,
+        image: this.image,
+        coords: this.coords
+    }
+};

@@ -1,1 +1,1 @@
-La practica 7 está acabada.
+Subo la práctica 8, le falta que al borrar las tiendas y categorias, sus productos se vayan a la categoria y a la tienda por defecto.

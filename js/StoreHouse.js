@@ -216,7 +216,19 @@ StoreHouse = (function () {
                 return _categories.findIndex(compareElements);
             }
 
-            var _defaultCategory = new Category("Anonymous category"); //Categoría por defecto
+            this.getCategoryPosition = function (category) {
+                if (!(category instanceof Category)) {
+                    throw new CategoryStoreHouseException();
+                }
+
+                function compareElements(element) {
+                    return (element.category.title === category.title)
+                }
+
+                return _categories.findIndex(compareElements);
+            };
+
+            var _defaultCategory = new Category(9, "Anonymous category"); //Categoría por defecto
             this.addCategory(_defaultCategory);
             _defaultCategory.description = "En esta categoría se guardan los productos que no están etiquetados en ninguna categoría.";
 
@@ -237,6 +249,19 @@ StoreHouse = (function () {
 
                 return categoriesProduct.findIndex(compareElements);
             }
+
+            this.getProductPosition = function (product, categoriesProduct) {
+                if (!(product instanceof Product)) {
+                    throw new ProductStoreHouseException();
+                }
+
+                function compareElements(element) {
+                    return (element.product.serialNumber === product.serialNumber)
+                }
+
+                return categoriesProduct.findIndex(compareElements);
+
+            };
 
             this.addProduct = function (product, category) {
 
@@ -345,6 +370,18 @@ StoreHouse = (function () {
                 return _shops.findIndex(compareElements);
             }
 
+            this.getShopPosition = function (shop) {
+                if (!(shop instanceof Shop)) {
+                    throw new ShopStoreHouseException();
+                }
+
+                function compareElements(element) {
+                    return (element.shop.cif === shop.cif)
+                }
+
+                return _shops.findIndex(compareElements);
+            }
+
 
             var _shops = [];
 
@@ -400,6 +437,8 @@ StoreHouse = (function () {
             };
 
             var _defaultShop = new Shop("9", "defaultShop"); //Categoría por defecto
+            _defaultShop.image = "img/defaultShop.jpg";
+
             this.addShop(_defaultShop);
 
             Object.defineProperty(this, 'defaultShop', {
@@ -450,6 +489,7 @@ StoreHouse = (function () {
 
 
             this.getShopProduct = function (shop, product) {
+                var products = [];
                 if (!(shop instanceof Shop)) {
                     throw new ShopStoreHouseException();
                 }
