@@ -1,6 +1,4 @@
 "use strict";
-
-var almacen2;
 const DB_NAME = 'UT07Indexed_erp';
 const DB_VERSION = 1;
 const DB_STORE_NAME1 = 'categories';
@@ -943,10 +941,14 @@ function init() {
         li.appendChild(enlaceLi);
         ulDropdown2.appendChild(li);
 
+
         // Iterador de las categorias
+
 
         while (category.done !== true) {
             productsCategory = almacen.getCategoryProduct(category.value);
+
+
             for (i = 0; i < productosTienda.length; i++) {
 
                 if (productsCategory.indexOf(productosTienda[i]) > -1 && categoriasTienda.indexOf(category.value) < 0) {
@@ -964,7 +966,6 @@ function init() {
                     j++;
                     ulDropdown2.appendChild(li);
                 }
-
             }
             category = categories.next();
         }
@@ -1748,15 +1749,85 @@ function init() {
 
     function removeShop(shop) {
         var initPopulate1 = document.getElementById("initPopulate");
+        var tiendas = showShops();
+        var position = almacen.getShopPosition(shop);
+        var shopPosition = almacen.getShopPosition(almacen.defaultShop);
+        var productosInShop;
 
-        almacen.removeShop(shop);
+        var i;
+        var productsInDefaultShop = showProductShop1(almacen.getShopProduct(tiendas[shopPosition]), tiendas[shopPosition]);
+
+        var product;
+        var objectStore1 = db.transaction([DB_STORE_NAME2], "readwrite").objectStore(DB_STORE_NAME2);
+        var productosInShop = showProductShop1(almacen.getShopProduct(shop), shop);
+
+        function checkProduct(productERP) {
+            return productERP.serialNumber == product.serialNumber;
+        }
+
+        var request1 = objectStore1.get("9");
+
+
+        request1.onsuccess = function (event) {
+
+
+            var products = productosInShop;
+
+            for (var i = 0; i < products.length; i++) {
+
+                product = products[i];
+                var productPosition = productsInDefaultShop.findIndex(checkProduct);
+                var productPositionNoDefault = productosInShop.findIndex(checkProduct);
+
+
+                if (productPosition !== -1) {
+
+                    var product1 = new DefaultProduct(product.serialNumber, product.name, product.price);
+                    var data = request1.result;
+
+                    var stock = almacen.getProductStock(product1, shop);
+
+                    data.stocks[productPosition] += stock;
+
+                } else {
+                    var product1 = new DefaultProduct(productosInShop[productPositionNoDefault].serialNumber, productosInShop[productPositionNoDefault].name, productosInShop[productPositionNoDefault].price);
+                    product1.description = productosInShop[productPositionNoDefault].description;
+                    product1.images = productosInShop[productPositionNoDefault].images;
+
+                    var data = request1.result;
+
+                    var stock = almacen.getProductStock(product1, shop);
+
+                    data.products.push(product1.getObject());
+                    data.stocks.push(stock);
+
+
+                }
+
+            }
+            var requestUpdate = objectStore1.put(data);
+            requestUpdate.onerror = function (event) {
+                alert("Fallo al actualizar!!!!");
+
+            };
+            requestUpdate.onsuccess = function (event) {
+
+            };
+
+        };
+
 
         var request = db.transaction([DB_STORE_NAME2], "readwrite")
             .objectStore(DB_STORE_NAME2)
             .delete(shop.cif);
 
         request.onsuccess = function (event) {
-            alert("Objeto borrado");
+            almacen.removeShop(shop);
+
+            initPopulate1.remove();
+            initPopulate();
+            checkCookie();
+
             // It's gone!
         };
 
@@ -1765,12 +1836,8 @@ function init() {
             // It's gone!
         };
 
-        initPopulate1.remove();
-        initPopulate();
-        checkCookie();
-
-
     }
+
 
     function functionUpdateShop(shop) {
 
@@ -1808,7 +1875,6 @@ function init() {
 
                 };
                 requestUpdate.onsuccess = function (event) {
-                    alert("Actualizado correctamente");
 
                 };
             };
@@ -1852,15 +1918,62 @@ function init() {
 
     function removeCategory(category) {
 
-        almacen.removeCategory(category);
+
+        var objectStore1 = db.transaction([DB_STORE_NAME1], "readwrite").objectStore(DB_STORE_NAME1);
+        var productInCategory = almacen.getCategoryProduct(category);
+        var productsInDefaultCategory = almacen.getCategoryProduct(almacen.defaultCategory);
+        var product;
+
+        function checkProduct(productERP) {
+            return productERP.serialNumber == product.serialNumber;
+        }
+
+        var request1 = objectStore1.get(almacen.defaultCategory.id);
+
+
+        request1.onsuccess = function (event) {
+
+
+            var products = productInCategory;
+
+            for (var i = 0; i < products.length; i++) {
+
+                product = products[i];
+                var productPosition = productsInDefaultCategory.findIndex(checkProduct);
+                var productPositionNoDefault = productInCategory.findIndex(checkProduct);
+
+
+                var product1 = new DefaultProduct(productInCategory[i].serialNumber, productInCategory[i].name, productInCategory[i].price);
+                product1.description = productInCategory[i].description;
+                product1.images = productInCategory[i].images;
+
+                var data = request1.result;
+
+                data.products.push(product1.getObject());
+
+
+            }
+            var requestUpdate = objectStore1.put(data);
+            requestUpdate.onerror = function (event) {
+                alert("Fallo al actualizar!!!!");
+
+            };
+            requestUpdate.onsuccess = function (event) {
+
+            };
+
+        };
+
 
         var request = db.transaction([DB_STORE_NAME1], "readwrite")
             .objectStore(DB_STORE_NAME1)
-            .delete(category.title);
+            .delete(category.id);
 
         request.onsuccess = function (event) {
-            alert("Categoria borrada");
-            // It's gone!
+            almacen.removeCategory(category);
+            categoryPopulate();
+            checkCookie();
+
         };
 
         request.onerror = function (event) {
@@ -1868,8 +1981,7 @@ function init() {
             // It's gone!
         };
 
-        categoryPopulate();
-        checkCookie();
+
     }
 
 
@@ -1878,8 +1990,6 @@ function init() {
         var nombre = document.forms["formUpdateCategory"]["nameCategory2"].value;
         var descripcion = document.forms["formUpdateCategory"]["descripcionCategory2"].value;
 
-
-        alert(category.title);
 
         if (nombre.length > 0) {
             category.title = nombre;
@@ -1906,7 +2016,6 @@ function init() {
 
                 };
                 requestUpdate.onsuccess = function (event) {
-                    alert("Actualizado correctamente");
 
                 };
             };
@@ -1948,11 +2057,10 @@ function init() {
             // Put this updated object back into the database.
             var requestUpdate = objectStore.put(data);
             requestUpdate.onerror = function (event) {
-                alert("eliminado al actualizar");
+                alert("fallo al eliminar");
 
             };
             requestUpdate.onsuccess = function (event) {
-                alert("eliminado correctamente");
 
             };
         };
@@ -2023,7 +2131,6 @@ function init() {
 
                         };
                         requestUpdate.onsuccess = function (event) {
-                            alert("añadido al erp correctamente");
 
                         };
                     }
@@ -2084,7 +2191,6 @@ function init() {
 
                         };
                         requestUpdate.onsuccess = function (event) {
-                            alert("añadido a la tienda correctamente");
 
                         };
                     }
@@ -2121,7 +2227,6 @@ function init() {
                         var data = request1.result;
 
                         // update the value(s) in the object that you want to change
-                        alert("la j es: " + posicionProducto);
                         data.products[posicionProducto] = product.getObject();
 
                         // Put this updated object back into the database.
@@ -2131,7 +2236,6 @@ function init() {
 
                         };
                         requestUpdate.onsuccess = function (event) {
-                            alert("Actualizado correctamente");
 
                         };
 
@@ -2148,7 +2252,6 @@ function init() {
         objectStore.openCursor().onsuccess = function (event) {
             var cursor = event.target.result;
             if (cursor) {
-                alert("Name for title " + cursor.key + " is " + cursor.value.shop.cif);
 
                 var request = objectStore.get(cursor.value.shop.cif);
 
@@ -2165,23 +2268,19 @@ function init() {
                     // shop.coords = cursor.value.coords;
 
                     var products = showProductShop1(almacen.getShopProduct(shop), shop);
-                    alert("tamaño de productos es: " + products.length);
                     for (var j = 0; j < products.length; j++) {
 
                         if (products[j].serialNumber === product.serialNumber) {
 
-                            alert("entra en el serial number " + products[j].serialNumber);
                             var posicionProducto = j;
                             request.onerror = function (event) {
-                                alert("hay error claro que si");
+                                alert("hay error");
                             };
 
-                            alert("No hay error que guay");
                             // Get the old value that we want to update
                             var data = request.result;
 
                             // update the value(s) in the object that you want to change
-                            alert("la j tienda es: " + posicionProducto);
                             data.products[posicionProducto] = product.getObject();
 
                             // Put this updated object back into the database.
@@ -2191,7 +2290,6 @@ function init() {
 
                             };
                             requestUpdate.onsuccess = function (event) {
-                                alert("Actualizado correctamente!!!!");
 
                             };
 
@@ -2201,10 +2299,6 @@ function init() {
                 };
                 cursor.continue();
             }
-            else {
-                alert("No more entries!");
-            }
-
         };
     }
 
@@ -2274,7 +2368,6 @@ function init() {
 
                 };
                 requestUpdate.onsuccess = function (event) {
-                    alert("Stock actualizado correctamente");
 
                 };
             };
@@ -2317,7 +2410,6 @@ function init() {
         // I get a DB to use it in my students form.
         db = event.target.result;
         db.onerror = function (event) {
-            alert("No entra2");
             // Generic error handler for all errors targeted at this database's
             // requests!
             document.getElementById("error").appendChild(document.createTextNode("Error en el acceso a la base de datos: " + event.target.error + "<br/>"));
@@ -2328,8 +2420,6 @@ function init() {
         objectStore.openCursor().onsuccess = function (event) {
             var cursor = event.target.result;
             if (cursor) {
-                alert("Name for title " + cursor.key + " is " + cursor.value.category.id);
-
                 var request = objectStore.get(cursor.value.category.id);
 
                 request.onsuccess = function (event) {
@@ -2340,10 +2430,14 @@ function init() {
 
                     var categoryPosition = almacen.getCategoryPosition(category);
 
-                    if (categoryPosition === -1) {
-                        almacen.addCategory(category);
+                    if (categoryPosition === -1 || category.id == "9") {
 
+                        if (categoryPosition === -1) {
+                            almacen.addCategory(category);
+
+                        }
                         for (var i = 0; i < productInCategory.length; i++) {
+
 
                             var product = new DefaultProduct(productInCategory[i].serialNumber, productInCategory[i].name, productInCategory[i].price);
 
@@ -2360,10 +2454,6 @@ function init() {
                 };
                 cursor.continue();
             }
-            else {
-                alert("No more entries!");
-            }
-
         };
 
         var objectStore1 = db.transaction(DB_STORE_NAME2).objectStore(DB_STORE_NAME2);
@@ -2371,7 +2461,6 @@ function init() {
         objectStore1.openCursor().onsuccess = function (event) {
             var cursor = event.target.result;
             if (cursor) {
-                alert("Name for nif " + cursor.key + " is " + cursor.value.shop.cif);
 
                 var request = objectStore1.get(cursor.value.shop.cif);
 
@@ -2410,8 +2499,6 @@ function init() {
                                 product.description = productInShop[i].description;
                                 product.tax = productInShop[i].tax;
                                 product.images = productInShop[i].images;
-
-                                alert("este producto no está");
                                 almacen.addProductInShop(product, shop, stockInShop[i]);
 
                             }
@@ -2423,7 +2510,6 @@ function init() {
                 cursor.continue();
             }
             else {
-                alert("No more entries!");
                 initPopulate();
                 shopsMenusPopulate();
                 checkCookie();
@@ -2467,7 +2553,6 @@ function init() {
             // Store values in the newly created objectStore.
             var i = 0;
             for (i in categoriasObjectStore) {
-                alert("Categoria " + categorias[i].title);
                 categoriesObjectStore.add(categoriasObjectStore[i]);
             }
 

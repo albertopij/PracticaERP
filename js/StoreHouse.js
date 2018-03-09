@@ -1,5 +1,6 @@
 "use strict";
 
+
 function StoreHouseException() {
     this.name = "ImageManagerException";
     this.message = "Error: StoreHouse Generic Exception.";
@@ -436,6 +437,7 @@ StoreHouse = (function () {
                 return _shops.length;
             };
 
+
             var _defaultShop = new Shop("9", "defaultShop"); //Categoría por defecto
             _defaultShop.image = "img/defaultShop.jpg";
 
@@ -487,6 +489,44 @@ StoreHouse = (function () {
                 return _shops[shopPosition].products.length;
             };
 
+            function addProductInShop(product, shop, number) {
+                if (!(product instanceof Product)) {
+                    throw new ProductStoreHouseException;
+                }
+
+                if (!(shop instanceof Shop)) {
+                    throw new ShopStoreHouseException;
+                }
+
+                if (!number || number === 0) throw new NumberEmptyStoreHouseException;
+
+                if (!shop) {
+                    shop = _defaultShop;
+                }
+
+                var shopPosition = getShopPosition(shop);
+                if (shopPosition === -1) {
+                    shopPosition = this.addShop(shop) - 1;
+                }
+
+                var productPosition = getProductPosition(product, _shops[shopPosition].products);
+                if (productPosition === -1) {
+                    _shops[shopPosition].products.push(
+                        {
+                            product: product
+                        });
+                    _shops[shopPosition].stocks.push(
+                        {
+                            stock: number
+                        }
+                    );
+                } else {
+                    throw new ProductExistsStoreHouseException();
+
+
+                }
+                return _shops[shopPosition].products.length;
+            }
 
             this.getShopProduct = function (shop, product) {
                 var products = [];
