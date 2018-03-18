@@ -440,7 +440,8 @@ StoreHouse = (function () {
 
             var _defaultShop = new Shop("9", "defaultShop"); //Categoría por defecto
             _defaultShop.image = "img/defaultShop.jpg";
-
+            var coord = new Coords(38.9913144,-3.9209376);
+            _defaultShop.coords = coord;
             this.addShop(_defaultShop);
 
             Object.defineProperty(this, 'defaultShop', {

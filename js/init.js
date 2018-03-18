@@ -140,6 +140,13 @@ function init() {
             var initPopulate = document.getElementById("initPopulate");
             var categoryPopulate = document.getElementById("categoryPopulate");
 
+
+            var mapPopulate = document.getElementById("mapPopulate");
+            if (mapPopulate !== null) {
+
+                mapPopulate.style.display = "none";
+            }
+
             if (categoryPopulate !== null) {
 
                 categoryPopulate.remove();
@@ -196,6 +203,7 @@ function init() {
         spanAddShop.setAttribute("class", "glyphicon glyphicon-plus");
         buttonAddShop.appendChild(spanAddShop);
         contenedorTiendas.appendChild(buttonAddShop);
+        buttonAddShop.addEventListener("click", myMapAddShop());
 
         var buttonAddProductERP = document.createElement("button");
         buttonAddProductERP.setAttribute("class", "btn btn-md loggin text-center");
@@ -384,6 +392,19 @@ function init() {
                     telf.setAttribute("value", shop.telf)
                 }
 
+                if (shop.coords.latitude !== undefined) {
+
+                    var latitude = document.getElementById("latitudeUpdateShop");
+                    latitude.setAttribute("value", shop.coords.latitude);
+                }
+
+                if (shop.coords.longitude !== undefined) {
+
+                    var longitude = document.getElementById("longitudeUpdateShop");
+                    longitude.setAttribute("value", shop.coords.latitude);
+                }
+
+
                 var buttonUpdateShopRepetido = document.getElementById("buttonUpdateShop");
 
                 if (buttonUpdateShopRepetido !== null) {
@@ -458,6 +479,12 @@ function init() {
             var initPopulate = document.getElementById("initPopulate");
             var categoryPopulate = document.getElementById("categoryPopulate");
 
+            var mapPopulate = document.getElementById("mapPopulate");
+            if (mapPopulate !== null) {
+
+                mapPopulate.style.display = "none";
+            }
+
             if (categoryPopulate !== null) {
 
                 categoryPopulate.remove();
@@ -509,6 +536,12 @@ function init() {
             var initPopulate = document.getElementById("initPopulate");
             var categoryPopulate = document.getElementById("categoryPopulate");
 
+            var mapPopulate = document.getElementById("mapPopulate");
+            if (mapPopulate !== null) {
+
+                mapPopulate.style.display = "none";
+            }
+
             if (categoryPopulate !== null) {
 
                 categoryPopulate.remove();
@@ -558,6 +591,16 @@ function init() {
 
         enlaceProductosGlobales.appendChild(textoAllProduct);
         li.appendChild(enlaceProductosGlobales);
+        ulNavbar.appendChild(li);
+
+
+        var textoTienda = document.createTextNode("Mapa");
+        var li = document.createElement("li");
+        var enlaceTienda = document.createElement("a");
+        enlaceTienda.setAttribute("href", "#");
+        enlaceTienda.addEventListener("click", mapPopulate);
+        enlaceTienda.appendChild(textoTienda);
+        li.appendChild(enlaceTienda);
         ulNavbar.appendChild(li);
 
 
@@ -826,7 +869,7 @@ function init() {
                     addProductInShop(shop);
                 }
                 x++;
-            }
+           }
         }
 
         function createFunctionRemoveProduct(product, shop) {
@@ -1360,6 +1403,12 @@ function init() {
         var categoryPopulate = document.getElementById("categoryPopulate");
         var categories = showCategories();
 
+        var mapPopulate = document.getElementById("mapPopulate");
+        if (mapPopulate !== null) {
+
+            mapPopulate.style.display = "none";
+        }
+
 
         if (categoryPopulate !== null) {
 
@@ -1475,6 +1524,7 @@ function init() {
                         var textodisponibilidadTienda = document.createTextNode(tienda.value.name + " tiene de stock " + stock + " ");
                         disponibilidadTienda.appendChild(textodisponibilidadTienda);
                         panelBodyProducto.appendChild(disponibilidadTienda);
+
                         var buttonStock = document.createElement("button");
                         buttonStock.setAttribute("class", "btn btn-md loggin pull-right");
                         buttonStock.setAttribute("data-toggle", "modal");
@@ -1548,6 +1598,14 @@ function init() {
 
             categoryPopulate.remove();
         }
+
+
+        var mapPopulate = document.getElementById("mapPopulate");
+        if (mapPopulate !== null) {
+
+            mapPopulate.style.display = "none";
+        }
+
 
         var globalProductPopulate = document.getElementById("globalProductPopulate");
 
@@ -1672,7 +1730,7 @@ function init() {
                 buttonRemoveCategory.setAttribute("class", "btn btn-danger loggin pull-right");
                 buttonRemoveCategory.setAttribute("type", "button");
                 buttonRemoveCategory.setAttribute("data-toggle", "modal");
-                buttonRemoveCategory.setAttribute("data-target", "#removeCategori");
+                buttonRemoveCategory.setAttribute("data-target", "#removeCategory");
                 buttonRemoveCategory.appendChild(document.createTextNode("Eliminar"));
                 divFooterBotones.appendChild(buttonRemoveCategory);
                 buttonRemoveCategory.addEventListener("click", createFunctionRemoveCategory(categorias[i]));
@@ -1733,6 +1791,8 @@ function init() {
         var imagen = document.forms["formAddShop"]["imageShop"].value;
         var direccion = document.forms["formAddShop"]["addressShop"].value;
         var telefono = document.forms["formAddShop"]["telfShop"].value;
+        var latidude = document.forms["formAddShop"]["latitudeAddShop"].value;
+        var longitude = document.forms["formAddShop"]["longitudeAddShop"].value;
         var initPopulate1 = document.getElementById("initPopulate");
 
 
@@ -1741,10 +1801,19 @@ function init() {
             tienda.image = imagen;
             tienda.address = direccion;
             tienda.telf = telefono;
+            var coord = new Coords(latidude, longitude);
+            tienda.coords = coord;
             almacen.addShop(tienda);
 
             tiendasObjectStore.push({
-                shop: tienda.getObject(),
+                shop: {
+                    cif: tienda.cif,
+                    name: tienda.name,
+                    address: tienda.address,
+                    telf: tienda.telf,
+                    image: tienda.image,
+                    coords: {latitude: tienda.coords.latitude, longitude: tienda.coords.longitude}
+                },
                 products: [],
                 stocks: []
             });
@@ -1857,6 +1926,8 @@ function init() {
         var imagen = document.forms["formUpdateShop"]["imageShop2"].value;
         var direccion = document.forms["formUpdateShop"]["addressShop2"].value;
         var telefono = document.forms["formUpdateShop"]["telfShop2"].value;
+        var latidude = document.forms["formUpdateShop"]["latitudeUpdateShop"].value;
+        var longitude = document.forms["formUpdateShop"]["longitudeUpdateShop"].value;
         var initPopulate1 = document.getElementById("initPopulate");
 
         if (nombre.length > 0) {
@@ -1864,6 +1935,9 @@ function init() {
             shop.image = imagen;
             shop.address = direccion;
             shop.telf = telefono;
+            var coord = new Coords(latidude, longitude);
+            shop.coords = coord;
+
 
             var objectStore = db.transaction([DB_STORE_NAME2], "readwrite").objectStore(DB_STORE_NAME2);
             var request = objectStore.get(shop.cif);
@@ -1879,6 +1953,7 @@ function init() {
                 data.shop.image = imagen;
                 data.shop.address = direccion;
                 data.shop.telf = telefono;
+                data.shop.coords = {latitude: latidude, longitude: longitude};
 
                 // Put this updated object back into the database.
                 var requestUpdate = objectStore.put(data);
@@ -2178,7 +2253,7 @@ function init() {
             console.log("La categoria es: " + categories[j].title);
             for (i = 0; i < products.length; i++) {
 
-                if (products[i].serialNumber === product) {
+                if (products[i].serialNumber === parseInt(product)) {
                     almacen.addProductInShop(products[i], shop, stock);
                     var productoInsertar = products[i];
 
@@ -2277,7 +2352,8 @@ function init() {
                     shop.address = request.result.shop.address;
                     shop.telf = request.result.shop.telf;
                     shop.image = request.result.shop.image;
-                    // shop.coords = cursor.value.coords;
+                    var coords = new Coords(request.result.shop.coords.latitude, request.result.shop.coords.longitude);
+                    shop.coords = coords;
 
                     var products = showProductShop1(almacen.getShopProduct(shop), shop);
                     for (var j = 0; j < products.length; j++) {
@@ -2402,19 +2478,257 @@ function init() {
         console.log(Json);
         var xhttp = new XMLHttpRequest();
 
-
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 $("#modalSaveState").modal("show");
 
             }
         }
-
         xhttp.open("POST", "saveState.php", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("Json=" + myJSON + "&user=" + username);
     }
 
+
+    function mapPopulate() {
+
+        var initPopulate = document.getElementById("initPopulate");
+        initPopulate.style.display = "none";
+
+        var mapPopulate = document.getElementById("mapPopulate");
+        if (mapPopulate !== null) {
+
+            mapPopulate.style.display = "block";
+        }
+
+        var categoryPopulate = document.getElementById("categoryPopulate");
+        if (categoryPopulate !== null) {
+
+            categoryPopulate.remove();
+        }
+
+        var globalProductPopulate = document.getElementById("globalProductPopulate");
+
+        if (globalProductPopulate !== null) {
+            globalProductPopulate.remove();
+        }
+
+
+        var menuCategoryShopPopulateRepetido = document.getElementById("menuCategoryShopPopulate");
+
+        if (menuCategoryShopPopulateRepetido !== null) {
+
+            menuCategoryShopPopulateRepetido.parentElement.removeChild(menuCategoryShopPopulateRepetido);
+        }
+
+        var contenedorTiendas = document.getElementById("initPopulate");
+
+        contenedorTiendas.style.display = "none";
+
+        var shopPopulateRepetido = document.getElementById("shopPopulate");
+        var detalleProducto = document.getElementById("detalleProducto");
+
+
+        if (shopPopulateRepetido !== null) {
+
+            contenedorPrincipal.removeChild(shopPopulateRepetido);
+        }
+
+        if (detalleProducto !== null) {
+
+            detalleProducto.remove();
+        }
+
+        /*     var divMapPopulate = document.createElement("div");
+             divMapPopulate.setAttribute("id", "mapPopulate");
+             contenedorPrincipal.appendChild(divMapPopulate);
+
+     var divMapPopulate = document.getElementById("mapPopulate");
+
+     var mainH2 = document.createElement("h2");
+     mainH2.setAttribute("class", "text-center bold titulo");
+     mainH2.appendChild(document.createTextNode("Mapa"));
+     divMapPopulate.appendChild(mainH2);
+
+       var divMap = document.createElement("div");
+         divMap.setAttribute("id", "map");
+         divMapPopulate.appendChild(divMap);
+*/
+
+        myMap();
+    }
+
+
+    function myMap() {
+
+        var latitude = "";
+        var longitude = "";
+        var tiendas = showShops();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showMap);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+
+        function showMap(position) {
+            if (tiendas !== undefined) {
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+
+                var myCenter = new google.maps.LatLng(latitude, longitude);
+
+                var mapCanvas = document.getElementById("map");
+                var mapOptions = {center: myCenter, zoom: 10};
+                var map = new google.maps.Map(mapCanvas, mapOptions);
+                for (var i = 0; i < tiendas.length; i++) {
+
+                    var position = new google.maps.LatLng(tiendas[i].coords.latitude, tiendas[i].coords.longitude);
+
+                    var marker = new google.maps.Marker({
+                        position: position,
+                        icon: "img/icoMapa.png"
+                    });
+
+                    marker.setMap(map);
+
+                    google.maps.event.addListener(marker, 'click', showOpenInfo(map, marker, tiendas[i]));
+                }
+            }
+
+        }
+
+        function showOpenInfo(map, marker, tienda) {
+            return function () {
+                var infowindow = new google.maps.InfoWindow({
+                    content: tienda.name
+                });
+                infowindow.open(map, marker);
+            }
+        }
+    }
+
+
+    function myMapAddShop() {
+        var markers = [];
+        var latitude = "";
+        var longitude = "";
+        var tiendas = showShops();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showMap);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+
+        function showMap(position) {
+
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+
+            var myCenter = new google.maps.LatLng(latitude, longitude);
+            var mapCanvas = document.getElementById("mapShop");
+
+            var mapOptions = {center: myCenter, zoom: 9};
+            var map = new google.maps.Map(mapCanvas, mapOptions);
+            google.maps.event.addListener(map, 'click', function (event) {
+                placeMarker(map, event.latLng);
+            });
+
+
+            function placeMarker(map, location) {
+
+                var latitude = document.getElementById("latitudeAddShop");
+                var longitude = document.getElementById("longitudeAddShop");
+
+                if (markers.length > 0) {
+                    markers[0].setMap(null);
+                }
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    icon: "img/icoMapa.png"
+                });
+                var infowindow = new google.maps.InfoWindow({
+                    content: 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng()
+                });
+                infowindow.open(map, marker);
+
+                markers[0] = marker;
+
+                latitude.value = location.lat();
+                longitude.value = location.lng();
+            }
+        }
+
+        function showOpenInfo(map, marker, tienda) {
+            return function () {
+                var infowindow = new google.maps.InfoWindow({
+                    content: tienda.name
+                });
+                infowindow.open(map, marker);
+            }
+        }
+    }
+
+    function myMapUpdateShop() {
+        var markers = [];
+        var latitude = "";
+        var longitude = "";
+        var tiendas = showShops();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showMap);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+
+        function showMap(position) {
+
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
+
+            var myCenter = new google.maps.LatLng(latitude, longitude);
+            var mapCanvas = document.getElementById("mapShop2");
+
+            var mapOptions = {center: myCenter, zoom: 9};
+            var map = new google.maps.Map(mapCanvas, mapOptions);
+            google.maps.event.addListener(map, 'click', function (event) {
+                placeMarker(map, event.latLng);
+            });
+
+
+            function placeMarker(map, location) {
+
+                var latitude = document.getElementById("latitudeUpdateShop");
+                var longitude = document.getElementById("longitudeUpdateShop");
+
+                if (markers.length > 0) {
+                    markers[0].setMap(null);
+                }
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    icon: "img/icoMapa.png"
+                });
+                var infowindow = new google.maps.InfoWindow({
+                    content: 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng()
+                });
+                infowindow.open(map, marker);
+
+                markers[0] = marker;
+
+                latitude.value = location.lat();
+                longitude.value = location.lng();
+            }
+        }
+
+        function showOpenInfo(map, marker, tienda) {
+            return function () {
+                var infowindow = new google.maps.InfoWindow({
+                    content: tienda.name
+                });
+                infowindow.open(map, marker);
+            }
+        }
+    }
 
     console.log("##### Testeo StoreHouse. ##### ");
     var almacen = StoreHouse.getInstance();
@@ -2507,7 +2821,8 @@ function init() {
                     shop.address = request.result.shop.address;
                     shop.telf = request.result.shop.telf;
                     shop.image = request.result.shop.image;
-                    // shop.coords = cursor.value.coords;
+                    var coords = new Coords(cursor.value.shop.coords.latitude, cursor.value.shop.coords.longitude);
+                    shop.coords = coords;
 
 
                     var shopPosition = almacen.getShopPosition(shop);
@@ -2787,14 +3102,23 @@ function init() {
 
                         var shop1 = new Shop(myJSON.shops[i].shop.cif, myJSON.shops[i].shop.name);
 
-                        // shop.address = myJSON.shops[i].shop.address;
-                        // shop.telf = myJSON.shops[i].shop.telf;
+                        shop1.address = myJSON.shops[i].shop.address;
+                        shop1.telf = myJSON.shops[i].shop.telf;
                         shop1.image = myJSON.shops[i].shop.image;
-                        // shop.coords = cursor.value.coords;
+
+                        var coords = new Coords(myJSON.shops[i].shop.coords.latitude, myJSON.shops[i].shop.coords.longitude);
+                        shop1.coords = coords;
                         almacen.addShop(shop1);
 
                         tiendasObjectStore[i] = {
-                            shop: shop1.getObject(),
+                            shop: {
+                                cif: shop1.cif,
+                                name: shop1.name,
+                                address: shop1.address,
+                                telf: shop1.telf,
+                                image: shop1.image,
+                                coords: {latitude: shop1.coords.latitude, longitude: shop1.coords.longitude}
+                            },
                             products: [],
                             stocks: []
                         };
@@ -2802,7 +3126,6 @@ function init() {
                         var shopsObjectStore = db.transaction(DB_STORE_NAME2, "readwrite").objectStore(DB_STORE_NAME2);
 
                         for (j = 0; j < myJSON.shops[i].products.length; j++) {
-                            alert("product" + myJSON.shops[i].products[j].name);
 
                             var product = new DefaultProduct(myJSON.shops[i].products[j].serialNumber, myJSON.shops[i].products[j].name, myJSON.shops[i].products[j].price);
                             product.images = myJSON.shops[i].products[j].images;
@@ -2891,11 +3214,11 @@ function init() {
         for (i = 0; i < tiendas.length; i++) {
             JSon.shops[i] = {
                 shop: {
-                    "cif": tiendas[i].cif,
+                    cif: tiendas[i].cif,
                     "name": tiendas[i].name,
                     "image": tiendas[i].image,
                     "address": tiendas[i].address,
-                    "coords": tiendas[i].coords,
+                    "coords": {latitude: tiendas[i].coords.latitude, longitude: tiendas[i].coords.longitude},
                     "telf": tiendas[i].telf
                 },
                 products: [],

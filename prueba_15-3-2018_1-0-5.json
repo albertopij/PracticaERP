@@ -130,11 +130,7 @@
       "shop": {
         "cif": "9",
         "name": "defaultShop",
-        "image": "img/defaultShop.jpg",
-        "coords": {
-          "latitude": 38.9913144,
-          "longitude": -3.9209376
-        }
+        "image": "img/defaultShop.jpg"
       },
       "products": [
         {
@@ -242,11 +238,7 @@
       "shop": {
         "cif": "1",
         "name": "MediaMarkt",
-        "image": "img/MediaMarkt.jpg",
-        "coords": {
-          "latitude": 38.9784694,
-          "longitude": -5.4904536
-        }
+        "image": "img/MediaMarkt.jpg"
       },
       "products": [
         {
@@ -306,11 +298,7 @@
       "shop": {
         "cif": "2",
         "name": "Worten",
-        "image": "img/Worten.jpg",
-        "coords": {
-          "latitude": 38.8475984,
-          "longitude": -4.3973518
-        }
+        "image": "img/Worten.jpg"
       },
       "products": [
         {
@@ -394,11 +382,7 @@
       "shop": {
         "cif": "3",
         "name": "PcComponentes",
-        "image": "img/PcComponentes.jpg",
-        "coords": {
-          "latitude": 37.828006,
-          "longitude": -1.3898567
-        }
+        "image": "img/PcComponentes.jpg"
       },
       "products": [
         {
