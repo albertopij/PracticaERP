@@ -209,6 +209,17 @@ function init() {
         buttonAddProductERP.appendChild(spanAddProduct);
         contenedorTiendas.appendChild(buttonAddProductERP);
 
+        var buttonSaveState = document.createElement("button");
+        buttonSaveState.setAttribute("class", "btn btn-md loggin text-center");
+        buttonSaveState.setAttribute("id", "buttonSaveState");
+        buttonSaveState.setAttribute("type", "button");
+        buttonSaveState.appendChild(document.createTextNode("Guardar Estado "));
+        var spanSaveState = document.createElement("span");
+        spanSaveState.setAttribute("class", "glyphicon glyphicon-save");
+        buttonSaveState.appendChild(spanSaveState);
+        contenedorTiendas.appendChild(buttonSaveState);
+        buttonSaveState.addEventListener("click", saveState);
+
         var mainH2 = document.createElement("h2");
         mainH2.setAttribute("class", "text-center bold titulo");
         mainH2.appendChild(document.createTextNode("Inicio"));
@@ -548,6 +559,7 @@ function init() {
         enlaceProductosGlobales.appendChild(textoAllProduct);
         li.appendChild(enlaceProductosGlobales);
         ulNavbar.appendChild(li);
+
 
         //navbar header
 
@@ -2381,6 +2393,28 @@ function init() {
 
     }
 
+    function saveState() {
+
+        var Json = createJson();
+        var myJSON = JSON.stringify(Json);
+        var username = getCookie("username");
+
+        console.log(Json);
+        var xhttp = new XMLHttpRequest();
+
+
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                $("#modalSaveState").modal("show");
+
+            }
+        }
+
+        xhttp.open("POST", "saveState.php", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("Json=" + myJSON + "&user=" + username);
+    }
+
 
     console.log("##### Testeo StoreHouse. ##### ");
     var almacen = StoreHouse.getInstance();
@@ -2526,6 +2560,7 @@ function init() {
 
         function createCategoriesObjectStore() {
             //reyeno el array de categorias preparado para insertar en la bbdd
+            var categorias = showCategories();
 
             for (var i = 0; i < categorias.length; i++) {
                 categoriasObjectStore.push({
@@ -2559,6 +2594,7 @@ function init() {
         }
 
         function createShopObjectStore() {
+            var tiendas = showShops();
             for (var i = 0; i < tiendas.length; i++) {
 
                 tiendasObjectStore.push({
@@ -2594,129 +2630,299 @@ function init() {
 
         }
 
+        function createObjectsStores() {
+            createCategoriesObjectStore();
+            createShopObjectStore();
+        }
+
         try {
 
             //Creamos categorias
-
-            var telefonos = new Category(1, "Telefonos");
-            telefonos.description = "Descripción categoría Telefonos";
-            var televisiones = new Category(2, "Televisiones");
-            televisiones.description = "Descripción categoría Televisiones";
-            var portatiles = new Category(3, "Portatiles");
-            portatiles.description = "Descripción categoría Portatiles";
-            var ropa = new Category(4, "Ropa");
-            ropa.description = "Descripción categoría Ropa";
-
-
-// Creamos productos
+            /*
+                        var telefonos = new Category(1, "Telefonos");
+                        telefonos.description = "Descripción categoría Telefonos";
+                        var televisiones = new Category(2, "Televisiones");
+                        televisiones.description = "Descripción categoría Televisiones";
+                        var portatiles = new Category(3, "Portatiles");
+                        portatiles.description = "Descripción categoría Portatiles";
+                        var ropa = new Category(4, "Ropa");
+                        ropa.description = "Descripción categoría Ropa";
 
 
-            var movil1 = new Smartphone("1", "Apple iPhone X 256GB Plata Libre", "1299");
-            movil1.images = ["img/iphone-x.jpg", "img/iphone-x2.jpg", "img/iphone-x3.jpg", "img/iphone-x4.jpg"];
-            movil1.description = "La pantalla del iPhone X tiene esquinas redondeadas que rematan el diseño curvo del teléfono, y esas esquinas se encuentran dentro de un rectángulo estándar. Si se mide el rectángulo estándar, la pantalla tiene 5,85 pulgadas en diagonal (la superficie real de visión es inferior).";
-
-            var movil2 = new Smartphone("2", "Samsung Galaxy S8 4G 64GB Plata Libre", "699");
-            movil2.images = ["img/samsung-s8.jpg", "img/samsung-s82.jpg", "img/samsung-s83.jpg", "img/samsung-s84.jpg"];
-            movil2.description = "¡Da la bienvenida a la pantalla infinita! El revolucionario diseño de Galaxy S8 y S8+ comienza desde su interior. Se ha redefinido cada componente del Smartphone para romper con los límites de su pantalla, despidiéndonos de los marcos. Así todo lo que verás será contenido y nada más. Disfruta de la pantalla más grande e inmersiva fabricada para un dispositivo móvil que podrás sostener con una sola mano. Galaxy S8 y S8+ te liberan de los confines de los marcos, ofreciéndote una superficie lisa e ininterrumpida que fluye sobre sus bordes. "
-
-            var movil3 = new Smartphone("7", "LG G6 32GB Plata Libre", "439");
-            movil3.images = ["img/lg-g6.jpg", "img/lg-g62.jpg", "img/lg-g63.jpg", "img/lg-g64.jpg"];
-            movil3.description = "El LG G6 tiene un diseño refinado resistente al agua y una pantalla casi sin bordes que lo hacen relativamente compacto a pesar de ser de 5.7 pulgadas. La combinación de cámaras es un placer de usar y es algo difícil de encontrar en el mercado; tiene ranura microSD y su desempeño muy bueno.";
-
-            var tele1 = new TV("3", "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo", "1799");
-            tele1.images = ["img/samsung-curve.jpg", "img/samsung-curve2.jpg", "img/samsung-curve3.jpg", "img/samsung-curve4.jpg"];
-            tele1.description = "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.";
-
-            var tele2 = new TV("4", "LG 55SJ950V 55\" UltraHD 4K", "1649");
-            tele2.images = ["img/lg-4k.jpg", "img/lg-4k2.jpg", "img/lg-4k3.jpg", "img/lg-4k4.jpg"];
-            tele2.description = "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.";
-
-            var tele3 = new TV("8", "Sony KD49XE9005 49\" LED UltraHD 4K", "1019");
-            tele3.images = ["img/sony-tv.jpg", "img/sony-tv2.jpg", "img/sony-tv3.jpg", "img/sony-tv4.jpg"];
-            tele3.description = "La realidad con un contraste excepcional Preciosas vistas nocturna con luces brillantes y negros profundos. Con hasta 5 veces 2 el contraste de un TV LED convencional, las escenas oscuras son más oscuras y las brillantes aún más brillantes.";
-            var portatil1 = new Laptop("5", "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil", "889");
-            portatil1.images = ["img/yoga.jpg", "img/yoga2.jpg", "img/yoga3.jpg", "img/yoga4.jpg", "img/yoga5.jpg"];
-            portatil1.description = "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.";
+            // Creamos productos
 
 
-            var portatil2 = new Laptop("6", "Apple MacBook Pro Retina Display Intel i7/16GB/256GB/15.4\"", "1999");
-            portatil2.images = ["img/mac-pro.jpg", "img/mac-pro2.jpg", "img/mac-pro3.jpg", "img/mac-pro4.jpg"];
-            portatil2.description = "El MacBook Pro con pantalla Retina sorprende porque es asombrosamente fino y ligero. Pero lo increíble de verdad es que un portátil así sea, además, tan y tan potente. Conseguir semejante rendimiento en un diseño como este no ha sido fácil. En absoluto. Cada milímetro está fabricado y montado con la máxima precisión. Y al diseñarlo hemos tenido que tomar decisiones arriesgadas. Un ejemplo: hemos sustituido viejas tecnologías como el disco duro giratorio y las unidades de disco óptico, que tanto ocupan, por opciones de alto rendimiento como el almacenamiento flash. ¿Por qué? Porque es mucho más rápido y fiable y ocupa hasta un 90% menos. Con todo esto, no es extraño que el MacBook Pro sea tan versátil y cómodo de llevar.";
+                        var movil1 = new Smartphone("1", "Apple iPhone X 256GB Plata Libre", "1299");
+                        movil1.images = ["img/iphone-x.jpg", "img/iphone-x2.jpg", "img/iphone-x3.jpg", "img/iphone-x4.jpg"];
+                        movil1.description = "La pantalla del iPhone X tiene esquinas redondeadas que rematan el diseño curvo del teléfono, y esas esquinas se encuentran dentro de un rectángulo estándar. Si se mide el rectángulo estándar, la pantalla tiene 5,85 pulgadas en diagonal (la superficie real de visión es inferior).";
+
+                        var movil2 = new Smartphone("2", "Samsung Galaxy S8 4G 64GB Plata Libre", "699");
+                        movil2.images = ["img/samsung-s8.jpg", "img/samsung-s82.jpg", "img/samsung-s83.jpg", "img/samsung-s84.jpg"];
+                        movil2.description = "¡Da la bienvenida a la pantalla infinita! El revolucionario diseño de Galaxy S8 y S8+ comienza desde su interior. Se ha redefinido cada componente del Smartphone para romper con los límites de su pantalla, despidiéndonos de los marcos. Así todo lo que verás será contenido y nada más. Disfruta de la pantalla más grande e inmersiva fabricada para un dispositivo móvil que podrás sostener con una sola mano. Galaxy S8 y S8+ te liberan de los confines de los marcos, ofreciéndote una superficie lisa e ininterrumpida que fluye sobre sus bordes. "
+
+                        var movil3 = new Smartphone("7", "LG G6 32GB Plata Libre", "439");
+                        movil3.images = ["img/lg-g6.jpg", "img/lg-g62.jpg", "img/lg-g63.jpg", "img/lg-g64.jpg"];
+                        movil3.description = "El LG G6 tiene un diseño refinado resistente al agua y una pantalla casi sin bordes que lo hacen relativamente compacto a pesar de ser de 5.7 pulgadas. La combinación de cámaras es un placer de usar y es algo difícil de encontrar en el mercado; tiene ranura microSD y su desempeño muy bueno.";
+
+                        var tele1 = new TV("3", "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo", "1799");
+                        tele1.images = ["img/samsung-curve.jpg", "img/samsung-curve2.jpg", "img/samsung-curve3.jpg", "img/samsung-curve4.jpg"];
+                        tele1.description = "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.";
+
+                        var tele2 = new TV("4", "LG 55SJ950V 55\" UltraHD 4K", "1649");
+                        tele2.images = ["img/lg-4k.jpg", "img/lg-4k2.jpg", "img/lg-4k3.jpg", "img/lg-4k4.jpg"];
+                        tele2.description = "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.";
+
+                        var tele3 = new TV("8", "Sony KD49XE9005 49\" LED UltraHD 4K", "1019");
+                        tele3.images = ["img/sony-tv.jpg", "img/sony-tv2.jpg", "img/sony-tv3.jpg", "img/sony-tv4.jpg"];
+                        tele3.description = "La realidad con un contraste excepcional Preciosas vistas nocturna con luces brillantes y negros profundos. Con hasta 5 veces 2 el contraste de un TV LED convencional, las escenas oscuras son más oscuras y las brillantes aún más brillantes.";
+                        var portatil1 = new Laptop("5", "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil", "889");
+                        portatil1.images = ["img/yoga.jpg", "img/yoga2.jpg", "img/yoga3.jpg", "img/yoga4.jpg", "img/yoga5.jpg"];
+                        portatil1.description = "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.";
 
 
-//Creamos Tiendas
-
-            var tienda1 = new Shop("1", "MediaMarkt");
-            tienda1.image = "img/MediaMarkt.jpg";
-            var tienda2 = new Shop("2", "Worten");
-            tienda2.image = "img/Worten.jpg";
-            var tienda3 = new Shop("3", "PcComponentes");
-            tienda3.image = "img/PcComponentes.jpg";
+                        var portatil2 = new Laptop("6", "Apple MacBook Pro Retina Display Intel i7/16GB/256GB/15.4\"", "1999");
+                        portatil2.images = ["img/mac-pro.jpg", "img/mac-pro2.jpg", "img/mac-pro3.jpg", "img/mac-pro4.jpg"];
+                        portatil2.description = "El MacBook Pro con pantalla Retina sorprende porque es asombrosamente fino y ligero. Pero lo increíble de verdad es que un portátil así sea, además, tan y tan potente. Conseguir semejante rendimiento en un diseño como este no ha sido fácil. En absoluto. Cada milímetro está fabricado y montado con la máxima precisión. Y al diseñarlo hemos tenido que tomar decisiones arriesgadas. Un ejemplo: hemos sustituido viejas tecnologías como el disco duro giratorio y las unidades de disco óptico, que tanto ocupan, por opciones de alto rendimiento como el almacenamiento flash. ¿Por qué? Porque es mucho más rápido y fiable y ocupa hasta un 90% menos. Con todo esto, no es extraño que el MacBook Pro sea tan versátil y cómodo de llevar.";
 
 
-            console.log("####################################################################");
-            console.log("añadimos las categorias Telefonos,televisiones,portatiles y ropa");
-            console.log(almacen.addCategory(telefonos));
-            console.log(almacen.addCategory(televisiones));
-            console.log(almacen.addCategory(portatiles));
+            //Creamos Tiendas
 
-            almacen.addProduct(movil1, telefonos);
-            almacen.addProduct(movil2, telefonos);
-            almacen.addProduct(movil3, telefonos);
-            almacen.addProduct(tele1, televisiones);
-            almacen.addProduct(tele2, televisiones);
-            almacen.addProduct(tele3, televisiones);
-            almacen.addProduct(portatil1, portatiles);
-            almacen.addProduct(portatil2, portatiles);
-
-            almacen.addShop(tienda1);
-            almacen.addShop(tienda2);
-            almacen.addShop(tienda3);
+                        var tienda1 = new Shop("1", "MediaMarkt");
+                        tienda1.image = "img/MediaMarkt.jpg";
+                        var tienda2 = new Shop("2", "Worten");
+                        tienda2.image = "img/Worten.jpg";
+                        var tienda3 = new Shop("3", "PcComponentes");
+                        tienda3.image = "img/PcComponentes.jpg";
 
 
-            almacen.addProductInShop(movil1, almacen.defaultShop, 55);
-            almacen.addProductInShop(movil2, almacen.defaultShop, 44);
-            almacen.addProductInShop(movil3, almacen.defaultShop, 28);
-            almacen.addProductInShop(tele1, almacen.defaultShop, 70);
-            almacen.addProductInShop(tele2, almacen.defaultShop, 42);
-            almacen.addProductInShop(tele3, almacen.defaultShop, 77);
-            almacen.addProductInShop(portatil1, almacen.defaultShop, 14);
-            almacen.addProductInShop(portatil2, almacen.defaultShop, 20);
+                        console.log("####################################################################");
+                        console.log("añadimos las categorias Telefonos,televisiones,portatiles y ropa");
+                        console.log(almacen.addCategory(telefonos));
+                        console.log(almacen.addCategory(televisiones));
+                        console.log(almacen.addCategory(portatiles));
 
-            almacen.addProductInShop(movil1, tienda1, 20);
-            almacen.addProductInShop(tele1, tienda1, 40);
-            almacen.addProductInShop(tele2, tienda1, 30);
-            almacen.addProductInShop(portatil1, tienda1, 18);
+                        almacen.addProduct(movil1, telefonos);
+                        almacen.addProduct(movil2, telefonos);
+                        almacen.addProduct(movil3, telefonos);
+                        almacen.addProduct(tele1, televisiones);
+                        almacen.addProduct(tele2, televisiones);
+                        almacen.addProduct(tele3, televisiones);
+                        almacen.addProduct(portatil1, portatiles);
+                        almacen.addProduct(portatil2, portatiles);
 
-            almacen.addProductInShop(movil1, tienda2, 50);
-            almacen.addProductInShop(movil2, tienda2, 24);
-            almacen.addProductInShop(tele1, tienda2, 70);
-            almacen.addProductInShop(tele2, tienda2, 40);
-            almacen.addProductInShop(portatil1, tienda2, 10);
-            almacen.addProductInShop(portatil2, tienda2, 15);
+                        almacen.addShop(tienda1);
+                        almacen.addShop(tienda2);
+                        almacen.addShop(tienda3);
 
 
-            almacen.addProductInShop(movil1, tienda3, 26);
-            almacen.addProductInShop(movil2, tienda3, 40);
-            almacen.addProductInShop(movil3, tienda3, 59);
-            almacen.addProductInShop(tele1, tienda3, 49);
-            almacen.addProductInShop(tele2, tienda3, 22);
-            almacen.addProductInShop(tele3, tienda3, 47);
-            almacen.addProductInShop(portatil1, tienda3, 25);
-            almacen.addProductInShop(portatil2, tienda3, 28);
+                        almacen.addProductInShop(movil1, almacen.defaultShop, 55);
+                        almacen.addProductInShop(movil2, almacen.defaultShop, 44);
+                        almacen.addProductInShop(movil3, almacen.defaultShop, 28);
+                        almacen.addProductInShop(tele1, almacen.defaultShop, 70);
+                        almacen.addProductInShop(tele2, almacen.defaultShop, 42);
+                        almacen.addProductInShop(tele3, almacen.defaultShop, 77);
+                        almacen.addProductInShop(portatil1, almacen.defaultShop, 14);
+                        almacen.addProductInShop(portatil2, almacen.defaultShop, 20);
 
-            var tiendas = showShops();
-            var categorias = showCategories();
+                        almacen.addProductInShop(movil1, tienda1, 20);
+                        almacen.addProductInShop(tele1, tienda1, 40);
+                        almacen.addProductInShop(tele2, tienda1, 30);
+                        almacen.addProductInShop(portatil1, tienda1, 18);
 
+                        almacen.addProductInShop(movil1, tienda2, 50);
+                        almacen.addProductInShop(movil2, tienda2, 24);
+                        almacen.addProductInShop(tele1, tienda2, 70);
+                        almacen.addProductInShop(tele2, tienda2, 40);
+                        almacen.addProductInShop(portatil1, tienda2, 10);
+                        almacen.addProductInShop(portatil2, tienda2, 15);
+
+
+                        almacen.addProductInShop(movil1, tienda3, 26);
+                        almacen.addProductInShop(movil2, tienda3, 40);
+                        almacen.addProductInShop(movil3, tienda3, 59);
+                        almacen.addProductInShop(tele1, tienda3, 49);
+                        almacen.addProductInShop(tele2, tienda3, 22);
+                        almacen.addProductInShop(tele3, tienda3, 47);
+                        almacen.addProductInShop(portatil1, tienda3, 25);
+                        almacen.addProductInShop(portatil2, tienda3, 28);
+                        */
+
+
+            //  var Json = createJson();
+            //  var myJSON = JSON.stringify(Json);
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var myJSON = JSON.parse(this.responseText);
+                    var i;
+                    var j;
+                    for (i = 1; i < myJSON.categories.length; i++) {
+
+                        var category = new Category(myJSON.categories[i].category.id, myJSON.categories[i].category.title);
+                        category.description = myJSON.categories[i].category.description;
+
+                        almacen.addCategory(category);
+                        categoriasObjectStore[i] = {
+                            category: category.getObject(),
+                            products: []
+                        };
+
+                        var categoriesObjectStore = db.transaction(DB_STORE_NAME1, "readwrite").objectStore(DB_STORE_NAME1);
+
+                        for (j = 0; j < myJSON.categories[i].products.length; j++) {
+
+                            var product = new DefaultProduct(myJSON.categories[i].products[j].serialNumber, myJSON.categories[i].products[j].name, myJSON.categories[i].products[j].price);
+                            product.images = myJSON.categories[i].products[j].images;
+                            product.description = myJSON.categories[i].products[j].description;
+
+                            categoriasObjectStore[i].products[j] = product.getObject();
+
+                            almacen.addProduct(product, category);
+
+                        }
+                        categoriesObjectStore.add(categoriasObjectStore[categoriasObjectStore.length - 1]);
+
+                    }
+                    for (i = 1; i < myJSON.shops.length; i++) {
+
+                        var shop1 = new Shop(myJSON.shops[i].shop.cif, myJSON.shops[i].shop.name);
+
+                        // shop.address = myJSON.shops[i].shop.address;
+                        // shop.telf = myJSON.shops[i].shop.telf;
+                        shop1.image = myJSON.shops[i].shop.image;
+                        // shop.coords = cursor.value.coords;
+                        almacen.addShop(shop1);
+
+                        tiendasObjectStore[i] = {
+                            shop: shop1.getObject(),
+                            products: [],
+                            stocks: []
+                        };
+
+                        var shopsObjectStore = db.transaction(DB_STORE_NAME2, "readwrite").objectStore(DB_STORE_NAME2);
+
+                        for (j = 0; j < myJSON.shops[i].products.length; j++) {
+                            alert("product" + myJSON.shops[i].products[j].name);
+
+                            var product = new DefaultProduct(myJSON.shops[i].products[j].serialNumber, myJSON.shops[i].products[j].name, myJSON.shops[i].products[j].price);
+                            product.images = myJSON.shops[i].products[j].images;
+                            product.description = myJSON.shops[i].products[j].description;
+
+                            tiendasObjectStore[i].products[j] = product.getObject();
+                            tiendasObjectStore[i].stocks[j] = myJSON.shops[i].stocks[j];
+
+                            almacen.addProductInShop(product, shop1, myJSON.shops[i].stocks[j]);
+
+
+                        }
+
+                        shopsObjectStore.add(tiendasObjectStore[tiendasObjectStore.length - 1]);
+
+                    }
+
+                    var initPopulate1 = document.getElementById("initPopulate");
+
+                    if (initPopulate1 !== null) {
+                        initPopulate1.remove();
+
+                    }
+                    //createObjectsStores();
+                    initPopulate();
+                    checkCookie();
+
+
+                }
+            };
 
             createCategoriesObjectStore();
             createShopObjectStore();
+
+
+            xhttp.open("POST", "initJson.php", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("Json=" + "init.json");
+
 
         } catch (e) {
             console.log("Exception creating object store: " + e);
         }
     };
 
+
+    function createJson() {
+
+
+        var categorias = showCategories();
+        var tiendas = showShops();
+        var stocks = [];
+        var JSon = {
+            "categories": [],
+            "shops": [{}]
+        };
+        var i;
+        var j;
+        var x;
+        for (i = 0; i < categorias.length; i++) {
+            JSon.categories[i] = {
+                category: {
+                    'id': categorias[i].id,
+                    "title": categorias[i].title,
+                    "description": categorias[i].description
+                },
+                products: []
+            };
+
+            var products = almacen.getCategoryProduct(categorias[i]);
+
+
+            for (j = 0; j < products.length; j++) {
+
+                JSon.categories[i].products[j] = {
+                    serialNumber: +products[j].serialNumber,
+                    "name": products[j].name,
+                    "description": products[j].description,
+                    "price": products[j].price,
+                    "images": products[j].images
+                };
+
+            }
+        }
+
+        for (i = 0; i < tiendas.length; i++) {
+            JSon.shops[i] = {
+                shop: {
+                    "cif": tiendas[i].cif,
+                    "name": tiendas[i].name,
+                    "image": tiendas[i].image,
+                    "address": tiendas[i].address,
+                    "coords": tiendas[i].coords,
+                    "telf": tiendas[i].telf
+                },
+                products: [],
+                stocks: []
+            };
+
+
+            var products = showProductShop1(almacen.getShopProduct(tiendas[i]), tiendas[i]);
+
+            for (j = 0; j < products.length; j++) {
+
+
+                JSon.shops[i].products[j] = {
+                    serialNumber: +products[j].serialNumber,
+                    "name": products[j].name,
+                    "description": products[j].description,
+                    "price": products[j].price,
+                    "images": products[j].images
+                };
+
+                JSon.shops[i].stocks[j] = almacen.getProductStock(products[j], tiendas[i]);
+
+            }
+        }
+        return JSon;
+    }
 }
+
 
 window.onload = init;

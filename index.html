@@ -28,7 +28,6 @@
     </div>
 </header>
 <nav>
-
 </nav>
 <main class="container" id="contenedorPrincipal">
     <div class="modal fade" id="modalAccess" role="dialog">
@@ -70,6 +69,34 @@
                 </div>
                 <div class="modal-body" style="padding:40px 50px;">
                     <p class="text-danger">El usuario o la contraseña no son correctos</p>
+                    <button type="submit" class="btn" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalSaveState" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Correcto</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <p>El estado ha sido guardado correctamente</p>
+                    <button type="submit" class="btn" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalSaveStateFalse" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding:35px 50px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4>Incorrecto</h4>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <p>El estado no ha sido guardado correctamente</p>
                     <button type="submit" class="btn" data-dismiss="modal">Aceptar</button>
                 </div>
             </div>
