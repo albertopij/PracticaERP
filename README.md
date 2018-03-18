@@ -1,1 +1,1 @@
-Subo la práctica 11 acabada, con todos los errores solucionados.
+Subo la práctica 11 acabada y he solucionado todos los errores en total.

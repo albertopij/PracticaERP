@@ -122,62 +122,26 @@ function init() {
         return productInShop;
     }
 
-
     function initPopulate() {
 
         var i = 0;
         var shops = almacen.shops;
         var shop = shops.next();
 
-        var inicioLogo = document.getElementById("logo");
+        $("#logo").click(function () {
 
-        inicioLogo.addEventListener("click", function () {
-
-            var categorias = document.getElementById("menuCategoryShopPopulate");
-            var shopPopulate = document.getElementById("shopPopulate");
-            var detalleProducto = document.getElementById("detalleProducto");
-            var globalProductPopulate = document.getElementById("globalProductPopulate");
-            var initPopulate = document.getElementById("initPopulate");
-            var categoryPopulate = document.getElementById("categoryPopulate");
-
-
-            var mapPopulate = document.getElementById("mapPopulate");
-            if (mapPopulate !== null) {
-
-                mapPopulate.style.display = "none";
-            }
-
-            if (categoryPopulate !== null) {
-
-                categoryPopulate.remove();
-            }
-
-
-            if (categorias !== null) {
-                categorias.remove();
-            }
-
-            if (shopPopulate !== null) {
-                shopPopulate.remove();
-            }
-
-            if (detalleProducto !== null) {
-                detalleProducto.remove();
-            }
-
-            if (globalProductPopulate !== null) {
-                globalProductPopulate.remove();
-            }
-
-            initPopulate.style.display = "";
+            $("#mapPopulate").hide();
+            $("#categoryPopulate").remove();
+            $("#menuCategoryShopPopulate").remove();
+            $("#shopPopulate").remove();
+            $("#detalleProducto").remove();
+            $("#globalProductPopulate").remove();
+            $("#initPopulate").css("display", "");
 
         });
 
 
-        var buttonCloseWindows = document.getElementById("closeAllWindows");
-
-        buttonCloseWindows.addEventListener("click", function () {
-
+        $("#closeAllWindows").click(function () {
             var i;
             for (i = 0; i < ventanas.length; i++) {
                 if (!ventanas[i].close()) {
@@ -186,57 +150,18 @@ function init() {
             }
             ventanas = [];
         });
+        $("#contenedorPrincipal").append("<div id='initPopulate' class='container'></div>");
+        $("#initPopulate").append("<button id='buttonAddShop' class='btn btn-md loggin text-center' type='button' data-toggle='modal' data-target='#addShop'>Añadir tienda <span class='glyphicon glyphicon-plus'></span></button>");
+        $("#buttonAddShop").click(myMapAddShop());
 
+        $("#initPopulate").append("<button id='buttonAddProductERP' class='btn btn-md loggin text-center' type='button' data-toggle='modal' data-target='#addProductERP'>Añadir Producto <span class='glyphicon glyphicon-plus'></span></button>");
+        $("#initPopulate").append("<button id='buttonSaveState' class='btn btn-md loggin text-center' type='button'>Guardar Estado <span class='glyphicon glyphicon-save'></span></button>");
 
-        var contenedorTiendas = document.createElement("div");
-        contenedorTiendas.setAttribute("class", ".container");
-        contenedorTiendas.setAttribute("id", "initPopulate");
+        $("#buttonSaveState").click(saveState);
 
-        var buttonAddShop = document.createElement("button");
-        buttonAddShop.setAttribute("class", "btn btn-md loggin text-center");
-        buttonAddShop.setAttribute("id", "buttonAddShop");
-        buttonAddShop.setAttribute("type", "button");
-        buttonAddShop.setAttribute("data-toggle", "modal");
-        buttonAddShop.setAttribute("data-target", "#addShop");
-        buttonAddShop.appendChild(document.createTextNode("Añadir Tienda "));
-        var spanAddShop = document.createElement("span");
-        spanAddShop.setAttribute("class", "glyphicon glyphicon-plus");
-        buttonAddShop.appendChild(spanAddShop);
-        contenedorTiendas.appendChild(buttonAddShop);
-        buttonAddShop.addEventListener("click", myMapAddShop());
+        $("#initPopulate").append("<h2 class='text-center bold titulo'>Inicio</h2>");
 
-        var buttonAddProductERP = document.createElement("button");
-        buttonAddProductERP.setAttribute("class", "btn btn-md loggin text-center");
-        buttonAddProductERP.setAttribute("id", "buttonAddProductERP");
-        buttonAddProductERP.setAttribute("type", "button");
-        buttonAddProductERP.setAttribute("data-toggle", "modal");
-        buttonAddProductERP.setAttribute("data-target", "#addProductERP");
-        buttonAddProductERP.appendChild(document.createTextNode("Añadir Producto"));
-        var spanAddProduct = document.createElement("span");
-        spanAddProduct.setAttribute("class", "glyphicon glyphicon-plus");
-        buttonAddProductERP.appendChild(spanAddProduct);
-        contenedorTiendas.appendChild(buttonAddProductERP);
-
-        var buttonSaveState = document.createElement("button");
-        buttonSaveState.setAttribute("class", "btn btn-md loggin text-center");
-        buttonSaveState.setAttribute("id", "buttonSaveState");
-        buttonSaveState.setAttribute("type", "button");
-        buttonSaveState.appendChild(document.createTextNode("Guardar Estado "));
-        var spanSaveState = document.createElement("span");
-        spanSaveState.setAttribute("class", "glyphicon glyphicon-save");
-        buttonSaveState.appendChild(spanSaveState);
-        contenedorTiendas.appendChild(buttonSaveState);
-        buttonSaveState.addEventListener("click", saveState);
-
-        var mainH2 = document.createElement("h2");
-        mainH2.setAttribute("class", "text-center bold titulo");
-        mainH2.appendChild(document.createTextNode("Inicio"));
-        contenedorTiendas.appendChild(mainH2);
-
-        var row = document.createElement("div");
-        row.setAttribute("class", "row");
-
-        contenedorPrincipal.appendChild(contenedorTiendas);
+        $("#initPopulate").append("<div class='row'></div>");
 
         while (shop.done !== true) {
 
@@ -244,15 +169,9 @@ function init() {
 
             if (i > 4) {
                 i = 0;
-
-                row = document.createElement("div");
-                row.setAttribute("class", "row");
-
-                contenedorTiendas.appendChild(row);
+                $("#initPopulate").append("<div class='row'></div>");
 
             }
-
-            var nombreTienda = document.createTextNode(shop.value.name);
 
             var dirImg;
             if (shop.value.image !== undefined || shop.value.image == "") {
@@ -262,106 +181,52 @@ function init() {
                 dirImg = "img/noShopImage.jpg";
             }
 
-
-            var tienda = document.createElement("div");
-            tienda.setAttribute("class", "col-md-3 col-sm-6 col-xs-12");
-
-            var panel = document.createElement("div");
-            panel.setAttribute("class", "panel panel-default text-center");
-
-            var panelHeading = document.createElement("div");
-            panelHeading.setAttribute("class", "panel-heading");
-
-            var h2 = document.createElement("h2");
-            h2.appendChild(nombreTienda);
-            panelHeading.appendChild(h2);
-
-            var panelBody = document.createElement("div");
-            panelBody.setAttribute("class", "panel-body");
-
-
-            var imagen = document.createElement("img");
-            imagen.setAttribute("class", "img-responsive");
-            imagen.setAttribute("src", dirImg);
-            panelBody.appendChild(imagen);
+            $("#initPopulate .row:last").append("<div class='col-md-3 col-sm-6 col-xs-12 tiendas'></div>");
+            $("#initPopulate .tiendas:last").append("<div class='panel panel-default text-center'></div>");
+            $("#initPopulate .tiendas:last .panel-default").append("<div class='panel-heading'><h2>" + shop.value.name + "</h2></div>");
+            $("#initPopulate .tiendas:last .panel-default").append("<div class='panel-body'><img class='img-responsive' src='" + dirImg + "'></div>");
 
             if (shop.value.name !== "defaultShop") {
+                $("#initPopulate .tiendas:last .panel-default>.panel-body").append("<button class='btn btn-success loggin pull-left' type='button' data-toggle='modal' data-target='#updateShop'>Modificar</button>");
+                $("#initPopulate .tiendas:last .panel-default>.panel-body").append("<button class='btn btn-danger loggin pull-right' type='button' data-toggle='modal' data-target='#removeShop'>Eliminar</button>");
 
-                var buttonUpdateCategory = document.createElement("button");
-                buttonUpdateCategory.setAttribute("class", "btn btn-success loggin pull-left");
-                buttonUpdateCategory.setAttribute("type", "button");
-                buttonUpdateCategory.setAttribute("data-toggle", "modal");
-                buttonUpdateCategory.setAttribute("data-target", "#updateShop");
-                buttonUpdateCategory.appendChild(document.createTextNode("Modificar"));
-                panelBody.appendChild(buttonUpdateCategory);
-                buttonUpdateCategory.addEventListener("click", createFunctionUpdateShop(shop.value));
+                $($("#initPopulate .tiendas:last .panel-default>.panel-body>.btn-success")).click(createFunctionUpdateShop(shop.value));
 
-                var buttonRemoveShop = document.createElement("button");
-                buttonRemoveShop.setAttribute("class", "btn btn-danger loggin pull-right");
-                buttonRemoveShop.setAttribute("type", "button");
-                buttonRemoveShop.setAttribute("data-toggle", "modal");
-                buttonRemoveShop.setAttribute("data-target", "#removeShop");
-                buttonRemoveShop.appendChild(document.createTextNode("Eliminar"));
-                panelBody.appendChild(buttonRemoveShop);
-                buttonRemoveShop.addEventListener("click", createFunctionRemoveShop(shop.value));
+                $($("#initPopulate .tiendas:last .panel-default>.panel-body>.btn-danger")).click(createFunctionRemoveShop(shop.value));
             }
 
-            var panelFooter = document.createElement("div");
-            panelFooter.setAttribute("class", "panel-footer");
+            $("#initPopulate .tiendas:last .panel-default").append("<div class='panel-footer'><button class='btn btn-lg tienda'>Ver Tienda</button></div>");
 
-            var button = document.createElement("button");
-            button.setAttribute("class", "btn btn-lg tienda");
-            button.addEventListener("click", createFunctionShowShop(shop.value));
+            $($("#initPopulate .tiendas:last .panel-default>.panel-footer> button")).click(createFunctionShowShop(shop.value));
 
-
-            button.appendChild(document.createTextNode("Ver Tienda"));
-            panelFooter.appendChild(button);
-
-            panel.appendChild(panelHeading);
-            panel.appendChild(panelBody);
-            panel.appendChild(panelFooter);
-
-            tienda.appendChild(panel);
-            row.appendChild(tienda);
-
-            contenedorTiendas.appendChild(row);
             shop = shops.next();
         }
 
 
-        var selectCategory = document.getElementById("selectCategoryProduct");
-
         var categories = almacen.categories;
         var category = categories.next();
 
         while (category.done !== true) {
 
-            var option = document.createElement("option");
-            option.setAttribute("value", category.value.title);
-            option.setAttribute("class", "optionDinamico");
-            option.appendChild(document.createTextNode(category.value.title));
-            selectCategory.appendChild(option);
+            $("#selectCategoryProduct").append("<option value='" + category.value.title + "' class='optionDinamico'>" + category.value.title + "</option>");
+
             category = categories.next();
         }
 
-        var selectProduct = document.getElementById("selectProduct");
+
         var i;
         var categories = almacen.categories;
         var category = categories.next();
         while (category.done !== true) {
+
             var product = almacen.getCategoryProduct(category.value);
             if (product.length > 0) {
-                var optgroup = document.createElement("optgroup");
-                optgroup.setAttribute("label", category.value.title);
-                optgroup.setAttribute("class", "optionDinamico");
-                selectProduct.appendChild(optgroup);
+
+                $("#selectProduct").append("<optgroup label='" + category.value.title + "' class='optionDinamico'></optgroup>");
 
                 for (i = 0; i < product.length; i++) {
-                    var option = document.createElement("option");
-                    option.setAttribute("value", product[i].serialNumber);
-                    option.setAttribute("class", "optionDinamico");
-                    option.appendChild(document.createTextNode(product[i].name));
-                    optgroup.appendChild(option);
+
+                    $("#selectProduct optgroup:last").append("<option value='" + product[i].serialNumber + "' class='optionDinamico'>" + product[i].name + "</option>");
                 }
 
             }
@@ -371,53 +236,39 @@ function init() {
         function createFunctionUpdateShop(shop) {
             return function () {
 
-                document.getElementById("formUpdateShop").reset();
-
-
-                var nombre = document.getElementById("nameShop2");
-                nombre.setAttribute("value", shop.name);
+                myMapUpdateShop();
+                $("#nameShop2").val(shop.name);
 
                 if (shop.image !== undefined && shop.image !== "") {
-                    var imagen = document.getElementById("imageShop2");
-                    imagen.setAttribute("value", shop.image)
+                    $("#imageShop2").val(shop.image);
                 }
 
                 if (shop.address !== undefined) {
-                    var direccion = document.getElementById("addressShop2");
-                    direccion.setAttribute("value", shop.address);
+                    $("#addressShop2").val(shop.address);
                 }
 
                 if (shop.telf !== undefined) {
-                    var telf = document.getElementById("telfShop2");
-                    telf.setAttribute("value", shop.telf)
+
+                    $("#telfShop2").val(shop.telf);
                 }
 
                 if (shop.coords.latitude !== undefined) {
 
-                    var latitude = document.getElementById("latitudeUpdateShop");
-                    latitude.setAttribute("value", shop.coords.latitude);
+                    $("#latitudeUpdateShop").val(shop.coords.latitude);
                 }
 
                 if (shop.coords.longitude !== undefined) {
-
-                    var longitude = document.getElementById("longitudeUpdateShop");
-                    longitude.setAttribute("value", shop.coords.latitude);
+                    $("#longitudeUpdateShop").val(shop.coords.longitude);
                 }
 
+                myMapUpdateShop();
 
-                var buttonUpdateShopRepetido = document.getElementById("buttonUpdateShop");
 
-                if (buttonUpdateShopRepetido !== null) {
-                    buttonUpdateShopRepetido.remove();
-                }
-                var bupdateShop = document.getElementById("BupdateShop");
-                var buttonUpdateShop = document.createElement("button");
-                buttonUpdateShop.setAttribute("id", "buttonUpdateShop");
-                buttonUpdateShop.setAttribute("class", "btn btn-block btn-classic");
-                buttonUpdateShop.setAttribute("data-dismiss", "modal");
-                buttonUpdateShop.appendChild(document.createTextNode("Modificar"));
-                bupdateShop.appendChild(buttonUpdateShop);
-                buttonUpdateShop.addEventListener("click", update(shop));
+                $("#buttonUpdateShop").remove();
+
+                $("#BupdateShop").append("<button id='buttonUpdateShop' class='btn btn-block btn-classic' data-dismiss='modal'>Modificar</button>");
+
+                $("#buttonUpdateShop").click(update(shop));
             }
         }
 
@@ -439,216 +290,55 @@ function init() {
                 removeShop(shop);
             }
         }
-    }
 
+    }
 
     function shopsMenusPopulate() {
 
-        var nav1 = document.createElement("div");
-        nav1.setAttribute("class", "container-fluid navbar navbar-default");
-        nav1.setAttribute("id", "nav1");
-        nav1.setAttribute("role", "navigation");
+
+        $("nav").append("<div id='nav1' class='container-fluid navbar navbar-default' role='navigation'></div>");
+        $("#nav1").append("<div class='navbar-header'><button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-ex1-collapse'>" +
+            "<span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span></button></div>");
 
 
-        var nav1Header = document.createElement("div");
-        nav1Header.setAttribute("class", "navbar-header");
+        $("#nav1:first-child").append("<a class='navbar-brand' href='#'>ERP</a>");
+        $("#nav1:first-child > a:first").click(function () {
 
-        var buttonNav = document.createElement("button");
-        buttonNav.setAttribute("type", "button");
-        buttonNav.setAttribute("class", "navbar-toggle");
-        buttonNav.setAttribute("data-toggle", "collapse");
-        buttonNav.setAttribute("data-target", ".navbar-ex1-collapse");
+            $("#mapPopulate").hide();
+            $("#categoryPopulate").remove();
+            $("#menuCategoryShopPopulate").remove();
+            $("#shopPopulate").remove();
+            $("#detalleProducto").remove();
+            $("#globalProductPopulate").remove();
+            $("#initPopulate").css("display", "");
+        });
 
-        var iconBar1 = document.createElement("span");
-        iconBar1.setAttribute("class", "icon-bar");
-        var iconBar2 = document.createElement("span");
-        iconBar2.setAttribute("class", "icon-bar");
-        var iconBar3 = document.createElement("span");
-        iconBar3.setAttribute("class", "icon-bar");
+        $("#nav1").append("<div id='navBar' class='collapse navbar-collapse navbar-ex1-collapse'><ul id='navLeft' class='nav navbar-nav'></ul></div>");
+        $("#navLeft").append("<li><a href='#'>Tiendas</a></li>");
+        $("#navLeft > li:last a ").click(function () {
 
-        var tituloMenu = document.createElement("a");
-        tituloMenu.setAttribute("class", "navbar-brand");
-        tituloMenu.setAttribute("href", "#");
-
-        tituloMenu.addEventListener("click", function () {
-
-            var categorias = document.getElementById("menuCategoryShopPopulate");
-            var shopPopulate = document.getElementById("shopPopulate");
-            var detalleProducto = document.getElementById("detalleProducto");
-            var globalProductPopulate = document.getElementById("globalProductPopulate");
-            var initPopulate = document.getElementById("initPopulate");
-            var categoryPopulate = document.getElementById("categoryPopulate");
-
-            var mapPopulate = document.getElementById("mapPopulate");
-            if (mapPopulate !== null) {
-
-                mapPopulate.style.display = "none";
-            }
-
-            if (categoryPopulate !== null) {
-
-                categoryPopulate.remove();
-            }
-
-            if (categorias !== null) {
-                categorias.remove();
-            }
-
-            if (shopPopulate !== null) {
-                shopPopulate.remove();
-            }
-
-            if (detalleProducto !== null) {
-                detalleProducto.remove();
-            }
-
-            if (globalProductPopulate !== null) {
-                globalProductPopulate.remove();
-            }
-
-            initPopulate.style.display = "";
+            $("#mapPopulate").hide();
+            $("#categoryPopulate").remove();
+            $("#menuCategoryShopPopulate").remove();
+            $("#shopPopulate").remove();
+            $("#detalleProducto").remove();
+            $("#globalProductPopulate").remove();
+            $("#initPopulate").css("display", "");
         });
 
 
-        var textoTitulo = document.createTextNode("ERP");
-        tituloMenu.appendChild(textoTitulo);
+        $("#navLeft").append("<li><a href='#'>Categorías Globales</a></li>");
+        $("#navLeft > li:last a ").click(categoryPopulate);
+
+        $("#navLeft").append("<li><a href='#'>Productos Globales</a></li>");
+        $("#navLeft > li:last a ").click(globalProductPopulate);
+
+        $("#navLeft").append("<li><a href='#'>Mapa</a></li>");
+        $("#navLeft > li:last a ").click(mapPopulate);
 
 
-        var navBar = document.createElement("div");
-        navBar.setAttribute("id", "navBar");
-        navBar.setAttribute("class", "collapse navbar-collapse navbar-ex1-collapse");
-
-        var ulNavbar = document.createElement("ul");
-        ulNavbar.setAttribute("id", "navLeft");
-        ulNavbar.setAttribute("class", "nav navbar-nav");
-
-
-        var textoTienda = document.createTextNode("Tiendas");
-        var li = document.createElement("li");
-        var enlaceTienda = document.createElement("a");
-        enlaceTienda.setAttribute("href", "#");
-        enlaceTienda.addEventListener("click", function () {
-
-            var categorias = document.getElementById("menuCategoryShopPopulate");
-            var shopPopulate = document.getElementById("shopPopulate");
-            var detalleProducto = document.getElementById("detalleProducto");
-            var globalProductPopulate = document.getElementById("globalProductPopulate");
-            var initPopulate = document.getElementById("initPopulate");
-            var categoryPopulate = document.getElementById("categoryPopulate");
-
-            var mapPopulate = document.getElementById("mapPopulate");
-            if (mapPopulate !== null) {
-
-                mapPopulate.style.display = "none";
-            }
-
-            if (categoryPopulate !== null) {
-
-                categoryPopulate.remove();
-            }
-
-            if (categorias !== null) {
-                categorias.remove();
-            }
-
-            if (shopPopulate !== null) {
-                shopPopulate.remove();
-            }
-
-            if (detalleProducto !== null) {
-                detalleProducto.remove();
-            }
-
-            if (globalProductPopulate !== null) {
-                globalProductPopulate.remove();
-            }
-
-            initPopulate.style.display = "";
-
-        });
-        enlaceTienda.appendChild(textoTienda);
-        li.appendChild(enlaceTienda);
-        ulNavbar.appendChild(li);
-
-        var textoTienda = document.createTextNode("Categorías Globales");
-        var li = document.createElement("li");
-        var enlaceTienda = document.createElement("a");
-        enlaceTienda.setAttribute("href", "#");
-        enlaceTienda.addEventListener("click", categoryPopulate);
-        enlaceTienda.appendChild(textoTienda);
-        li.appendChild(enlaceTienda);
-        ulNavbar.appendChild(li);
-
-
-        var textoAllProduct = document.createTextNode("Productos Globales");
-        li = document.createElement("li");
-        var enlaceProductosGlobales = document.createElement("a");
-        enlaceProductosGlobales.setAttribute("href", "#");
-        enlaceProductosGlobales.addEventListener("click", function () {
-
-            globalProductPopulate()
-        });
-
-        enlaceProductosGlobales.appendChild(textoAllProduct);
-        li.appendChild(enlaceProductosGlobales);
-        ulNavbar.appendChild(li);
-
-
-        var textoTienda = document.createTextNode("Mapa");
-        var li = document.createElement("li");
-        var enlaceTienda = document.createElement("a");
-        enlaceTienda.setAttribute("href", "#");
-        enlaceTienda.addEventListener("click", mapPopulate);
-        enlaceTienda.appendChild(textoTienda);
-        li.appendChild(enlaceTienda);
-        ulNavbar.appendChild(li);
-
-
-        //navbar header
-
-
-        buttonNav.appendChild(iconBar1);
-        buttonNav.appendChild(iconBar2);
-        buttonNav.appendChild(iconBar3);
-
-        nav1Header.appendChild(buttonNav);
-        nav1Header.appendChild(tituloMenu);
-
-        //navbar
-
-        navBar.appendChild(ulNavbar);
-
-        nav1.appendChild(nav1Header);
-        nav1.appendChild(navBar);
-
-        etiquetaNav[0].appendChild(nav1);
-
-        function createFunctionShowShop(shop) {
-            return function () {
-                shopPopulate(shop);
-
-                var ulRepetido = document.getElementById("returnShopProduct");
-
-
-                if (ulRepetido !== null) {
-
-                    navBar.removeChild(ulRepetido);
-                }
-            }
-        }
-
-
-        var liRightNav = document.createElement("li");
-
-        ulNavbar.appendChild(liRightNav);
-
-        var aLiRight = document.createElement("a");
-        aLiRight.setAttribute("href", "#");
-        aLiRight.setAttribute("id", "closeAllWindows2");
-        aLiRight.setAttribute("class", "hidden-sm hidden-md hidden-lg");
-        aLiRight.appendChild(document.createTextNode("Cerrar Ventanas"));
-        aLiRight.addEventListener("click", function () {
-
+        $("#navLeft").append("<li><a href='#' id='closeAllWindows2' class='hidden-sm hidden-md hidden-lg'>Cerrar Ventanas</a></li>");
+        $("#closeAllWindows2").click(function () {
             var i;
             for (i = 0; i < ventanas.length; i++) {
                 if (!ventanas[i].close()) {
@@ -658,88 +348,39 @@ function init() {
             ventanas = [];
         });
 
-        liRightNav.appendChild(aLiRight);
+        $("#nav1:first-child").append("<button id='buttonAccess2' class='btn btn-md pull-right' data-toggle='modal' data-target='#modalAccess'><span class='glyphicon glyphicon-user'> Acceso</span></button>");
 
-
-        var buttonAccess = document.createElement("button");
-        buttonAccess.setAttribute("id", "buttonAccess2");
-        buttonAccess.setAttribute("class", "btn btn-md pull-right");
-        buttonAccess.setAttribute("data-toggle", "modal");
-        buttonAccess.setAttribute("data-target", "#modalAccess");
-        var spanAccess = document.createElement("span");
-        spanAccess.setAttribute("class", "glyphicon glyphicon-user");
-        buttonAccess.appendChild(spanAccess);
-        buttonAccess.appendChild(document.createTextNode(" Acceso"));
-        nav1Header.appendChild(buttonAccess);
-
-        var divLoggin = document.createElement("div");
-        divLoggin.setAttribute("id", "loggin2");
-        divLoggin.setAttribute("class", "pull-right");
-        nav1Header.appendChild(divLoggin);
-
+        $("#nav1:first-child").append("<div id='loggin2' class='pull-right'></div>");
     }
-
 
     function shopPopulate(shop) {
 
+        $("#globalProductPopulate").remove();
 
-        var globalProductPopulate = document.getElementById("globalProductPopulate");
-
-        if (globalProductPopulate !== null) {
-            globalProductPopulate.remove();
-        }
         menuCategoryShopPopulate(shop);
 
-        var contenedorTiendas = document.getElementById("initPopulate");
+        $("#initPopulate").hide();
 
-        contenedorTiendas.style.display = "none";
 
         var tienda = shop;
         var j = 0;
         var i;
-        var shopPopulateRepetido = document.getElementById("shopPopulate");
-        var detalleProducto = document.getElementById("detalleProducto");
 
-
-        if (shopPopulateRepetido !== null) {
-
-            contenedorPrincipal.removeChild(shopPopulateRepetido);
-        }
-
-        if (detalleProducto !== null) {
-
-            detalleProducto.remove();
-        }
-
+        $("#shopPopulate").remove();
+        $("#detalleProducto").remove();
 
         var productos = showProductShop1(almacen.getShopProduct(tienda), tienda);
 
-        var divShopPopulate = document.createElement("div");
-        divShopPopulate.setAttribute("id", "shopPopulate");
-        divShopPopulate.setAttribute("class", ".container-fluid");
-        contenedorPrincipal.appendChild(divShopPopulate);
 
-        var buttonAddProduct = document.createElement("button");
-        buttonAddProduct.setAttribute("class", "btn btn-md loggin text-center");
-        buttonAddProduct.setAttribute("type", "button");
-        buttonAddProduct.setAttribute("data-toggle", "modal");
-        buttonAddProduct.setAttribute("data-target", "#addProductShop");
-        buttonAddProduct.appendChild(document.createTextNode("Añadir Producto "));
-        var spanAddProduct = document.createElement("span");
-        spanAddProduct.setAttribute("class", "glyphicon glyphicon-plus");
-        buttonAddProduct.appendChild(spanAddProduct);
-        divShopPopulate.appendChild(buttonAddProduct);
+        $("#contenedorPrincipal").append("<div id='shopPopulate' class='.container-fluid'></div>");
 
 
-        var mainH2 = document.createElement("h2");
-        mainH2.setAttribute("class", "text-center bold titulo");
-        mainH2.appendChild(document.createTextNode("Tienda " + shop.name));
-        divShopPopulate.appendChild(mainH2);
+        $("#shopPopulate").append("<button class='btn btn-md loggin text-center' type='button' data-toggle='modal' data-target='#addProductShop'>Añadir Producto <span class='glyphicon glyphicon-plus'></span></button>");
 
+        $("#shopPopulate").append("<h2 class='text-center bold titulo'>Tienda " + shop.name + "</h2>");
 
-        var row = document.createElement("div");
-        row.setAttribute("class", "row");
-        divShopPopulate.appendChild(row);
+        $("#shopPopulate").append("<div class='row'></div>");
+
         var x = 0;
         for (i = 0; i < productos.length; i++) {
 
@@ -747,77 +388,39 @@ function init() {
 
             if (j > 4) {
                 j = 0;
-
-                row = document.createElement("div");
-                row.setAttribute("class", "row");
-                divShopPopulate.appendChild(row);
-
+                $("#shopPopulate").append("<div class='row'></div>");
             }
 
-            var producto = document.createElement("div");
-            producto.setAttribute("class", "col-md-3 col-sm-6 col-xs-12");
-            row.appendChild(producto);
-
-            var panelProducto = document.createElement("div");
-            panelProducto.setAttribute("class", "panel panel-default text-center producto");
-            producto.appendChild(panelProducto);
-
-            var panelBodyProducto = document.createElement("div");
-            panelBodyProducto.setAttribute("class", "panel-body");
-            panelProducto.appendChild(panelBodyProducto);
-
-            var imgProducto = document.createElement("img");
-            imgProducto.setAttribute("class", "img-responsive");
-            imgProducto.setAttribute("src", productos[i].images[0]);
-            panelBodyProducto.appendChild(imgProducto);
+            $("#shopPopulate .row:last").append("<div class='col-md-3 col-sm-6 col-xs-12 productos'></div>");
+            $("#shopPopulate .row:last .productos:last").append("<div class='panel panel-default text-center producto'></div>");
+            $("#shopPopulate .productos:last .panel-default").append("<div class='panel-body'><img src='" + productos[i].images[0] + "'></div>");
 
 
-            var buttonUpdateProduct = document.createElement("button");
-            buttonUpdateProduct.setAttribute("class", "btn btn-success loggin pull-left");
-            buttonUpdateProduct.setAttribute("type", "button");
-            buttonUpdateProduct.setAttribute("data-toggle", "modal");
-            buttonUpdateProduct.setAttribute("data-target", "#updateProduct");
-            buttonUpdateProduct.appendChild(document.createTextNode("Modificar"));
-            panelBodyProducto.appendChild(buttonUpdateProduct);
-            buttonUpdateProduct.addEventListener("click", createFunctionUpdateProduct(productos[i], shop));
+            $("#shopPopulate .productos:last .panel-default .panel-body").append("<button class='btn btn-success loggin pull-left' type='button' data-toggle='modal' data-target='#updateProduct'>Modificar</button>");
+            $("#shopPopulate .productos:last .panel-default .panel-body button:last").click(createFunctionUpdateProduct(productos[i], shop));
 
 
-            var buttonRemoveProducto = document.createElement("button");
-            buttonRemoveProducto.setAttribute("class", "btn btn-danger loggin pull-right");
-            buttonRemoveProducto.setAttribute("type", "button");
-            buttonRemoveProducto.setAttribute("data-toggle", "modal");
-            buttonRemoveProducto.setAttribute("data-target", "#removeProduct");
-            buttonRemoveProducto.appendChild(document.createTextNode("Eliminar"));
-            panelBodyProducto.appendChild(buttonRemoveProducto);
-            buttonRemoveProducto.addEventListener("click", createFunctionRemoveProduct(productos[i], tienda));
+            $("#shopPopulate .productos:last .panel-default .panel-body").append("<button class='btn btn-danger loggin pull-right' type='button' data-toggle='modal' data-target='#removeProduct'>Eliminar</button>");
 
-            var panelFooterProducto = document.createElement("div");
-            panelFooterProducto.setAttribute("class", "panel-footer");
-            panelProducto.appendChild(panelFooterProducto);
+            $("#shopPopulate .productos:last .panel-default .panel-body button:last").click(createFunctionRemoveProduct(productos[i], tienda));
 
-            var nombreProducto = document.createElement("p");
-            var textoNombreProducto = document.createTextNode(productos[i].name);
-            nombreProducto.appendChild(textoNombreProducto);
-            panelFooterProducto.appendChild(nombreProducto);
+            $("#shopPopulate .productos:last .panel-default").append("<div class='panel-footer'></div>");
 
-            var precioProducto = document.createElement("h3");
-            precioProducto.setAttribute("class", "bold");
-            var textoPrecioProducto = document.createTextNode(productos[i].price + "€");
-            precioProducto.appendChild(textoPrecioProducto);
-            panelFooterProducto.appendChild(precioProducto);
+            $("#shopPopulate .productos:last .panel-default .panel-footer").append("<p>" + productos[i].name + "</p><h3 class='bold'>" + productos[i].price + "€</h3>");
 
-            var buttonDetalles = document.createElement("button");
-            buttonDetalles.setAttribute("class", "btn btn-lg");
-            buttonDetalles.appendChild(document.createTextNode("Ver Detalle"));
-            buttonDetalles.addEventListener("click", createFunctionShowShopDetailProduct(tienda, productos[i]));
-            panelFooterProducto.appendChild(buttonDetalles);
+            $("#shopPopulate .productos:last .panel-default .panel-footer").append("<button class='btn btn-lg'>Ver Detalle</button>");
 
-            var buttonAddProductShop = document.getElementById("buttonAddProductShop");
-            buttonAddProductShop.addEventListener("click", createFunctionAddProduct(shop));
-
-            checkCookie();
+            $("#shopPopulate .productos:last .panel-default .panel-footer button:last").click(createFunctionShowShopDetailProduct(tienda, productos[i]));
 
         }
+        $("#buttonAddProductShop").remove();
+
+        $("#formAddProductShop").append("<button id='buttonAddProductShop' class='btn btn-block btn-classic' data-dismiss='modal'><span class='glyphicon glyphicon-plus'> Añadirrrrrrrrrrr</span></button>");
+
+
+        $("#buttonAddProductShop").click(createFunctionAddProduct());
+        checkCookie();
+
 
         function createFunctionUpdateProduct(product, shop) {
             return function () {
@@ -825,35 +428,29 @@ function init() {
                 document.getElementById("formUpdateProduct").reset();
 
 
-                var nombre = document.getElementById("nameProduct2");
-                nombre.setAttribute("value", product.name);
+                $("#nameProduct2").val(product.name);
 
-                var precio = document.getElementById("priceProduct2");
-                precio.setAttribute("value", product.price);
+                $("#priceProduct2").val(product.price);
 
-                var imagen = document.getElementById("imageProduct2");
 
                 if (product.images !== undefined && product.images[0] !== "") {
-                    imagen.setAttribute("value", product.images[0]);
+
+                    $("#imageProduct2").val(product.images[0]);
                 }
+
 
                 if (product.description !== undefined) {
-                    descripcionProduct2.innerHTML = product.description;
+
+                    $("#descripcionProduct2").val(product.description);
                 }
 
-                var buttonUpdateProductRepetido = document.getElementById("buttonUpdateProduct");
 
-                if (buttonUpdateProductRepetido !== null) {
-                    buttonUpdateProductRepetido.remove();
-                }
-                var formUpdateProduct = document.getElementById("formUpdateProduct");
-                var buttonUpdateProduct = document.createElement("button");
-                buttonUpdateProduct.setAttribute("id", "buttonUpdateProduct");
-                buttonUpdateProduct.setAttribute("class", "btn btn-block btn-classic");
-                buttonUpdateProduct.setAttribute("data-dismiss", "modal");
-                buttonUpdateProduct.appendChild(document.createTextNode("Modificar"));
-                formUpdateProduct.appendChild(buttonUpdateProduct);
-                buttonUpdateProduct.addEventListener("click", update(product, shop));
+                $("#buttonUpdateProduct").remove();
+
+
+                $("#formUpdateProduct").append("<button id='buttonUpdateProduct' class='btn btn-block btn-classic' data-dismiss='modal'>Modificar</button>");
+
+                $("#buttonUpdateProduct").click(update(product, shop));
             }
         }
 
@@ -863,13 +460,17 @@ function init() {
             }
         }
 
-        function createFunctionAddProduct(shop) {
+        function createFunctionAddProduct() {
             return function () {
                 if (x === 0) {
-                    addProductInShop(shop);
+                    addProduct(shop);
                 }
                 x++;
-           }
+            }
+        }
+
+        function addProduct() {
+            addProductInShop(shop);
         }
 
         function createFunctionRemoveProduct(product, shop) {
@@ -895,110 +496,40 @@ function init() {
         }
     }
 
-
-    function returnShopPopulate(shop) {
-
-        var navBar = document.getElementById("navBar");
-
-
-        var ulRight = document.createElement("ul");
-        ulRight.setAttribute("id", "returnShopProduct");
-        ulRight.setAttribute("class", "nav navbar-nav navbar-right");
-
-
-        var liReturn = document.createElement("li");
-
-
-        var aReturn = document.createElement("a");
-
-        var textoEnlace = document.createTextNode("Volver");
-
-        navBar.appendChild(ulRight);
-        ulRight.appendChild(liReturn);
-        liReturn.appendChild(aReturn);
-        aReturn.appendChild(textoEnlace);
-
-        aReturn.addEventListener("click", function () {
-
-            var shopPopulate = document.getElementById("shopPopulate");
-            var detalleProducto = document.getElementById("detalleProducto");
-            var categorias = document.getElementById("menuCategoryShopPopulate");
-
-
-            categorias.style.display = "";
-            ulRight.remove();
-            detalleProducto.remove();
-            shopPopulate.style.display = "";
-        });
-
-    }
-
     function menuCategoryShopPopulate(shop) {
 
         var tienda = shop;
         var j = 0;
         var i;
-        var navBar = document.getElementById("navBar");
         var productsCategory = [];
         var productosTienda = showProductShop1(almacen.getShopProduct(tienda), tienda);
+        var productos = showProductShop1(almacen.getShopProduct(tienda), tienda);
         var categoriasTienda = [];
 
-        var menuCategoryShopPopulateRepetido = document.getElementById("menuCategoryShopPopulate");
 
-        if (menuCategoryShopPopulateRepetido !== null) {
+        $("#menuCategoryShopPopulate").remove();
 
-            menuCategoryShopPopulateRepetido.parentElement.removeChild(menuCategoryShopPopulateRepetido);
-        }
+        $("#navLeft").append("<li id='menuCategoryShopPopulate' class='dropdown'></li>");
+        $("#menuCategoryShopPopulate").append("<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>Categorias <span class='caret'></span></span></a>");
+        $("#menuCategoryShopPopulate").append("<ul class='dropdown-menu'></ul>");
 
-
-        var ulDropdown1 = document.getElementById("navLeft");
-
-
-        var liDropdown1 = document.createElement("li");
-        liDropdown1.setAttribute("id", "menuCategoryShopPopulate");
-        liDropdown1.setAttribute("class", "dropdown");
-
-
-        var aDropdownPrinci = document.createElement("a");
-        aDropdownPrinci.setAttribute("href", "#");
-        aDropdownPrinci.setAttribute("class", "dropdown-toggle");
-        aDropdownPrinci.setAttribute("data-toggle", "dropdown");
-        aDropdownPrinci.setAttribute("role", "button");
-        aDropdownPrinci.setAttribute("aria-haspopup", "true");
-        aDropdownPrinci.setAttribute("aria-expanded", "false");
-
-        textoEnlace = document.createTextNode("Categorias ");
-
-        var spanFlecha = document.createElement("span");
-
-
-        spanFlecha.setAttribute("class", "caret");
-
-        aDropdownPrinci.appendChild(textoEnlace);
-        aDropdownPrinci.appendChild(spanFlecha);
-
-        liDropdown1.appendChild(aDropdownPrinci);
-
-        var ulDropdown2 = document.createElement("ul");
-        ulDropdown2.setAttribute("class", "dropdown-menu");
-
-        liDropdown1.appendChild(ulDropdown2);
 
         var categories = almacen.categories;
         var category = categories.next();
 
-        textoEnlace = document.createTextNode("Todas las categorias");
-        li = document.createElement("li");
-        enlaceLi = document.createElement("a");
-        enlaceLi.setAttribute("href", "#");
-        enlaceLi.appendChild(textoEnlace);
-        enlaceLi.addEventListener("click", createFunctionShowShop(tienda));
-        li.appendChild(enlaceLi);
-        ulDropdown2.appendChild(li);
+
+        $("#menuCategoryShopPopulate ul").append("<li><a href='#'>Todas las categorias</a></li>");
+        $("#menuCategoryShopPopulate ul a").click(createFunctionShowShop(tienda));
 
 
-        // Iterador de las categorias
+        function getProductPosition1(product, categoriesProduct) {
 
+            function compareElements(element) {
+                return (element.serialNumber === product.serialNumber)
+            }
+
+            return categoriesProduct.findIndex(compareElements);
+        }
 
         while (category.done !== true) {
             productsCategory = almacen.getCategoryProduct(category.value);
@@ -1006,27 +537,19 @@ function init() {
 
             for (i = 0; i < productosTienda.length; i++) {
 
-                if (productsCategory.indexOf(productosTienda[i]) > -1 && categoriasTienda.indexOf(category.value) < 0) {
 
-                    var textoEnlace = document.createTextNode(category.value.title + " ");
-                    var li = document.createElement("li");
-                    var enlaceLi = document.createElement("a");
+                if (getProductPosition1((productosTienda[i]), productsCategory) > -1 && categoriasTienda.indexOf(category.value) < 0) {
+
+                    $("#menuCategoryShopPopulate ul").append("<li><a href='#'>" + category.value.title + "</a></li>");
                     categoriasTienda[j] = category.value;
-                    enlaceLi.setAttribute("href", "#");
+                    $("#menuCategoryShopPopulate ul li:last a").click(createFunctionShowShopCategoryProduct(tienda, category.value));
 
-                    enlaceLi.appendChild(textoEnlace);
-                    enlaceLi.addEventListener("click", createFunctionShowShopCategoryProduct(tienda, category.value));
-
-                    li.appendChild(enlaceLi);
                     j++;
-                    ulDropdown2.appendChild(li);
                 }
             }
+
             category = categories.next();
         }
-
-        ulDropdown1.appendChild(liDropdown1);
-        navBar.appendChild(ulDropdown1);
 
         function createFunctionShowShop(shop) {
             return function () {
@@ -1043,171 +566,113 @@ function init() {
 
     function productsCategoryShopPopulate(shop, category) {
 
-        var globalProductPopulate = document.getElementById("globalProductPopulate");
-
-        if (globalProductPopulate !== null) {
-            globalProductPopulate.remove();
-        }
+        $("#globalProductPopulate").remove();
 
         menuCategoryShopPopulate(shop);
 
-        var contenedorTiendas = document.getElementById("initPopulate");
+        $("#initPopulate").hide();
 
-        contenedorTiendas.style.display = "none";
 
         var tienda = shop;
+        var j = 0;
         var i;
-        var productosTienda = showProductShop1(almacen.getShopProduct(tienda), tienda);
         var productsCategory = almacen.getCategoryProduct(category);
-        var shopPopulateRepetido = document.getElementById("shopPopulate");
 
-        if (shopPopulateRepetido !== null) {
-
-            contenedorPrincipal.removeChild(shopPopulateRepetido);
-        }
+        $("#shopPopulate").remove();
+        $("#detalleProducto").remove();
 
         var productos = showProductShop1(almacen.getShopProduct(tienda), tienda);
 
-        var divShopPopulate = document.createElement("div");
-        divShopPopulate.setAttribute("id", "shopPopulate");
-        divShopPopulate.setAttribute("class", ".container-fluid");
-        contenedorPrincipal.appendChild(divShopPopulate);
+
+        $("#contenedorPrincipal").append("<div id='shopPopulate' class='.container-fluid'></div>");
 
 
-        var buttonAddProduct = document.createElement("button");
-        buttonAddProduct.setAttribute("class", "btn btn-md loggin text-center");
-        buttonAddProduct.setAttribute("type", "button");
-        buttonAddProduct.setAttribute("data-toggle", "modal");
-        buttonAddProduct.setAttribute("data-target", "#addShop");
-        buttonAddProduct.appendChild(document.createTextNode("Añadir Producto "));
-        var spanAddProduct = document.createElement("span");
-        spanAddProduct.setAttribute("class", "glyphicon glyphicon-plus");
-        buttonAddProduct.appendChild(spanAddProduct);
-        divShopPopulate.appendChild(buttonAddProduct);
+        $("#shopPopulate").append("<button class='btn btn-md loggin text-center' type='button' data-toggle='modal' data-target='#addProductShop'>Añadir Producto <span class='glyphicon glyphicon-plus'></span></button>");
 
-        var mainH2 = document.createElement("h2");
-        mainH2.setAttribute("class", "text-center bold titulo");
-        mainH2.appendChild(document.createTextNode("Tienda " + shop.name));
-        divShopPopulate.appendChild(mainH2);
+        $("#shopPopulate").append("<h2 class='text-center bold titulo'>Tienda " + shop.name + "</h2>");
 
-        var row = document.createElement("div");
-        row.setAttribute("class", "row");
-        divShopPopulate.appendChild(row);
+        $("#shopPopulate").append("<div class='row'></div>");
 
+        var x = 0;
+        for (i = 0; i < productos.length; i++) {
 
-        var j = 0;
-        for (i = 0; i < productosTienda.length; i++) {
 
             if (j > 4) {
                 j = 0;
-
-                row = document.createElement("div");
-                row.setAttribute("class", "row");
-                divShopPopulate.appendChild(row);
-
+                $("#shopPopulate").append("<div class='row'></div>");
             }
 
-
-            if (productsCategory.indexOf(productosTienda[i]) > -1) {
-
+            if (getProductPosition(productos[i], productsCategory) > -1) {
                 j++;
-                var producto = document.createElement("div");
-                producto.setAttribute("class", "col-md-3 col-sm-6 col-xs-12");
-                row.appendChild(producto);
 
-                var panelProducto = document.createElement("div");
-                panelProducto.setAttribute("class", "panel panel-default text-center producto");
-                producto.appendChild(panelProducto);
 
-                var panelBodyProducto = document.createElement("div");
-                panelBodyProducto.setAttribute("class", "panel-body");
-                panelProducto.appendChild(panelBodyProducto);
+                $("#shopPopulate .row:last").append("<div class='col-md-3 col-sm-6 col-xs-12 productos'></div>");
+                $("#shopPopulate .row:last .productos:last").append("<div class='panel panel-default text-center producto'></div>");
+                $("#shopPopulate .productos:last .panel-default").append("<div class='panel-body'><img src='" + productos[i].images[0] + "'></div>");
 
-                var imgProducto = document.createElement("img");
-                imgProducto.setAttribute("class", "img-responsive");
-                imgProducto.setAttribute("src", productosTienda[i].images[0]);
-                panelBodyProducto.appendChild(imgProducto);
 
-                var buttonUpdateProduct = document.createElement("button");
-                buttonUpdateProduct.setAttribute("class", "btn btn-success loggin pull-left");
-                buttonUpdateProduct.setAttribute("type", "button");
-                buttonUpdateProduct.setAttribute("data-toggle", "modal");
-                buttonUpdateProduct.setAttribute("data-target", "#updateProduct");
-                buttonUpdateProduct.appendChild(document.createTextNode("Modificar"));
-                panelBodyProducto.appendChild(buttonUpdateProduct);
-                buttonUpdateProduct.addEventListener("click", createFunctionUpdateProduct(productos[i], tienda));
+                $("#shopPopulate .productos:last .panel-default .panel-body").append("<button class='btn btn-success loggin pull-left' type='button' data-toggle='modal' data-target='#updateProduct'>Modificar</button>");
+                $("#shopPopulate .productos:last .panel-default .panel-body button:last").click(createFunctionUpdateProduct(productos[i], shop));
 
-                var buttonRemoveProducto = document.createElement("button");
-                buttonRemoveProducto.setAttribute("class", "btn btn-danger loggin pull-right");
-                buttonRemoveProducto.setAttribute("type", "button");
-                buttonRemoveProducto.setAttribute("data-toggle", "modal");
-                buttonRemoveProducto.setAttribute("data-target", "#removeProduct");
-                buttonRemoveProducto.appendChild(document.createTextNode("Eliminar"));
-                panelBodyProducto.appendChild(buttonRemoveProducto);
-                buttonRemoveProducto.addEventListener("click", createFunctionRemoveProduct(productos[i], tienda, category));
 
-                var panelFooterProducto = document.createElement("div");
-                panelFooterProducto.setAttribute("class", "panel-footer");
-                panelProducto.appendChild(panelFooterProducto);
+                $("#shopPopulate .productos:last .panel-default .panel-body").append("<button class='btn btn-danger loggin pull-right' type='button' data-toggle='modal' data-target='#removeProduct'>Eliminar</button>");
 
-                var nombreProducto = document.createElement("p");
-                var textoNombreProducto = document.createTextNode(productosTienda[i].name);
-                nombreProducto.appendChild(textoNombreProducto);
-                panelFooterProducto.appendChild(nombreProducto);
+                $("#shopPopulate .productos:last .panel-default .panel-body button:last").click(createFunctionRemoveProduct(productos[i], tienda));
 
-                var precioProducto = document.createElement("h3");
-                precioProducto.setAttribute("class", "bold");
-                var textoPrecioProducto = document.createTextNode(productosTienda[i].price + "€");
-                precioProducto.appendChild(textoPrecioProducto);
-                panelFooterProducto.appendChild(precioProducto);
+                $("#shopPopulate .productos:last .panel-default").append("<div class='panel-footer'></div>");
 
-                var buttonDetalles = document.createElement("button");
-                buttonDetalles.setAttribute("class", "btn btn-lg");
-                buttonDetalles.appendChild(document.createTextNode("Ver Detalle"));
-                panelFooterProducto.appendChild(buttonDetalles);
-                buttonDetalles.addEventListener("click", createFunctionShowShopDetailProduct(tienda, productosTienda[i]));
-                panelFooterProducto.appendChild(buttonDetalles);
+                $("#shopPopulate .productos:last .panel-default .panel-footer").append("<p>" + productos[i].name + "</p><h3 class='bold'>" + productos[i].price + "€</h3>");
+
+                $("#shopPopulate .productos:last .panel-default .panel-footer").append("<button class='btn btn-lg'>Ver Detalle</button>");
+
+                $("#shopPopulate .productos:last .panel-default .panel-footer button:last").click(createFunctionShowShopDetailProduct(tienda, productos[i]));
+
             }
-            checkCookie();
+
         }
 
+        checkCookie();
+
+
+        function getProductPosition(product, categoriesProduct) {
+
+            function compareElements(element) {
+                return (element.serialNumber === product.serialNumber)
+            }
+
+            return categoriesProduct.findIndex(compareElements);
+        }
 
         function createFunctionUpdateProduct(product, shop) {
             return function () {
-
                 document.getElementById("formUpdateProduct").reset();
 
 
-                var nombre = document.getElementById("nameProduct2");
-                nombre.setAttribute("value", product.name);
+                $("#nameProduct2").val(product.name);
 
-                var precio = document.getElementById("priceProduct2");
-                precio.setAttribute("value", product.price);
+                $("#priceProduct2").val(product.price);
 
-                var imagen = document.getElementById("imageProduct2");
 
                 if (product.images !== undefined && product.images[0] !== "") {
-                    imagen.setAttribute("value", product.images[0]);
+
+                    $("#imageProduct2").val(product.images[0]);
                 }
+
 
                 if (product.description !== undefined) {
-                    descripcionProduct2.innerHTML = product.description;
+
+                    $("#descripcionProduct2").val(product.description);
                 }
 
-                var buttonUpdateProductRepetido = document.getElementById("buttonUpdateProduct");
 
-                if (buttonUpdateProductRepetido !== null) {
-                    buttonUpdateProductRepetido.remove();
-                }
-                var formUpdateProduct = document.getElementById("formUpdateProduct");
-                var buttonUpdateProduct = document.createElement("button");
-                buttonUpdateProduct.setAttribute("id", "buttonUpdateProduct");
-                buttonUpdateProduct.setAttribute("class", "btn btn-block btn-classic");
-                buttonUpdateProduct.setAttribute("data-dismiss", "modal");
-                buttonUpdateProduct.appendChild(document.createTextNode("Modificar"));
-                formUpdateProduct.appendChild(buttonUpdateProduct);
-                buttonUpdateProduct.addEventListener("click", update(product, shop));
+                $("#buttonUpdateProduct").remove();
+
+
+                $("#formUpdateProduct").append("<button id='buttonUpdateProduct' class='btn btn-block btn-classic' data-dismiss='modal'>Modificar</button>");
+
+                $("#buttonUpdateProduct").click(update(product, shop));
             }
+
         }
 
         function update(product) {
@@ -1379,7 +844,6 @@ function init() {
         descripcion.appendChild(textoDescripcion);
     }
 
-
     function globalProductPopulate() {
 
 
@@ -1393,83 +857,26 @@ function init() {
         var x;
         var stock;
         var suma = 0;
-
-        var categorias = document.getElementById("menuCategoryShopPopulate");
-        var shopPopulate = document.getElementById("shopPopulate");
-        var detalleProducto = document.getElementById("detalleProducto");
-        var globalProductPopulate = document.getElementById("globalProductPopulate");
-        var menuCategoryShopPopulateRepetido = document.getElementById("menuCategoryShopPopulate");
-        var returnShopProduct = document.getElementById("returnShopProduct");
-        var categoryPopulate = document.getElementById("categoryPopulate");
         var categories = showCategories();
 
-        var mapPopulate = document.getElementById("mapPopulate");
-        if (mapPopulate !== null) {
 
-            mapPopulate.style.display = "none";
-        }
-
-
-        if (categoryPopulate !== null) {
-
-            categoryPopulate.remove();
-        }
+        $("#mapPopulate").hide();
+        $("#categoryPopulate").remove();
+        $("#menuCategoryShopPopulate").remove();
+        $("#shopPopulate").remove();
+        $("#detalleProducto").remove();
+        $("#globalProductPopulate").remove();
+        $("#initPopulate").css("display", "none");
 
 
-        if (categorias !== null) {
-            categorias.remove();
-        }
-
-        if (shopPopulate !== null) {
-            shopPopulate.remove();
-        }
-
-        if (detalleProducto !== null) {
-            detalleProducto.remove();
-        }
-
-        if (globalProductPopulate !== null) {
-            globalProductPopulate.remove();
-        }
-
-        if (menuCategoryShopPopulateRepetido !== null) {
-
-            menuCategoryShopPopulateRepetido.remove();
-        }
-
-        if (returnShopProduct !== null) {
-
-            returnShopProduct.remove();
-        }
-
-        var initPopulate = document.getElementById("initPopulate");
-        initPopulate.style.display = "none";
-
-
-        var main = document.getElementById("contenedorPrincipal");
-        var globalProductPopulate = document.createElement("div");
-        globalProductPopulate.setAttribute("id", "globalProductPopulate");
-        main.appendChild(globalProductPopulate);
-
-        var mainH2 = document.createElement("h2");
-        mainH2.setAttribute("class", "text-center bold titulo");
-        mainH2.appendChild(document.createTextNode("Productos Globales"));
-        globalProductPopulate.appendChild(mainH2);
-
+        $("#contenedorPrincipal").append("<div id='globalProductPopulate'><h2 class='text-center bold titulo'>Productos Globales</h2></div>");
 
         for (i = 0; i < categories.length; i++) {
             categoryProducts = almacen.getCategoryProduct(categories[i]);
             if (categoryProducts.length > 0) {
-                console.log("La categoria Global: " + categories[i].title);
 
-                var nameCategory = document.createElement("h3");
-                nameCategory.setAttribute("class", "text-center bold titulo");
-                nameCategory.appendChild(document.createTextNode(categories[i].title));
-                globalProductPopulate.appendChild(nameCategory);
-
-                var row = document.createElement("div");
-                row.setAttribute("class", "row");
-                globalProductPopulate.appendChild(row);
+                $("#globalProductPopulate").append("<h3 class='text-center bold titulo'>" + categories[i].title + "</h3>");
+                $("#globalProductPopulate").append("<div class='row'></div>");
             }
 
             for (j = 0; j < categoryProducts.length; j++) {
@@ -1478,26 +885,17 @@ function init() {
                 tienda = tiendas.next();
                 if (x > 4) {
                     x = 0;
-
-                    row = document.createElement("div");
-                    row.setAttribute("class", "row");
-                    globalProductPopulate.appendChild(row);
-
+                    $("#globalProductPopulate").append("<div class='row'></div>");
                 }
                 x++;
 
-                var producto = document.createElement("div");
-                producto.setAttribute("class", "col-md-4 col-sm-6 col-xs-12");
-                row.appendChild(producto);
+                $("#globalProductPopulate .row:last").append("<div class='col-md-4 col-sm-6 col-xs-12 gProducts'></div>");
 
-                var panelProducto = document.createElement("div");
-                panelProducto.setAttribute("class", "panel panel-default text-center producto");
-                producto.appendChild(panelProducto);
+                $("#globalProductPopulate .row:last .gProducts:last").append("<div class='panel panel-default text-center producto'></div>");
 
-                var panelBodyProducto = document.createElement("div");
-                panelBodyProducto.setAttribute("class", "panel-body");
-                panelProducto.appendChild(panelBodyProducto);
+                $("#globalProductPopulate .gProducts:last .panel-default:last").append("<div class='panel-body'></div>");
 
+                var numTienda = 0;
                 while (tienda.done !== true) {
 
                     product = showProductShop2(almacen.getShopProduct(tienda.value), categoryProducts[j], tienda.value);
@@ -1507,168 +905,74 @@ function init() {
                         if (lastProduct !== product.serialNumber) {
                             lastProduct = product.serialNumber;
 
-                            var tituloProducto = document.createElement("h3");
-                            var textoTituloProducto = document.createTextNode(product.name);
-                            tituloProducto.appendChild(textoTituloProducto);
-                            panelBodyProducto.appendChild(tituloProducto);
+                            $("#globalProductPopulate .gProducts:last .panel-default:last .panel-body").append("<h3>" + product.name + "</h3>");
+                            $("#globalProductPopulate .gProducts:last .panel-default:last .panel-body").append("<img src='" + product.images[0] + "' class='img-responsive'>");
 
-                            var imgProducto = document.createElement("img");
-                            imgProducto.setAttribute("class", "img-responsive");
-                            imgProducto.setAttribute("src", product.images[0]);
-                            panelBodyProducto.appendChild(imgProducto);
+
                         }
 
                         stock = almacen.getProductStock(product, tienda.value);
                         suma += parseInt(stock);
-                        var disponibilidadTienda = document.createElement("p");
-                        var textodisponibilidadTienda = document.createTextNode(tienda.value.name + " tiene de stock " + stock + " ");
-                        disponibilidadTienda.appendChild(textodisponibilidadTienda);
-                        panelBodyProducto.appendChild(disponibilidadTienda);
 
-                        var buttonStock = document.createElement("button");
-                        buttonStock.setAttribute("class", "btn btn-md loggin pull-right");
-                        buttonStock.setAttribute("data-toggle", "modal");
-                        buttonStock.setAttribute("data-target", "#updateGlobalProduct");
+                        $("#globalProductPopulate .gProducts:last .panel-default:last .panel-body").append("<p>" + tienda.value.name + " tiene de stock " + stock + "</p>");
 
-                        var spanButtonStock = document.createElement("span");
-                        spanButtonStock.setAttribute("class", "glyphicon glyphicon-pencil");
-                        buttonStock.appendChild(spanButtonStock);
-                        disponibilidadTienda.appendChild(buttonStock);
-                        buttonStock.addEventListener("click", createFunctionUpdateGlobalProduct(product, tienda.value));
+                        $("#globalProductPopulate .panel-default:last .panel-body p:last").append("<button id='updateGlobalProduct" + numTienda + "' class='btn btn-md loggin pull-right' data-toggle='modal' data-target='#updateGlobalProduct'><span class='glyphicon glyphicon-pencil'></span></button>");
+
+
+                        $("#globalProductPopulate .panel-default:last .panel-body p:last #updateGlobalProduct" + numTienda).on("click", createFunctionUpdateGlobalProduct(product, tienda.value));
+
                     }
-
+                    numTienda++;
                     tienda = tiendas.next();
                 }
-
-                var panelFooterProducto = document.createElement("div");
-                panelFooterProducto.setAttribute("class", "panel-footer");
-                panelProducto.appendChild(panelFooterProducto);
-
-                var stockTotal = document.createElement("h3");
-                var textoStockTotal = document.createTextNode("Stock total: " + suma);
-                stockTotal.appendChild(textoStockTotal);
-                panelFooterProducto.appendChild(stockTotal);
-
+                $("#globalProductPopulate .gProducts:last .panel-default:last").append("<div class='panel-footer'><h3>Stock total: " + suma + "</h3></div>");
             }
-
         }
 
 
         function createFunctionUpdateGlobalProduct(product, shop) {
+
             return function () {
+                $("#buttonUpdateGlobalProduct").remove();
 
-                var formPanelBodyProducto = document.getElementById("formUpdateGlobalProduct");
 
-                var buttonUpdateGlobalProductRepetido = document.getElementById("buttonUpdateGlobalProduct");
+                $("#formUpdateGlobalProduct").append("<button id='buttonUpdateGlobalProduct' class='btn btn-block btn-classic' type='button' data-dismiss='modal'>Modificar</button>");
 
-                if (buttonUpdateGlobalProductRepetido !== null) {
-                    buttonUpdateGlobalProductRepetido.remove();
-                }
-
-                var buttonUpdateGlobalProduct = document.createElement("button");
-                buttonUpdateGlobalProduct.setAttribute("id", "buttonUpdateGlobalProduct");
-                buttonUpdateGlobalProduct.setAttribute("class", "btn btn-block btn-classic");
-                buttonUpdateGlobalProduct.setAttribute("type", "button");
-                buttonUpdateGlobalProduct.setAttribute("data-dismiss", "modal");
-                buttonUpdateGlobalProduct.appendChild(document.createTextNode("Modificar"));
-                formPanelBodyProducto.appendChild(buttonUpdateGlobalProduct);
-                buttonUpdateGlobalProduct.addEventListener("click", update(product, shop));
+                $("#buttonUpdateGlobalProduct").click(update(product, shop));
             }
         }
 
         function update(product, shop) {
-
-
             return function () {
                 functionUpdateGlobalProduct(product, shop);
-            };
 
+            }
         }
 
         checkCookie();
-
     }
 
-
     function categoryPopulate() {
-        var initPopulate = document.getElementById("initPopulate");
-        initPopulate.style.display = "none";
-        var categoryPopulate = document.getElementById("categoryPopulate");
-        if (categoryPopulate !== null) {
 
-            categoryPopulate.remove();
-        }
-
-
-        var mapPopulate = document.getElementById("mapPopulate");
-        if (mapPopulate !== null) {
-
-            mapPopulate.style.display = "none";
-        }
-
-
-        var globalProductPopulate = document.getElementById("globalProductPopulate");
-
-        if (globalProductPopulate !== null) {
-            globalProductPopulate.remove();
-        }
-
-
-        var menuCategoryShopPopulateRepetido = document.getElementById("menuCategoryShopPopulate");
-
-        if (menuCategoryShopPopulateRepetido !== null) {
-
-            menuCategoryShopPopulateRepetido.parentElement.removeChild(menuCategoryShopPopulateRepetido);
-        }
-
-        var contenedorTiendas = document.getElementById("initPopulate");
-
-        contenedorTiendas.style.display = "none";
-
-        var j = 0;
-        var i;
-        var shopPopulateRepetido = document.getElementById("shopPopulate");
-        var detalleProducto = document.getElementById("detalleProducto");
-
-
-        if (shopPopulateRepetido !== null) {
-
-            contenedorPrincipal.removeChild(shopPopulateRepetido);
-        }
-
-        if (detalleProducto !== null) {
-
-            detalleProducto.remove();
-        }
-
+        $("#mapPopulate").hide();
+        $("#categoryPopulate").remove();
+        $("#menuCategoryShopPopulate").remove();
+        $("#shopPopulate").remove();
+        $("#detalleProducto").remove();
+        $("#globalProductPopulate").remove();
+        $("#initPopulate").css("display", "none");
 
         var categorias = showCategories();
+        var j = 0;
+        var i;
 
-        var divCategoryPopulate = document.createElement("div");
-        divCategoryPopulate.setAttribute("id", "categoryPopulate");
-        divCategoryPopulate.setAttribute("class", ".container-fluid");
-        contenedorPrincipal.appendChild(divCategoryPopulate);
+        $("#contenedorPrincipal").append("<div id='categoryPopulate' class='container-fluid'></div>");
+        $("#categoryPopulate").append("<button class='btn btn-md loggin text-center' type='button' data-toggle='modal' data-target='#addCategory'>Añadir Categoría <span class='glyphicon glyphicon-plus'></span></button>");
 
-        var buttonAddCategory = document.createElement("button");
-        buttonAddCategory.setAttribute("class", "btn btn-md loggin text-center");
-        buttonAddCategory.setAttribute("type", "button");
-        buttonAddCategory.setAttribute("data-toggle", "modal");
-        buttonAddCategory.setAttribute("data-target", "#addCategory");
-        buttonAddCategory.appendChild(document.createTextNode("Añadir Categoria "));
-        var spanAddCategory = document.createElement("span");
-        spanAddCategory.setAttribute("class", "glyphicon glyphicon-plus");
-        buttonAddCategory.appendChild(spanAddCategory);
-        divCategoryPopulate.appendChild(buttonAddCategory);
+        $("#categoryPopulate").append("<h2 class='text-center bold titulo'>Categorías</h2>")
 
-        var mainH2 = document.createElement("h2");
-        mainH2.setAttribute("class", "text-center bold titulo");
-        mainH2.appendChild(document.createTextNode("Categorías"));
-        divCategoryPopulate.appendChild(mainH2);
+        $("#categoryPopulate").append("<div class='row'></div>");
 
-
-        var row = document.createElement("div");
-        row.setAttribute("class", "row");
-        divCategoryPopulate.appendChild(row);
 
         for (i = 0; i < categorias.length; i++) {
 
@@ -1677,96 +981,52 @@ function init() {
             if (j > 4) {
                 j = 0;
 
-                row = document.createElement("div");
-                row.setAttribute("class", "row");
-                divCategoryPopulate.appendChild(row);
-
+                $("#categoryPopulate").append("<div class='row'></div>");
             }
 
-            var categoria = document.createElement("div");
-            categoria.setAttribute("class", "col-md-3 col-sm-6 col-xs-12");
-            row.appendChild(categoria);
+            $("#categoryPopulate .row:last").append("<div class='col-md-3 col-sm-6 col-xs-12 categorias'></div>");
 
-            var panelCategoria = document.createElement("div");
-            panelCategoria.setAttribute("class", "panel panel-default text-center categoria");
-            categoria.appendChild(panelCategoria);
+            $("#categoryPopulate .row:last .categorias:last").append("<div class='panel panel-default text-center categoria'></div>");
 
+            $("#categoryPopulate .categorias:last .panel-default").append("<div class='panel-body'><h2>" + categorias[i].title + "</h2></div>")
 
-            var panelBodyCategoria = document.createElement("div");
-            panelBodyCategoria.setAttribute("class", "panel-body");
-            panelCategoria.appendChild(panelBodyCategoria);
+            $("#categoryPopulate .categorias:last .panel-default .panel-body").append("<p>" + categorias[i].description + "</p>");
 
-            var h2 = document.createElement("h2");
-            h2.appendChild(document.createTextNode(categorias[i].title));
-            panelBodyCategoria.appendChild(h2);
-            panelCategoria.appendChild(panelBodyCategoria);
+            $("#categoryPopulate .categorias:last .panel-default").append("<div class='panel-footer loggin'></div>");
 
-
-            var descipcionCategoria = document.createElement("p");
-            descipcionCategoria.appendChild(document.createTextNode(categorias[i].description));
-            panelBodyCategoria.appendChild(descipcionCategoria);
-
-
-            var panelFooterCategoria = document.createElement("div");
-            panelFooterCategoria.setAttribute("class", "panel-footer loggin");
-            panelCategoria.appendChild(panelFooterCategoria);
-
-
-            var divFooterBotones = document.createElement("div");
-            divFooterBotones.setAttribute("id", "divFooterBotones");
-            panelFooterCategoria.appendChild(divFooterBotones);
             if (categorias[i].title !== "Anonymous category") {
-                var buttonUpdateProduct = document.createElement("button");
-                buttonUpdateProduct.setAttribute("class", "btn btn-success loggin pull-left");
-                buttonUpdateProduct.setAttribute("type", "button");
-                buttonUpdateProduct.setAttribute("data-toggle", "modal");
-                buttonUpdateProduct.setAttribute("data-target", "#updateCategory");
-                buttonUpdateProduct.appendChild(document.createTextNode("Modificar"));
-                buttonUpdateProduct.addEventListener("click", createFunctionUpdateCategory(categorias[i]));
 
-                divFooterBotones.appendChild(buttonUpdateProduct);
+                $("#categoryPopulate .categorias:last .panel-default .panel-footer").append("<div class='divFooterBotones'></div>");
+                $(".divFooterBotones:last").append("<button class='btn btn-success loggin pull-left' type='button' data-toggle='modal' data-target='#updateCategory'>Modificar</button>");
 
-                var buttonRemoveCategory = document.createElement("button");
-                buttonRemoveCategory.setAttribute("class", "btn btn-danger loggin pull-right");
-                buttonRemoveCategory.setAttribute("type", "button");
-                buttonRemoveCategory.setAttribute("data-toggle", "modal");
-                buttonRemoveCategory.setAttribute("data-target", "#removeCategory");
-                buttonRemoveCategory.appendChild(document.createTextNode("Eliminar"));
-                divFooterBotones.appendChild(buttonRemoveCategory);
-                buttonRemoveCategory.addEventListener("click", createFunctionRemoveCategory(categorias[i]));
+                $(".divFooterBotones:last button:last").click(createFunctionUpdateCategory(categorias[i]));
+
+                $(".divFooterBotones:last").append("<button class='btn btn-danger loggin pull-right' type='button' data-toggle='modal' data-target='#removeCategory'>Eliminar</button>");
+
+                $(".divFooterBotones:last button:last").click(createFunctionRemoveCategory(categorias[i]));
 
             }
 
-            checkCookie();
         }
 
+
+        checkCookie();
 
         function createFunctionUpdateCategory(category) {
             return function () {
 
-                document.getElementById("formUpdateCategory").reset();
-
-
-                var nombre = document.getElementById("nameCategory2");
-                nombre.setAttribute("value", category.title);
+                $("#nameCategory2").val(category.title);
 
                 if (category.description !== undefined) {
-                    descripcionCategory2.innerHTML = category.description;
+
+                    $("#descripcionCategory2").val(category.description);
                 }
 
-                var buttonUpdateCategoryRepetido = document.getElementById("buttonUpdateCategory");
+                $("#buttonUpdateCategory").remove();
 
-                if (buttonUpdateCategoryRepetido !== null) {
-                    buttonUpdateCategoryRepetido.remove();
-                }
-                var formUpdateCategory = document.getElementById("formUpdateCategory");
-                var buttonUpdateCategory = document.createElement("button");
-                buttonUpdateCategory.setAttribute("id", "buttonUpdateCategory");
-                buttonUpdateCategory.setAttribute("class", "btn btn-block btn-classic");
-                buttonUpdateCategory.setAttribute("data-dismiss", "modal");
-                buttonUpdateCategory.appendChild(document.createTextNode("Modificar"));
-                formUpdateCategory.appendChild(buttonUpdateCategory);
-                buttonUpdateCategory.addEventListener("click", update(category));
+                $("#formUpdateCategory").append("<button id='buttonUpdateCategory' class='btn btn-block btn-classic' data-dismiss='modal'>Modificar</button>");
+
+                $("#buttonUpdateCategory").click(update(category));
             }
         }
 
@@ -2227,11 +1487,8 @@ function init() {
             }
         }
 
-        var optionDinamico = document.getElementsByClassName("optionDinamico");
-        var size = optionDinamico.length;
-        for (j = 0; j < size; j++) {
-            optionDinamico[j].style.display = "none";
-        }
+
+        $(".optionDinamico").hide();
 
         initPopulate();
         checkCookie();
@@ -2246,14 +1503,12 @@ function init() {
         var i;
         var j;
         var categories = showCategories();
-
         for (j = 0; j < categories.length; j++) {
 
             products = almacen.getCategoryProduct(categories[j]);
             console.log("La categoria es: " + categories[j].title);
             for (i = 0; i < products.length; i++) {
-
-                if (products[i].serialNumber === parseInt(product)) {
+                if (products[i].serialNumber == parseInt(product)) {
                     almacen.addProductInShop(products[i], shop, stock);
                     var productoInsertar = products[i];
 
@@ -2420,6 +1675,7 @@ function init() {
 
     function functionUpdateGlobalProduct(product, shop) {
 
+
         var number = document.forms["formUpdateGlobalProduct"]["stockGlobalProduct"].value;
         var productosInERPShop = showProductShop1(almacen.getShopProduct(shop), shop);
 
@@ -2475,89 +1731,55 @@ function init() {
         var myJSON = JSON.stringify(Json);
         var username = getCookie("username");
 
-        console.log(Json);
-        var xhttp = new XMLHttpRequest();
 
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
+        $.ajax({
+            // la URL para la petición
+            url: 'saveState.php',
+
+            // la información a enviar
+            // (también es posible utilizar una cadena de datos)
+            data: {Json: myJSON, user: username},
+
+            // especifica si será una petición POST o GET
+            type: 'POST',
+
+            // el tipo de información que se espera de respuesta
+            dataType: 'json',
+
+            // código a ejecutar si la petición es satisfactoria;
+            // la respuesta es pasada como argumento a la función
+            success: function (json) {
                 $("#modalSaveState").modal("show");
+            },
 
+            // código a ejecutar si la petición falla;
+            // son pasados como argumentos a la función
+            // el objeto de la petición en crudo y código de estatus de la petición
+            error: function (xhr, status) {
+                $("#modalSaveStateFalse").modal("show");
+            },
+
+            // código a ejecutar sin importar si la petición falló o no
+            complete: function (xhr, status) {
             }
-        }
-        xhttp.open("POST", "saveState.php", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhttp.send("Json=" + myJSON + "&user=" + username);
+        });
+
+
     }
 
 
     function mapPopulate() {
 
-        var initPopulate = document.getElementById("initPopulate");
-        initPopulate.style.display = "none";
-
-        var mapPopulate = document.getElementById("mapPopulate");
-        if (mapPopulate !== null) {
-
-            mapPopulate.style.display = "block";
-        }
-
-        var categoryPopulate = document.getElementById("categoryPopulate");
-        if (categoryPopulate !== null) {
-
-            categoryPopulate.remove();
-        }
-
-        var globalProductPopulate = document.getElementById("globalProductPopulate");
-
-        if (globalProductPopulate !== null) {
-            globalProductPopulate.remove();
-        }
-
-
-        var menuCategoryShopPopulateRepetido = document.getElementById("menuCategoryShopPopulate");
-
-        if (menuCategoryShopPopulateRepetido !== null) {
-
-            menuCategoryShopPopulateRepetido.parentElement.removeChild(menuCategoryShopPopulateRepetido);
-        }
-
-        var contenedorTiendas = document.getElementById("initPopulate");
-
-        contenedorTiendas.style.display = "none";
-
-        var shopPopulateRepetido = document.getElementById("shopPopulate");
-        var detalleProducto = document.getElementById("detalleProducto");
-
-
-        if (shopPopulateRepetido !== null) {
-
-            contenedorPrincipal.removeChild(shopPopulateRepetido);
-        }
-
-        if (detalleProducto !== null) {
-
-            detalleProducto.remove();
-        }
-
-        /*     var divMapPopulate = document.createElement("div");
-             divMapPopulate.setAttribute("id", "mapPopulate");
-             contenedorPrincipal.appendChild(divMapPopulate);
-
-     var divMapPopulate = document.getElementById("mapPopulate");
-
-     var mainH2 = document.createElement("h2");
-     mainH2.setAttribute("class", "text-center bold titulo");
-     mainH2.appendChild(document.createTextNode("Mapa"));
-     divMapPopulate.appendChild(mainH2);
-
-       var divMap = document.createElement("div");
-         divMap.setAttribute("id", "map");
-         divMapPopulate.appendChild(divMap);
-*/
+        $("#mapPopulate").css("display", "block");
+        $("#categoryPopulate").remove();
+        $("#menuCategoryShopPopulate").remove();
+        $("#shopPopulate").remove();
+        $("#detalleProducto").remove();
+        $("#globalProductPopulate").remove();
+        $("#initPopulate").css("display", "none");
 
         myMap();
     }
-
 
     function myMap() {
 
@@ -2952,123 +2174,145 @@ function init() {
 
         try {
 
-            //Creamos categorias
             /*
-                        var telefonos = new Category(1, "Telefonos");
-                        telefonos.description = "Descripción categoría Telefonos";
-                        var televisiones = new Category(2, "Televisiones");
-                        televisiones.description = "Descripción categoría Televisiones";
-                        var portatiles = new Category(3, "Portatiles");
-                        portatiles.description = "Descripción categoría Portatiles";
-                        var ropa = new Category(4, "Ropa");
-                        ropa.description = "Descripción categoría Ropa";
+                      //Creamos categorias
+
+                      var telefonos = new Category(1, "Telefonos");
+                      telefonos.description = "Descripción categoría Telefonos";
+                      var televisiones = new Category(2, "Televisiones");
+                      televisiones.description = "Descripción categoría Televisiones";
+                      var portatiles = new Category(3, "Portatiles");
+                      portatiles.description = "Descripción categoría Portatiles";
+                      var ropa = new Category(4, "Ropa");
+                      ropa.description = "Descripción categoría Ropa";
 
 
-            // Creamos productos
+                      // Creamos productos
 
 
-                        var movil1 = new Smartphone("1", "Apple iPhone X 256GB Plata Libre", "1299");
-                        movil1.images = ["img/iphone-x.jpg", "img/iphone-x2.jpg", "img/iphone-x3.jpg", "img/iphone-x4.jpg"];
-                        movil1.description = "La pantalla del iPhone X tiene esquinas redondeadas que rematan el diseño curvo del teléfono, y esas esquinas se encuentran dentro de un rectángulo estándar. Si se mide el rectángulo estándar, la pantalla tiene 5,85 pulgadas en diagonal (la superficie real de visión es inferior).";
+                      var movil1 = new Smartphone("1", "Apple iPhone X 256GB Plata Libre", "1299");
+                      movil1.images = ["img/iphone-x.jpg", "img/iphone-x2.jpg", "img/iphone-x3.jpg", "img/iphone-x4.jpg"];
+                      movil1.description = "La pantalla del iPhone X tiene esquinas redondeadas que rematan el diseño curvo del teléfono, y esas esquinas se encuentran dentro de un rectángulo estándar. Si se mide el rectángulo estándar, la pantalla tiene 5,85 pulgadas en diagonal (la superficie real de visión es inferior).";
 
-                        var movil2 = new Smartphone("2", "Samsung Galaxy S8 4G 64GB Plata Libre", "699");
-                        movil2.images = ["img/samsung-s8.jpg", "img/samsung-s82.jpg", "img/samsung-s83.jpg", "img/samsung-s84.jpg"];
-                        movil2.description = "¡Da la bienvenida a la pantalla infinita! El revolucionario diseño de Galaxy S8 y S8+ comienza desde su interior. Se ha redefinido cada componente del Smartphone para romper con los límites de su pantalla, despidiéndonos de los marcos. Así todo lo que verás será contenido y nada más. Disfruta de la pantalla más grande e inmersiva fabricada para un dispositivo móvil que podrás sostener con una sola mano. Galaxy S8 y S8+ te liberan de los confines de los marcos, ofreciéndote una superficie lisa e ininterrumpida que fluye sobre sus bordes. "
+                      var movil2 = new Smartphone("2", "Samsung Galaxy S8 4G 64GB Plata Libre", "699");
+                      movil2.images = ["img/samsung-s8.jpg", "img/samsung-s82.jpg", "img/samsung-s83.jpg", "img/samsung-s84.jpg"];
+                      movil2.description = "¡Da la bienvenida a la pantalla infinita! El revolucionario diseño de Galaxy S8 y S8+ comienza desde su interior. Se ha redefinido cada componente del Smartphone para romper con los límites de su pantalla, despidiéndonos de los marcos. Así todo lo que verás será contenido y nada más. Disfruta de la pantalla más grande e inmersiva fabricada para un dispositivo móvil que podrás sostener con una sola mano. Galaxy S8 y S8+ te liberan de los confines de los marcos, ofreciéndote una superficie lisa e ininterrumpida que fluye sobre sus bordes. "
 
-                        var movil3 = new Smartphone("7", "LG G6 32GB Plata Libre", "439");
-                        movil3.images = ["img/lg-g6.jpg", "img/lg-g62.jpg", "img/lg-g63.jpg", "img/lg-g64.jpg"];
-                        movil3.description = "El LG G6 tiene un diseño refinado resistente al agua y una pantalla casi sin bordes que lo hacen relativamente compacto a pesar de ser de 5.7 pulgadas. La combinación de cámaras es un placer de usar y es algo difícil de encontrar en el mercado; tiene ranura microSD y su desempeño muy bueno.";
+                      var movil3 = new Smartphone("7", "LG G6 32GB Plata Libre", "439");
+                      movil3.images = ["img/lg-g6.jpg", "img/lg-g62.jpg", "img/lg-g63.jpg", "img/lg-g64.jpg"];
+                      movil3.description = "El LG G6 tiene un diseño refinado resistente al agua y una pantalla casi sin bordes que lo hacen relativamente compacto a pesar de ser de 5.7 pulgadas. La combinación de cámaras es un placer de usar y es algo difícil de encontrar en el mercado; tiene ranura microSD y su desempeño muy bueno.";
 
-                        var tele1 = new TV("3", "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo", "1799");
-                        tele1.images = ["img/samsung-curve.jpg", "img/samsung-curve2.jpg", "img/samsung-curve3.jpg", "img/samsung-curve4.jpg"];
-                        tele1.description = "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.";
+                      var tele1 = new TV("3", "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo", "1799");
+                      tele1.images = ["img/samsung-curve.jpg", "img/samsung-curve2.jpg", "img/samsung-curve3.jpg", "img/samsung-curve4.jpg"];
+                      tele1.description = "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.";
 
-                        var tele2 = new TV("4", "LG 55SJ950V 55\" UltraHD 4K", "1649");
-                        tele2.images = ["img/lg-4k.jpg", "img/lg-4k2.jpg", "img/lg-4k3.jpg", "img/lg-4k4.jpg"];
-                        tele2.description = "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.";
+                      var tele2 = new TV("4", "LG 55SJ950V 55\" UltraHD 4K", "1649");
+                      tele2.images = ["img/lg-4k.jpg", "img/lg-4k2.jpg", "img/lg-4k3.jpg", "img/lg-4k4.jpg"];
+                      tele2.description = "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.";
 
-                        var tele3 = new TV("8", "Sony KD49XE9005 49\" LED UltraHD 4K", "1019");
-                        tele3.images = ["img/sony-tv.jpg", "img/sony-tv2.jpg", "img/sony-tv3.jpg", "img/sony-tv4.jpg"];
-                        tele3.description = "La realidad con un contraste excepcional Preciosas vistas nocturna con luces brillantes y negros profundos. Con hasta 5 veces 2 el contraste de un TV LED convencional, las escenas oscuras son más oscuras y las brillantes aún más brillantes.";
-                        var portatil1 = new Laptop("5", "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil", "889");
-                        portatil1.images = ["img/yoga.jpg", "img/yoga2.jpg", "img/yoga3.jpg", "img/yoga4.jpg", "img/yoga5.jpg"];
-                        portatil1.description = "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.";
-
-
-                        var portatil2 = new Laptop("6", "Apple MacBook Pro Retina Display Intel i7/16GB/256GB/15.4\"", "1999");
-                        portatil2.images = ["img/mac-pro.jpg", "img/mac-pro2.jpg", "img/mac-pro3.jpg", "img/mac-pro4.jpg"];
-                        portatil2.description = "El MacBook Pro con pantalla Retina sorprende porque es asombrosamente fino y ligero. Pero lo increíble de verdad es que un portátil así sea, además, tan y tan potente. Conseguir semejante rendimiento en un diseño como este no ha sido fácil. En absoluto. Cada milímetro está fabricado y montado con la máxima precisión. Y al diseñarlo hemos tenido que tomar decisiones arriesgadas. Un ejemplo: hemos sustituido viejas tecnologías como el disco duro giratorio y las unidades de disco óptico, que tanto ocupan, por opciones de alto rendimiento como el almacenamiento flash. ¿Por qué? Porque es mucho más rápido y fiable y ocupa hasta un 90% menos. Con todo esto, no es extraño que el MacBook Pro sea tan versátil y cómodo de llevar.";
+                      var tele3 = new TV("8", "Sony KD49XE9005 49\" LED UltraHD 4K", "1019");
+                      tele3.images = ["img/sony-tv.jpg", "img/sony-tv2.jpg", "img/sony-tv3.jpg", "img/sony-tv4.jpg"];
+                      tele3.description = "La realidad con un contraste excepcional Preciosas vistas nocturna con luces brillantes y negros profundos. Con hasta 5 veces 2 el contraste de un TV LED convencional, las escenas oscuras son más oscuras y las brillantes aún más brillantes.";
+                      var portatil1 = new Laptop("5", "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil", "889");
+                      portatil1.images = ["img/yoga.jpg", "img/yoga2.jpg", "img/yoga3.jpg", "img/yoga4.jpg", "img/yoga5.jpg"];
+                      portatil1.description = "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.";
 
 
-            //Creamos Tiendas
-
-                        var tienda1 = new Shop("1", "MediaMarkt");
-                        tienda1.image = "img/MediaMarkt.jpg";
-                        var tienda2 = new Shop("2", "Worten");
-                        tienda2.image = "img/Worten.jpg";
-                        var tienda3 = new Shop("3", "PcComponentes");
-                        tienda3.image = "img/PcComponentes.jpg";
+                      var portatil2 = new Laptop("6", "Apple MacBook Pro Retina Display Intel i7/16GB/256GB/15.4\"", "1999");
+                      portatil2.images = ["img/mac-pro.jpg", "img/mac-pro2.jpg", "img/mac-pro3.jpg", "img/mac-pro4.jpg"];
+                      portatil2.description = "El MacBook Pro con pantalla Retina sorprende porque es asombrosamente fino y ligero. Pero lo increíble de verdad es que un portátil así sea, además, tan y tan potente. Conseguir semejante rendimiento en un diseño como este no ha sido fácil. En absoluto. Cada milímetro está fabricado y montado con la máxima precisión. Y al diseñarlo hemos tenido que tomar decisiones arriesgadas. Un ejemplo: hemos sustituido viejas tecnologías como el disco duro giratorio y las unidades de disco óptico, que tanto ocupan, por opciones de alto rendimiento como el almacenamiento flash. ¿Por qué? Porque es mucho más rápido y fiable y ocupa hasta un 90% menos. Con todo esto, no es extraño que el MacBook Pro sea tan versátil y cómodo de llevar.";
 
 
-                        console.log("####################################################################");
-                        console.log("añadimos las categorias Telefonos,televisiones,portatiles y ropa");
-                        console.log(almacen.addCategory(telefonos));
-                        console.log(almacen.addCategory(televisiones));
-                        console.log(almacen.addCategory(portatiles));
+                      //Creamos Tiendas
 
-                        almacen.addProduct(movil1, telefonos);
-                        almacen.addProduct(movil2, telefonos);
-                        almacen.addProduct(movil3, telefonos);
-                        almacen.addProduct(tele1, televisiones);
-                        almacen.addProduct(tele2, televisiones);
-                        almacen.addProduct(tele3, televisiones);
-                        almacen.addProduct(portatil1, portatiles);
-                        almacen.addProduct(portatil2, portatiles);
-
-                        almacen.addShop(tienda1);
-                        almacen.addShop(tienda2);
-                        almacen.addShop(tienda3);
+                      var tienda1 = new Shop("1", "MediaMarkt");
+                      tienda1.image = "img/MediaMarkt.jpg";
+                      var coord = new Coords(39.3965861,-3.232647);
+                      tienda1.coords = coord;
+                      var tienda2 = new Shop("2", "Worten");
+                      tienda2.image = "img/Worten.jpg";
+                      var coord = new Coords(38.9876103,-3.9314084);
+                      tienda2.coords = coord;
+                      var tienda3 = new Shop("3", "PcComponentes");
+                      tienda3.image = "img/PcComponentes.jpg";
+                      var coord = new Coords(38.6932382,-4.120831);
+                      tienda3.coords = coord;
 
 
-                        almacen.addProductInShop(movil1, almacen.defaultShop, 55);
-                        almacen.addProductInShop(movil2, almacen.defaultShop, 44);
-                        almacen.addProductInShop(movil3, almacen.defaultShop, 28);
-                        almacen.addProductInShop(tele1, almacen.defaultShop, 70);
-                        almacen.addProductInShop(tele2, almacen.defaultShop, 42);
-                        almacen.addProductInShop(tele3, almacen.defaultShop, 77);
-                        almacen.addProductInShop(portatil1, almacen.defaultShop, 14);
-                        almacen.addProductInShop(portatil2, almacen.defaultShop, 20);
+                      console.log("####################################################################");
+                      console.log("añadimos las categorias Telefonos,televisiones,portatiles y ropa");
+                      console.log(almacen.addCategory(telefonos));
+                      console.log(almacen.addCategory(televisiones));
+                      console.log(almacen.addCategory(portatiles));
 
-                        almacen.addProductInShop(movil1, tienda1, 20);
-                        almacen.addProductInShop(tele1, tienda1, 40);
-                        almacen.addProductInShop(tele2, tienda1, 30);
-                        almacen.addProductInShop(portatil1, tienda1, 18);
+                      almacen.addProduct(movil1, telefonos);
+                      almacen.addProduct(movil2, telefonos);
+                      almacen.addProduct(movil3, telefonos);
+                      almacen.addProduct(tele1, televisiones);
+                      almacen.addProduct(tele2, televisiones);
+                      almacen.addProduct(tele3, televisiones);
+                      almacen.addProduct(portatil1, portatiles);
+                      almacen.addProduct(portatil2, portatiles);
 
-                        almacen.addProductInShop(movil1, tienda2, 50);
-                        almacen.addProductInShop(movil2, tienda2, 24);
-                        almacen.addProductInShop(tele1, tienda2, 70);
-                        almacen.addProductInShop(tele2, tienda2, 40);
-                        almacen.addProductInShop(portatil1, tienda2, 10);
-                        almacen.addProductInShop(portatil2, tienda2, 15);
+                      almacen.addShop(tienda1);
+                      almacen.addShop(tienda2);
+                      almacen.addShop(tienda3);
 
 
-                        almacen.addProductInShop(movil1, tienda3, 26);
-                        almacen.addProductInShop(movil2, tienda3, 40);
-                        almacen.addProductInShop(movil3, tienda3, 59);
-                        almacen.addProductInShop(tele1, tienda3, 49);
-                        almacen.addProductInShop(tele2, tienda3, 22);
-                        almacen.addProductInShop(tele3, tienda3, 47);
-                        almacen.addProductInShop(portatil1, tienda3, 25);
-                        almacen.addProductInShop(portatil2, tienda3, 28);
-                        */
+                      almacen.addProductInShop(movil1, almacen.defaultShop, 55);
+                      almacen.addProductInShop(movil2, almacen.defaultShop, 44);
+                      almacen.addProductInShop(movil3, almacen.defaultShop, 28);
+                      almacen.addProductInShop(tele1, almacen.defaultShop, 70);
+                      almacen.addProductInShop(tele2, almacen.defaultShop, 42);
+                      almacen.addProductInShop(tele3, almacen.defaultShop, 77);
+                      almacen.addProductInShop(portatil1, almacen.defaultShop, 14);
+                      almacen.addProductInShop(portatil2, almacen.defaultShop, 20);
+
+                      almacen.addProductInShop(movil1, tienda1, 20);
+                      almacen.addProductInShop(tele1, tienda1, 40);
+                      almacen.addProductInShop(tele2, tienda1, 30);
+                      almacen.addProductInShop(portatil1, tienda1, 18);
+
+                      almacen.addProductInShop(movil1, tienda2, 50);
+                      almacen.addProductInShop(movil2, tienda2, 24);
+                      almacen.addProductInShop(tele1, tienda2, 70);
+                      almacen.addProductInShop(tele2, tienda2, 40);
+                      almacen.addProductInShop(portatil1, tienda2, 10);
+                      almacen.addProductInShop(portatil2, tienda2, 15);
 
 
-            //  var Json = createJson();
-            //  var myJSON = JSON.stringify(Json);
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    var myJSON = JSON.parse(this.responseText);
+                      almacen.addProductInShop(movil1, tienda3, 26);
+                      almacen.addProductInShop(movil2, tienda3, 40);
+                      almacen.addProductInShop(movil3, tienda3, 59);
+                      almacen.addProductInShop(tele1, tienda3, 49);
+                      almacen.addProductInShop(tele2, tienda3, 22);
+                      almacen.addProductInShop(tele3, tienda3, 47);
+                      almacen.addProductInShop(portatil1, tienda3, 25);
+                      almacen.addProductInShop(portatil2, tienda3, 28);
+          */
+
+            createCategoriesObjectStore();
+            createShopObjectStore();
+
+            $.ajax({
+                // la URL para la petición
+                url: 'initJson.php',
+
+                // la información a enviar
+                // (también es posible utilizar una cadena de datos)
+                data: {Json: "init.json"},
+
+                // especifica si será una petición POST o GET
+                type: 'POST',
+
+                // el tipo de información que se espera de respuesta
+                dataType: 'json',
+
+                // código a ejecutar si la petición es satisfactoria;
+                // la respuesta es pasada como argumento a la función
+                success: function (json) {
+
+                    var myJSON = json;
                     var i;
                     var j;
                     for (i = 1; i < myJSON.categories.length; i++) {
@@ -3149,22 +2393,21 @@ function init() {
                         initPopulate1.remove();
 
                     }
-                    //createObjectsStores();
                     initPopulate();
                     checkCookie();
+                },
 
+                // código a ejecutar si la petición falla;
+                // son pasados como argumentos a la función
+                // el objeto de la petición en crudo y código de estatus de la petición
+                error: function (xhr, status) {
+                    alert('Disculpe, existió un problema');
+                },
 
+                // código a ejecutar sin importar si la petición falló o no
+                complete: function (xhr, status) {
                 }
-            };
-
-            createCategoriesObjectStore();
-            createShopObjectStore();
-
-
-            xhttp.open("POST", "initJson.php", true);
-            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("Json=" + "init.json");
-
+            });
 
         } catch (e) {
             console.log("Exception creating object store: " + e);
@@ -3246,6 +2489,5 @@ function init() {
         return JSon;
     }
 }
-
 
 window.onload = init;

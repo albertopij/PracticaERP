@@ -18,6 +18,7 @@
         {
           "serialNumber": 1,
           "name": "Apple iPhone X 256GB Plata Libre",
+          "description": "La pantalla del iPhone X tiene esquinas redondeadas que rematan el diseño curvo del teléfono, y esas esquinas se encuentran dentro de un rectángulo estándar. Si se mide el rectángulo estándar, la pantalla tiene 5,85 pulgadas en diagonal (la superficie real de visión es inferior).",
           "price": "1299",
           "images": [
             "img/iphone-x.jpg",
@@ -29,6 +30,7 @@
         {
           "serialNumber": 2,
           "name": "Samsung Galaxy S8 4G 64GB Plata Libre",
+          "description": "¡Da la bienvenida a la pantalla infinita! El revolucionario diseño de Galaxy S8 y S8+ comienza desde su interior. Se ha redefinido cada componente del Smartphone para romper con los límites de su pantalla, despidiéndonos de los marcos. Así todo lo que verás será contenido y nada más. Disfruta de la pantalla más grande e inmersiva fabricada para un dispositivo móvil que podrás sostener con una sola mano. Galaxy S8 y S8+ te liberan de los confines de los marcos, ofreciéndote una superficie lisa e ininterrumpida que fluye sobre sus bordes. ",
           "price": "699",
           "images": [
             "img/samsung-s8.jpg",
@@ -40,6 +42,7 @@
         {
           "serialNumber": 7,
           "name": "LG G6 32GB Plata Libre",
+          "description": "El LG G6 tiene un diseño refinado resistente al agua y una pantalla casi sin bordes que lo hacen relativamente compacto a pesar de ser de 5.7 pulgadas. La combinación de cámaras es un placer de usar y es algo difícil de encontrar en el mercado; tiene ranura microSD y su desempeño muy bueno.",
           "price": "439",
           "images": [
             "img/lg-g6.jpg",
@@ -60,6 +63,7 @@
         {
           "serialNumber": 3,
           "name": "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo",
+          "description": "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.",
           "price": "1799",
           "images": [
             "img/samsung-curve.jpg",
@@ -71,6 +75,7 @@
         {
           "serialNumber": 4,
           "name": "LG 55SJ950V 55\" UltraHD 4K",
+          "description": "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.",
           "price": "1649",
           "images": [
             "img/lg-4k.jpg",
@@ -82,6 +87,7 @@
         {
           "serialNumber": 8,
           "name": "Sony KD49XE9005 49\" LED UltraHD 4K",
+          "description": "La realidad con un contraste excepcional Preciosas vistas nocturna con luces brillantes y negros profundos. Con hasta 5 veces 2 el contraste de un TV LED convencional, las escenas oscuras son más oscuras y las brillantes aún más brillantes.",
           "price": "1019",
           "images": [
             "img/sony-tv.jpg",
@@ -102,6 +108,7 @@
         {
           "serialNumber": 5,
           "name": "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil",
+          "description": "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.",
           "price": "889",
           "images": [
             "img/yoga.jpg",
@@ -114,6 +121,7 @@
         {
           "serialNumber": 6,
           "name": "Apple MacBook Pro Retina Display Intel i7/16GB/256GB/15.4\"",
+          "description": "El MacBook Pro con pantalla Retina sorprende porque es asombrosamente fino y ligero. Pero lo increíble de verdad es que un portátil así sea, además, tan y tan potente. Conseguir semejante rendimiento en un diseño como este no ha sido fácil. En absoluto. Cada milímetro está fabricado y montado con la máxima precisión. Y al diseñarlo hemos tenido que tomar decisiones arriesgadas. Un ejemplo: hemos sustituido viejas tecnologías como el disco duro giratorio y las unidades de disco óptico, que tanto ocupan, por opciones de alto rendimiento como el almacenamiento flash. ¿Por qué? Porque es mucho más rápido y fiable y ocupa hasta un 90% menos. Con todo esto, no es extraño que el MacBook Pro sea tan versátil y cómodo de llevar.",
           "price": "1999",
           "images": [
             "img/mac-pro.jpg",
@@ -140,6 +148,7 @@
         {
           "serialNumber": 1,
           "name": "Apple iPhone X 256GB Plata Libre",
+          "description": "La pantalla del iPhone X tiene esquinas redondeadas que rematan el diseño curvo del teléfono, y esas esquinas se encuentran dentro de un rectángulo estándar. Si se mide el rectángulo estándar, la pantalla tiene 5,85 pulgadas en diagonal (la superficie real de visión es inferior).",
           "price": "1299",
           "images": [
             "img/iphone-x.jpg",
@@ -151,6 +160,7 @@
         {
           "serialNumber": 2,
           "name": "Samsung Galaxy S8 4G 64GB Plata Libre",
+          "description": "¡Da la bienvenida a la pantalla infinita! El revolucionario diseño de Galaxy S8 y S8+ comienza desde su interior. Se ha redefinido cada componente del Smartphone para romper con los límites de su pantalla, despidiéndonos de los marcos. Así todo lo que verás será contenido y nada más. Disfruta de la pantalla más grande e inmersiva fabricada para un dispositivo móvil que podrás sostener con una sola mano. Galaxy S8 y S8+ te liberan de los confines de los marcos, ofreciéndote una superficie lisa e ininterrumpida que fluye sobre sus bordes. ",
           "price": "699",
           "images": [
             "img/samsung-s8.jpg",
@@ -162,6 +172,7 @@
         {
           "serialNumber": 7,
           "name": "LG G6 32GB Plata Libre",
+          "description": "El LG G6 tiene un diseño refinado resistente al agua y una pantalla casi sin bordes que lo hacen relativamente compacto a pesar de ser de 5.7 pulgadas. La combinación de cámaras es un placer de usar y es algo difícil de encontrar en el mercado; tiene ranura microSD y su desempeño muy bueno.",
           "price": "439",
           "images": [
             "img/lg-g6.jpg",
@@ -173,6 +184,7 @@
         {
           "serialNumber": 3,
           "name": "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo",
+          "description": "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.",
           "price": "1799",
           "images": [
             "img/samsung-curve.jpg",
@@ -184,6 +196,7 @@
         {
           "serialNumber": 4,
           "name": "LG 55SJ950V 55\" UltraHD 4K",
+          "description": "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.",
           "price": "1649",
           "images": [
             "img/lg-4k.jpg",
@@ -195,6 +208,7 @@
         {
           "serialNumber": 8,
           "name": "Sony KD49XE9005 49\" LED UltraHD 4K",
+          "description": "La realidad con un contraste excepcional Preciosas vistas nocturna con luces brillantes y negros profundos. Con hasta 5 veces 2 el contraste de un TV LED convencional, las escenas oscuras son más oscuras y las brillantes aún más brillantes.",
           "price": "1019",
           "images": [
             "img/sony-tv.jpg",
@@ -206,6 +220,7 @@
         {
           "serialNumber": 5,
           "name": "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil",
+          "description": "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.",
           "price": "889",
           "images": [
             "img/yoga.jpg",
@@ -218,6 +233,7 @@
         {
           "serialNumber": 6,
           "name": "Apple MacBook Pro Retina Display Intel i7/16GB/256GB/15.4\"",
+          "description": "El MacBook Pro con pantalla Retina sorprende porque es asombrosamente fino y ligero. Pero lo increíble de verdad es que un portátil así sea, además, tan y tan potente. Conseguir semejante rendimiento en un diseño como este no ha sido fácil. En absoluto. Cada milímetro está fabricado y montado con la máxima precisión. Y al diseñarlo hemos tenido que tomar decisiones arriesgadas. Un ejemplo: hemos sustituido viejas tecnologías como el disco duro giratorio y las unidades de disco óptico, que tanto ocupan, por opciones de alto rendimiento como el almacenamiento flash. ¿Por qué? Porque es mucho más rápido y fiable y ocupa hasta un 90% menos. Con todo esto, no es extraño que el MacBook Pro sea tan versátil y cómodo de llevar.",
           "price": "1999",
           "images": [
             "img/mac-pro.jpg",
@@ -244,14 +260,15 @@
         "name": "MediaMarkt",
         "image": "img/MediaMarkt.jpg",
         "coords": {
-          "latitude": 38.9784694,
-          "longitude": -5.4904536
+          "latitude": 39.3965861,
+          "longitude": -3.232647
         }
       },
       "products": [
         {
           "serialNumber": 1,
           "name": "Apple iPhone X 256GB Plata Libre",
+          "description": "La pantalla del iPhone X tiene esquinas redondeadas que rematan el diseño curvo del teléfono, y esas esquinas se encuentran dentro de un rectángulo estándar. Si se mide el rectángulo estándar, la pantalla tiene 5,85 pulgadas en diagonal (la superficie real de visión es inferior).",
           "price": "1299",
           "images": [
             "img/iphone-x.jpg",
@@ -263,6 +280,7 @@
         {
           "serialNumber": 3,
           "name": "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo",
+          "description": "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.",
           "price": "1799",
           "images": [
             "img/samsung-curve.jpg",
@@ -274,6 +292,7 @@
         {
           "serialNumber": 4,
           "name": "LG 55SJ950V 55\" UltraHD 4K",
+          "description": "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.",
           "price": "1649",
           "images": [
             "img/lg-4k.jpg",
@@ -285,6 +304,7 @@
         {
           "serialNumber": 5,
           "name": "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil",
+          "description": "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.",
           "price": "889",
           "images": [
             "img/yoga.jpg",
@@ -308,14 +328,15 @@
         "name": "Worten",
         "image": "img/Worten.jpg",
         "coords": {
-          "latitude": 38.8475984,
-          "longitude": -4.3973518
+          "latitude": 38.9876103,
+          "longitude": -3.9314084
         }
       },
       "products": [
         {
           "serialNumber": 1,
           "name": "Apple iPhone X 256GB Plata Libre",
+          "description": "La pantalla del iPhone X tiene esquinas redondeadas que rematan el diseño curvo del teléfono, y esas esquinas se encuentran dentro de un rectángulo estándar. Si se mide el rectángulo estándar, la pantalla tiene 5,85 pulgadas en diagonal (la superficie real de visión es inferior).",
           "price": "1299",
           "images": [
             "img/iphone-x.jpg",
@@ -327,6 +348,7 @@
         {
           "serialNumber": 2,
           "name": "Samsung Galaxy S8 4G 64GB Plata Libre",
+          "description": "¡Da la bienvenida a la pantalla infinita! El revolucionario diseño de Galaxy S8 y S8+ comienza desde su interior. Se ha redefinido cada componente del Smartphone para romper con los límites de su pantalla, despidiéndonos de los marcos. Así todo lo que verás será contenido y nada más. Disfruta de la pantalla más grande e inmersiva fabricada para un dispositivo móvil que podrás sostener con una sola mano. Galaxy S8 y S8+ te liberan de los confines de los marcos, ofreciéndote una superficie lisa e ininterrumpida que fluye sobre sus bordes. ",
           "price": "699",
           "images": [
             "img/samsung-s8.jpg",
@@ -338,6 +360,7 @@
         {
           "serialNumber": 3,
           "name": "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo",
+          "description": "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.",
           "price": "1799",
           "images": [
             "img/samsung-curve.jpg",
@@ -349,6 +372,7 @@
         {
           "serialNumber": 4,
           "name": "LG 55SJ950V 55\" UltraHD 4K",
+          "description": "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.",
           "price": "1649",
           "images": [
             "img/lg-4k.jpg",
@@ -360,6 +384,7 @@
         {
           "serialNumber": 5,
           "name": "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil",
+          "description": "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.",
           "price": "889",
           "images": [
             "img/yoga.jpg",
@@ -372,6 +397,7 @@
         {
           "serialNumber": 6,
           "name": "Apple MacBook Pro Retina Display Intel i7/16GB/256GB/15.4\"",
+          "description": "El MacBook Pro con pantalla Retina sorprende porque es asombrosamente fino y ligero. Pero lo increíble de verdad es que un portátil así sea, además, tan y tan potente. Conseguir semejante rendimiento en un diseño como este no ha sido fácil. En absoluto. Cada milímetro está fabricado y montado con la máxima precisión. Y al diseñarlo hemos tenido que tomar decisiones arriesgadas. Un ejemplo: hemos sustituido viejas tecnologías como el disco duro giratorio y las unidades de disco óptico, que tanto ocupan, por opciones de alto rendimiento como el almacenamiento flash. ¿Por qué? Porque es mucho más rápido y fiable y ocupa hasta un 90% menos. Con todo esto, no es extraño que el MacBook Pro sea tan versátil y cómodo de llevar.",
           "price": "1999",
           "images": [
             "img/mac-pro.jpg",
@@ -396,14 +422,15 @@
         "name": "PcComponentes",
         "image": "img/PcComponentes.jpg",
         "coords": {
-          "latitude": 37.828006,
-          "longitude": -1.3898567
+          "latitude": 38.6932382,
+          "longitude": -4.120831
         }
       },
       "products": [
         {
           "serialNumber": 1,
           "name": "Apple iPhone X 256GB Plata Libre",
+          "description": "La pantalla del iPhone X tiene esquinas redondeadas que rematan el diseño curvo del teléfono, y esas esquinas se encuentran dentro de un rectángulo estándar. Si se mide el rectángulo estándar, la pantalla tiene 5,85 pulgadas en diagonal (la superficie real de visión es inferior).",
           "price": "1299",
           "images": [
             "img/iphone-x.jpg",
@@ -415,6 +442,7 @@
         {
           "serialNumber": 2,
           "name": "Samsung Galaxy S8 4G 64GB Plata Libre",
+          "description": "¡Da la bienvenida a la pantalla infinita! El revolucionario diseño de Galaxy S8 y S8+ comienza desde su interior. Se ha redefinido cada componente del Smartphone para romper con los límites de su pantalla, despidiéndonos de los marcos. Así todo lo que verás será contenido y nada más. Disfruta de la pantalla más grande e inmersiva fabricada para un dispositivo móvil que podrás sostener con una sola mano. Galaxy S8 y S8+ te liberan de los confines de los marcos, ofreciéndote una superficie lisa e ininterrumpida que fluye sobre sus bordes. ",
           "price": "699",
           "images": [
             "img/samsung-s8.jpg",
@@ -426,6 +454,7 @@
         {
           "serialNumber": 7,
           "name": "LG G6 32GB Plata Libre",
+          "description": "El LG G6 tiene un diseño refinado resistente al agua y una pantalla casi sin bordes que lo hacen relativamente compacto a pesar de ser de 5.7 pulgadas. La combinación de cámaras es un placer de usar y es algo difícil de encontrar en el mercado; tiene ranura microSD y su desempeño muy bueno.",
           "price": "439",
           "images": [
             "img/lg-g6.jpg",
@@ -437,6 +466,7 @@
         {
           "serialNumber": 3,
           "name": "Samsung QE55Q7C 55\" QLED UltraHD 4K Curvo",
+          "description": "Te presentamos lo último de Samsung la Serie 7 QLED. Simplemente Innovador La tecnología Quantum Dot es capaz de reproducir todos los colores gracias a su nuevo recubrimiento metálico. Disfruta de una experiencia de visualización fuera de este mundo.",
           "price": "1799",
           "images": [
             "img/samsung-curve.jpg",
@@ -448,6 +478,7 @@
         {
           "serialNumber": 4,
           "name": "LG 55SJ950V 55\" UltraHD 4K",
+          "description": "Colores más precisos gracias a la tecnología Nanocell que absorbe frecuencias lumínicas no deseadas para buscar la pureza de los colores primarios, rojo, verde y azul, que componen el resto. La combinación de la tecnología Nano Cell y la pantalla IPS hacen que color y brillo se mantengan constantes y 100% precisos desde un ángulo de visión más amplio que otros LED con pantallas VA.",
           "price": "1649",
           "images": [
             "img/lg-4k.jpg",
@@ -459,6 +490,7 @@
         {
           "serialNumber": 8,
           "name": "Sony KD49XE9005 49\" LED UltraHD 4K",
+          "description": "La realidad con un contraste excepcional Preciosas vistas nocturna con luces brillantes y negros profundos. Con hasta 5 veces 2 el contraste de un TV LED convencional, las escenas oscuras son más oscuras y las brillantes aún más brillantes.",
           "price": "1019",
           "images": [
             "img/sony-tv.jpg",
@@ -470,6 +502,7 @@
         {
           "serialNumber": 5,
           "name": "Lenovo Yoga 520-14IKB Intel Core i5-7200U/8GB/1TB/14\" Táctil",
+          "description": "Te presentamos el portátil Yoga 520-14IKB de Lenovo. El Yoga 520 (14\") tiene un único reposamanos de diamante tallado. Además, es más delgado y ligero que las generaciones anteriores y tiene el doble de almacenamiento. Además de recargarse más de un 40 % más rápido que los portátiles normales, el Yoga 510se puede dar la vuelta, doblar, inclinar y mantener de pie para satisfacer sus necesidades.",
           "price": "889",
           "images": [
             "img/yoga.jpg",
@@ -482,6 +515,7 @@
         {
           "serialNumber": 6,
           "name": "Apple MacBook Pro Retina Display Intel i7/16GB/256GB/15.4\"",
+          "description": "El MacBook Pro con pantalla Retina sorprende porque es asombrosamente fino y ligero. Pero lo increíble de verdad es que un portátil así sea, además, tan y tan potente. Conseguir semejante rendimiento en un diseño como este no ha sido fácil. En absoluto. Cada milímetro está fabricado y montado con la máxima precisión. Y al diseñarlo hemos tenido que tomar decisiones arriesgadas. Un ejemplo: hemos sustituido viejas tecnologías como el disco duro giratorio y las unidades de disco óptico, que tanto ocupan, por opciones de alto rendimiento como el almacenamiento flash. ¿Por qué? Porque es mucho más rápido y fiable y ocupa hasta un 90% menos. Con todo esto, no es extraño que el MacBook Pro sea tan versátil y cómodo de llevar.",
           "price": "1999",
           "images": [
             "img/mac-pro.jpg",
