@@ -1,1 +1,1 @@
-Subo la práctica 10 acabada.
+Subo la práctica 11 acabada, con todos los errores solucionados.
